@@ -45,7 +45,8 @@ public class ListActivity extends AppCompatActivity {
         arrayList.add("By Booth");
         arrayList.add("By Colour");
         arrayList.add("By Age");
-        arrayList.add("By Caste");
+        arrayList.add("By Language");
+        arrayList.add("By Religion");
         arrayList.add("By Village");
         arrayList.add("Dead");
         arrayList.add("Important Voters");

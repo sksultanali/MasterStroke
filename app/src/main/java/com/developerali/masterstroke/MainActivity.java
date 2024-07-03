@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
+import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
 import com.developerali.masterstroke.Models.ToolsModel;
 import com.developerali.masterstroke.databinding.ActivityMainBinding;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, SearchActivity.class));
                         break;
                     case 1:
                         startActivity(new Intent(MainActivity.this, ListActivity.class));
