@@ -23,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, SurveyActivity.class));
                         break;
                     case 3:
-                        Toast.makeText(MainActivity.this, "Charts", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
                         break;
                     case 4:
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
