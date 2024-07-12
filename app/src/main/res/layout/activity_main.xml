@@ -11,7 +11,7 @@
         android:id="@+id/imView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_200mdp"
-        android:src="@drawable/election_logo"
+        android:src="@drawable/pubimg_min"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

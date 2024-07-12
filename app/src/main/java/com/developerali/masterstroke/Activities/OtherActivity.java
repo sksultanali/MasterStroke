@@ -1,5 +1,7 @@
 package com.developerali.masterstroke.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.developerali.masterstroke.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityOtherBinding;
 
@@ -36,12 +39,14 @@ public class OtherActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Survey");
-        arrayList.add("Export Survey");
-        arrayList.add("Import Survey");
-        arrayList.add("New Voters");
-        arrayList.add("View Voted");
-        arrayList.add("Clear Voted Marking");
+        arrayList.add("Survey"); //0
+        arrayList.add("Export Survey"); //1
+        arrayList.add("Import Survey"); //2
+        arrayList.add("New Voters");  //3
+        arrayList.add("View Voted");  //4
+        arrayList.add("Clear Voted Marking");  //5
+        arrayList.add("Whatsapp Message Forward");  //6
+        arrayList.add("Tele Calling Facility");  //7
 
         myListAdapter adapter = new myListAdapter();
         binding.toolsList.setAdapter(adapter);
@@ -64,6 +69,27 @@ public class OtherActivity extends AppCompatActivity {
                         break;
                     case 4:
                         //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6:
+                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
+                            Helper.openChromeTab("https://whatsapp2.bulksmsserver.in/", OtherActivity.this);
+                        }else {
+                            Intent i = new Intent(OtherActivity.this, WebView.class);
+                            i.putExtra("share" ,"https://whatsapp2.bulksmsserver.in/");
+                            startActivity(i);
+                        }
+                        break;
+                    case 7:
+                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
+                            Helper.openChromeTab("http://obd2.bulksmsserver.in/", OtherActivity.this);
+                        }else {
+                            Intent i = new Intent(OtherActivity.this, WebView.class);
+                            i.putExtra("share" ,"http://obd2.bulksmsserver.in/");
+                            startActivity(i);
+                        }
                         break;
                 }
             }

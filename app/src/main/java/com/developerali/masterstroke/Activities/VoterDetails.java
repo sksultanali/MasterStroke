@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityVoterDetailsBinding;
 import com.developerali.masterstroke.databinding.DialogShareSlipBinding;
+import com.developerali.masterstroke.databinding.DialogSurveyPredicationBinding;
 
 public class VoterDetails extends AppCompatActivity {
 
@@ -39,6 +40,9 @@ public class VoterDetails extends AppCompatActivity {
         binding.share.setOnClickListener(v->{
             shareDialog();
         });
+        binding.surveyBtn.setOnClickListener(v->{
+            surveyDialog();
+        });
         binding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -49,6 +53,17 @@ public class VoterDetails extends AppCompatActivity {
 
 
 
+    }
+
+    public void surveyDialog(){
+        DialogSurveyPredicationBinding dialogBinding = DialogSurveyPredicationBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+
+
+        dialog.show();
     }
 
     public void shareDialog(){
