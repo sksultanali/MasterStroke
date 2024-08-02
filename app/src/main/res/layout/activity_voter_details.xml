@@ -49,6 +49,20 @@
                 android:textColor="@color/white" />
 
             <Button
+                android:id="@+id/call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5mdp"
+                android:layout_marginEnd="@dimen/_5mdp"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:background="@drawable/bg_green_corner"
+                android:text="Call"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/editBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5mdp"
@@ -83,14 +97,23 @@
             android:padding="@dimen/_10mdp">
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Name : Person Name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
-
             <TextView
+                android:id="@+id/serialNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Sl No : NA"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <TextView
+                android:id="@+id/voterId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -99,6 +122,7 @@
                 android:textSize="@dimen/_12font_mdp" />
 
             <TextView
+                android:id="@+id/partGenderAge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -107,6 +131,7 @@
                 android:textSize="@dimen/_12font_mdp" />
 
             <TextView
+                android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -124,22 +149,40 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/houseNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
                 android:text="House No : A12/522"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
-
             <TextView
+                android:id="@+id/section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:text="Section : A12/522"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <TextView
+                android:id="@+id/boothName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
                 android:text="Booth Name : YMCA College Kolkata"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
-
             <TextView
+                android:id="@+id/old_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:drawableTint="@color/icon_color"
+                android:text="Old Mobile No : 9876543210 |  8978564523"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <TextView
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
@@ -150,9 +193,33 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
             <TextView
+                android:id="@+id/dob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
+                android:drawableTint="@color/icon_color"
+                android:drawablePadding="@dimen/_5mdp"
+                android:drawableEnd="@drawable/edit_24"
+                android:text="DOB : __ /__ / ____"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <TextView
+                android:id="@+id/doa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:drawableTint="@color/icon_color"
+                android:drawablePadding="@dimen/_5mdp"
+                android:drawableEnd="@drawable/edit_24"
+                android:text="DOA : __ /__ / ____"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <TextView
+                android:id="@+id/newAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:visibility="gone"
                 android:text="New Address : NA"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
@@ -160,27 +227,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
-                android:text="Dead : "
+                android:text="Language : "
+                android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
             <RadioGroup
                 android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/bangla"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="No"/>
+                    android:text="Bengali"/>
                 <RadioButton
+                    android:id="@+id/hindi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes"/>
+                    android:text="Hindi"/>
+                <RadioButton
+                    android:id="@+id/none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"/>
             </RadioGroup>
         </LinearLayout>
-
-
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -30,7 +30,7 @@ public class ChartsActivity extends AppCompatActivity {
         TranslateAPI translateAPI = new TranslateAPI(
                 Language.AUTO_DETECT,   //Source Language
                 Language.BENGALI,         //Target Language
-                binding.editTextText.getText().toString());           //Query Text
+                binding.editTextText.getText().toString());//Query Text
 
         translateAPI.setTranslateListener(new TranslateAPI.TranslateListener() {
             @Override

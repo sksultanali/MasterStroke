@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_color_corner8"
+    android:orientation="vertical"
+    android:padding="@dimen/_10mdp"
+    android:elevation="@dimen/_3mdp"
+    android:layout_margin="@dimen/_35mdp">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_marginTop="@dimen/_5mdp"
+        android:textAllCaps="false"/>
+</LinearLayout>

@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
+import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         //EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if (Helper.CANDIDATE != null){
+            getSupportActionBar().setTitle(Helper.CANDIDATE);
+        }
 
         arrayList.clear();
         arrayList.add(new ToolsModel("Search", getDrawable(R.drawable.search)));
@@ -97,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.notification) {
             Toast.makeText(this, "Notification...!", Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.logout) {
-            Toast.makeText(this, "Log Out...!", Toast.LENGTH_SHORT).show();
+            Helper.clearSharedPreferences(MainActivity.this);
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

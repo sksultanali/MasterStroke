@@ -1,5 +1,6 @@
 package com.developerali.masterstroke.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,9 @@ public class SurveyActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position){
                     case 0:
-                        //startActivity(new Intent(MainActivity.this, MainActivity.class));
+                        Intent l = new Intent(SurveyActivity.this, PartSectionActivity.class);
+                        l.putExtra("name", "intereset_party");
+                        startActivity(l);
                         break;
                     case 1:
                         //startActivity(new Intent(MainActivity.this, HistoryBooks.class));

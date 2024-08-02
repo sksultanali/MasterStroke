@@ -1,6 +1,8 @@
 package com.developerali.masterstroke;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,32 +15,52 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
+import com.developerali.masterstroke.Activities.PartSectionActivity;
+import com.developerali.masterstroke.Activities.SearchActivity;
+import com.developerali.masterstroke.Adapters.VoterAdapter;
+import com.developerali.masterstroke.ApiModels.ConstitutionModel;
+import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.databinding.CustomDialogBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Helper {
 
     public static String API_TOKEN = "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d";
     public static String USER_ID;
-    public static String ACTIVE_STATUS;
-    public static String START_DATE;
-    public static String END_DATE;
+    public static String NAME;
+    public static String PHONE;
+    public static String PASSWORD;
+    public static String USER_NAME;
+    public static String WARD;
+    public static String SPLASH_LINK;
+    public static String CANDIDATE;
     public static boolean DELETE;
     public static int PresentDays;
     public static boolean EDIT;
@@ -105,8 +127,8 @@ public class Helper {
         return simpleDateFormat.format(date);
     }
 
-    public static String getDateKey(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");
+    public static String getToday(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
         String date = simpleDateFormat.format(new Date());
         return date;
     }
@@ -172,16 +194,111 @@ public class Helper {
         return sb.toString().trim();
     }
 
-    public static void changeSem(String id, Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("Ids", Context.MODE_PRIVATE);
+    public static void accountDetails(String username, String password,
+                                 String userId, String name, String phone,
+                                      String ward, String link, String candidate,
+                                      Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("id", id);
+        editor.putString("username", username);
+        editor.putString("name", name);
+        editor.putString("phone", phone);
+        editor.putString("password", password);
+        editor.putString("userId", userId);
+        editor.putString("ward_id", ward);
+        editor.putString("splash_link", link);
+        editor.putString("candidate_name", candidate);
         editor.apply();
     }
-    public static String getSem(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("Ids", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", null);
-        return id;
+    public static boolean getUserLogin(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
+        Helper.USER_NAME = sharedPreferences.getString("username", "NA");
+        Helper.NAME = sharedPreferences.getString("name", "NA");
+        Helper.PHONE = sharedPreferences.getString("phone", "NA");
+        Helper.PASSWORD = sharedPreferences.getString("password", "NA");
+        Helper.USER_ID = sharedPreferences.getString("userId", "NA");
+        Helper.WARD = sharedPreferences.getString("ward_id", "0");
+        Helper.SPLASH_LINK = sharedPreferences.getString("splash_link", "NA");
+        Helper.CANDIDATE = sharedPreferences.getString("candidate_name", "NA");
+
+        if (Helper.USER_NAME.equalsIgnoreCase("NA")){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    public static void startCounter(int countTill, TextView textView){
+        ValueAnimator animator = ValueAnimator.ofInt(0, countTill);
+        animator.setDuration(3000); // Animation duration in milliseconds
+        animator.addUpdateListener(valueAnimator -> {
+            int animatedValue = (int) valueAnimator.getAnimatedValue();
+            textView.setText(String.valueOf(animatedValue));
+        });
+        animator.start();
+    }
+
+    public static void getWardName(String ward, TextView textView){
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<ConstitutionModel> call = apiService.getConstitutionDetails(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                Integer.parseInt(ward)
+        );
+
+        call.enqueue(new Callback<ConstitutionModel>() {
+            @Override
+            public void onResponse(Call<ConstitutionModel> call, Response<ConstitutionModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ConstitutionModel apiResponse = response.body();
+                    if (apiResponse.getItem() != null){
+                        textView.setText(apiResponse.getItem().get(0).getConstitution_name());
+                    }
+                }
+
+                Log.d("SearchActivity.this", "URL: " + call.request().url());
+            }
+
+            @Override
+            public void onFailure(Call<ConstitutionModel> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public static void getWardNo(String ward, Activity activity, androidx.appcompat.app.ActionBar supportActionBar) {
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<PhoneAddressModel> call = apiService.getVoters(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                0,
+                Integer.parseInt(ward)
+        );
+
+        call.enqueue(new Callback<PhoneAddressModel>() {
+            @Override
+            public void onResponse(Call<PhoneAddressModel> call, Response<PhoneAddressModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    PhoneAddressModel apiResponse = response.body();
+                    //ActionBar actionBar = activity.getActionBar();
+                    if (supportActionBar != null) {
+                        supportActionBar.setSubtitle("Ward no - " + apiResponse.getItem().get(0).getWard());
+                    } else {
+                        Toast.makeText(activity, "Action bar is not available", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhoneAddressModel> call, Throwable t) {
+            }
+        });
+
+    }
+
+    public static void clearSharedPreferences(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
     public static boolean isChromeCustomTabsSupported(@NonNull final Context context) {
@@ -222,6 +339,37 @@ public class Helper {
 
         dialog.show();
     }
+
+    private static final String PREFS_NAME = "my_prefs";
+    private static final String KEY_ARRAY_LIST = "my_array_list";
+
+    // Save ArrayList to SharedPreferences
+    public static void savePartyList(Context context, ArrayList<String> list) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(KEY_ARRAY_LIST, json);
+        editor.apply();
+    }
+
+    // Retrieve ArrayList from SharedPreferences
+    public static ArrayList<String> getPartyList(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = prefs.getString(KEY_ARRAY_LIST, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    // Clear the ArrayList from SharedPreferences
+    public static void clearPartyList(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(KEY_ARRAY_LIST);
+        editor.apply();
+    }
+
     @SuppressLint("ResourceAsColor")
     public static void showCustomMessage(Activity activity, String title, String message) {
         CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(activity));
@@ -272,5 +420,4 @@ public class Helper {
         }
         return false;
     }
-
 }

@@ -47,6 +47,9 @@ public class OtherActivity extends AppCompatActivity {
         arrayList.add("Clear Voted Marking");  //5
         arrayList.add("Whatsapp Message Forward");  //6
         arrayList.add("Tele Calling Facility");  //7
+        arrayList.add("Today Birthday");  //8
+        arrayList.add("Today Anniversary");  //9
+        arrayList.add("Set Parties");  //10
 
         myListAdapter adapter = new myListAdapter();
         binding.toolsList.setAdapter(adapter);
@@ -90,6 +93,21 @@ public class OtherActivity extends AppCompatActivity {
                             i.putExtra("share" ,"http://obd2.bulksmsserver.in/");
                             startActivity(i);
                         }
+                        break;
+                    case 8:
+                        Intent i = new Intent(OtherActivity.this, SearchActivity.class);
+                        i.putExtra("keyword", Helper.getToday());
+                        i.putExtra("searchOn", "dob");
+                        startActivity(i);
+                        break;
+                    case 9:
+                        Intent j = new Intent(OtherActivity.this, SearchActivity.class);
+                        j.putExtra("keyword", Helper.getToday());
+                        j.putExtra("searchOn", "doa");
+                        startActivity(j);
+                        break;
+                    case 10:
+                        startActivity(new Intent(OtherActivity.this, PartiesActivity.class));
                         break;
                 }
             }

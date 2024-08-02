@@ -41,11 +41,45 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
         PhoneAddressModel.Item details = arrayList.get(position);
 
         holder.binding.voterName.setText(details.getName());
-        holder.binding.otherDetails.setText(details.getAddress().substring(0, 22) + " | Age - " + details.getAge());
+        String someString = details.getAddress();
+
+        if (details.getStat() != null && details.getStat().equalsIgnoreCase("edited")){
+            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_green_corner));
+            holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
+            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.gray));
+        }else {
+            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_white_color_corner8));
+            holder.binding.voterName.setTextColor(activity.getColor(R.color.black));
+            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.icon_color));
+        }
+
+        if (someString.length() >= 22) {
+            String substring = someString.substring(0, 22);  // Make sure the index is within bounds
+            holder.binding.otherDetails.setText(substring+ " | Age - " + details.getAge());
+        } else {
+            holder.binding.otherDetails.setText(someString+ " | Age - " + details.getAge());  // Handle the case where the string is too short
+        }
 
         holder.itemView.setOnClickListener(v->{
-            activity.startActivity(new Intent(activity.getApplicationContext(), VoterDetails.class));
+//            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_green_corner));
+//            holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
+//            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.gray));
+//            details.setStat("edited");
+
+            Intent i = new Intent(activity.getApplicationContext(), VoterDetails.class);
+            i.putExtra("details", details);
+            activity.startActivity(i);
         });
+    }
+
+    public void addItems(List<PhoneAddressModel.Item> newVoters) {
+        this.arrayList.addAll(newVoters);
+        notifyDataSetChanged();
+    }
+
+    public void removeItems() {
+        this.arrayList.clear();
+        notifyDataSetChanged();
     }
 
     @Override
