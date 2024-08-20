@@ -174,7 +174,7 @@ public class SearchActivity extends AppCompatActivity {
                 String txt = binding.pageText.getText().toString();
                 if (!txt.isEmpty()){
                     int page = Integer.parseInt(txt);
-                    if (page == currentPage){
+                    if ((page-1) == currentPage){
                         binding.goPage.setVisibility(View.GONE);
                     }else {
                         binding.goPage.setVisibility(View.VISIBLE);

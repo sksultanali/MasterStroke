@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityOtherBinding;
@@ -39,33 +40,29 @@ public class OtherActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Survey"); //0
-        arrayList.add("Export Survey"); //1
-        arrayList.add("Import Survey"); //2
+        //arrayList.add("Survey"); //0
+        //arrayList.add("Export Survey"); //1
+        arrayList.add("Survey"); //2
         arrayList.add("New Voters");  //3
-        arrayList.add("View Voted");  //4
-        arrayList.add("Clear Voted Marking");  //5
+        arrayList.add("Child Voters");  //4
+        arrayList.add("Relocated Voters");  //5
         arrayList.add("Whatsapp Message Forward");  //6
         arrayList.add("Tele Calling Facility");  //7
         arrayList.add("Today Birthday");  //8
         arrayList.add("Today Anniversary");  //9
         arrayList.add("Set Parties");  //10
 
-        myListAdapter adapter = new myListAdapter();
+        myListAdapter adapter = new myListAdapter(OtherActivity.this, arrayList);
         binding.toolsList.setAdapter(adapter);
 
         binding.toolsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        //startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        break;
-                    case 1:
-                        //startActivity(new Intent(MainActivity.this, HistoryBooks.class));
-                        break;
+                switch ((position+2)){
                     case 2:
-                        //startActivity(new Intent(MainActivity.this, PaymentActivity.class));
+                        Intent lj = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        lj.putExtra("name", "intereset_party");
+                        startActivity(lj);
                         break;
                     case 3:
                         //startActivity(new Intent(MainActivity.this, DonationActivity.class));
@@ -74,7 +71,10 @@ public class OtherActivity extends AppCompatActivity {
                         //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
                         break;
                     case 5:
-                        //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        Intent ik = new Intent(OtherActivity.this, SearchActivity.class);
+                        ik.putExtra("keyword", "Relocated");
+                        ik.putExtra("searchOn", "status");
+                        startActivity(ik);
                         break;
                     case 6:
                         if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
@@ -120,32 +120,4 @@ public class OtherActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-    public class myListAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return arrayList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            LayoutInflater obj = getLayoutInflater();
-            View view1 = obj.inflate(R.layout.sample_tools_vertical, null);
-
-            TextView textView = view1.findViewById(R.id.toolName);
-            textView.setText(arrayList.get(i));
-
-            return view1;
-        }
-    }
 }

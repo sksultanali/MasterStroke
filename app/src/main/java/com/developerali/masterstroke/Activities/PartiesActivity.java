@@ -1,10 +1,13 @@
 package com.developerali.masterstroke.Activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -39,6 +42,10 @@ public class PartiesActivity extends AppCompatActivity {
         arrayList = Helper.getPartyList(PartiesActivity.this);
         if (arrayList == null){
             arrayList = new ArrayList<>();
+            arrayList.add("Our Party");
+            arrayList.add("Opposition Party");
+            arrayList.add("Doubtful");
+            Helper.savePartyList(PartiesActivity.this, arrayList);
         }
         adapter = new myListAdapter(PartiesActivity.this, arrayList);
         binding.listItems.setAdapter(adapter);
@@ -55,6 +62,15 @@ public class PartiesActivity extends AppCompatActivity {
             }
         });
 
+        binding.listItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent ik = new Intent(PartiesActivity.this, SearchActivity.class);
+                ik.putExtra("keyword", arrayList.get(i));
+                ik.putExtra("searchOn", "intereset_party");
+                startActivity(ik);
+            }
+        });
 
 
 
@@ -62,12 +78,12 @@ public class PartiesActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.delete_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.delete_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

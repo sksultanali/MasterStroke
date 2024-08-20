@@ -254,6 +254,38 @@
                     android:layout_height="wrap_content"
                     android:text="None"/>
             </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:text="Residential Status : "
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/_10mdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <RadioGroup
+                android:id="@+id/radioGroupP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/present"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Present"/>
+                <RadioButton
+                    android:id="@+id/relocated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Relocated"/>
+                <RadioButton
+                    android:id="@+id/dead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dead"/>
+            </RadioGroup>
         </LinearLayout>
     </LinearLayout>
 

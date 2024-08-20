@@ -86,6 +86,10 @@ public class PhoneAddressModel {
         private String sl_no;
         @SerializedName("language")
         private String language;
+        @SerializedName("status")
+        private String status;
+        @SerializedName("lname")
+        private String lname;
         @SerializedName("dob")
         private String dob;
         @SerializedName("doa")
@@ -275,6 +279,22 @@ public class PhoneAddressModel {
             this.intereset_party = intereset_party;
         }
 
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getLname() {
+            return lname;
+        }
+
+        public void setLname(String lname) {
+            this.lname = lname;
+        }
+
         protected Item(Parcel in) {
             conPhoneId = in.readString();
             constitutionId = in.readString();
@@ -298,6 +318,8 @@ public class PhoneAddressModel {
             stat = in.readString();
             note = in.readString();
             intereset_party = in.readString();
+            status = in.readString();
+            lname = in.readString();
         }
 
         public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -341,6 +363,8 @@ public class PhoneAddressModel {
             parcel.writeString(stat);
             parcel.writeString(note);
             parcel.writeString(intereset_party);
+            parcel.writeString(status);
+            parcel.writeString(lname);
         }
     }
 }

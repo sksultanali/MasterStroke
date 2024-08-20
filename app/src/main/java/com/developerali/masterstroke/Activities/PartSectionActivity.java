@@ -25,6 +25,10 @@ import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.ActivityPartSectionBinding;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +83,14 @@ public class PartSectionActivity extends AppCompatActivity {
                     if (apiResponse.getItem() == null){
                         Toast.makeText(PartSectionActivity.this, "not found", Toast.LENGTH_SHORT).show();
                     }else {
+
+                        Collections.sort(apiResponse.getItem(), new Comparator<WardClass.Item>() {
+                            @Override
+                            public int compare(WardClass.Item item, WardClass.Item t1) {
+                                return Integer.compare(Integer.parseInt(t1.getTotal()), Integer.parseInt(item.getTotal()));
+                            }
+                        });
+
                         adapter = new PartSecAdapter(PartSectionActivity.this, apiResponse.getItem(), txt);
                         binding.recView.setAdapter(adapter);
 

@@ -40,17 +40,24 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
 
         PhoneAddressModel.Item details = arrayList.get(position);
 
-        holder.binding.voterName.setText(details.getName());
+        holder.binding.voterName.setText(details.getName() + " " + details.getLname());
         String someString = details.getAddress();
 
         if (details.getStat() != null && details.getStat().equalsIgnoreCase("edited")){
-            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_green_corner));
+            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_dark_yellow));
             holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
             holder.binding.otherDetails.setTextColor(activity.getColor(R.color.gray));
         }else {
-            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_white_color_corner8));
-            holder.binding.voterName.setTextColor(activity.getColor(R.color.black));
-            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.icon_color));
+
+            if (position % 2 == 0){
+                holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_white_color_corner8));
+                holder.binding.voterName.setTextColor(activity.getColor(R.color.black));
+                holder.binding.otherDetails.setTextColor(activity.getColor(R.color.icon_color));
+            }else {
+                holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_dark_gray_corner8));
+                holder.binding.voterName.setTextColor(activity.getColor(R.color.black));
+                holder.binding.otherDetails.setTextColor(activity.getColor(R.color.icon_color));
+            }
         }
 
         if (someString.length() >= 22) {

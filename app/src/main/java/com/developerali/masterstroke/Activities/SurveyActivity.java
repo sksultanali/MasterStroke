@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivitySurveyBinding;
 
@@ -44,7 +45,7 @@ public class SurveyActivity extends AppCompatActivity {
         arrayList.add("View Voted");
         arrayList.add("Clear Voted Marking");
 
-        myListAdapter adapter = new myListAdapter();
+        myListAdapter adapter = new myListAdapter(SurveyActivity.this, arrayList);
         binding.toolsList.setAdapter(adapter);
 
         binding.toolsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,34 +78,5 @@ public class SurveyActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
-    }
-
-    public class myListAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return arrayList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            LayoutInflater obj = getLayoutInflater();
-            View view1 = obj.inflate(R.layout.sample_tools_vertical, null);
-
-            TextView textView = view1.findViewById(R.id.toolName);
-            textView.setText(arrayList.get(i));
-
-            return view1;
-        }
     }
 }

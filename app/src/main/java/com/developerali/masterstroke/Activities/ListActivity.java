@@ -51,21 +51,22 @@ public class ListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Advance Search"); //0
-        arrayList.add("By Ward"); //1
+        //arrayList.add("Advance Search"); //0
+        arrayList.add("Complete list"); //1
         arrayList.add("By Address"); //2
         arrayList.add("By Booth"); //3
         arrayList.add("By Age"); //4
         arrayList.add("By Language"); //5
         arrayList.add("By Religion"); //6
-        arrayList.add("By Village");  //7
+        arrayList.add("By Last Name");  //7
         arrayList.add("By Sex");  //8
         arrayList.add("By Name");  //9
         arrayList.add("By Section");  //10
         arrayList.add("By Voter Id No"); //11
         arrayList.add("By Mobile No List"); //12
+        arrayList.add("By Common Name"); //12
         arrayList.add("Dead");  //13
-        arrayList.add("Important Voters"); //14
+        //arrayList.add("Important Voters"); //14
 
         myListAdapter adapter = new myListAdapter(ListActivity.this, arrayList);
         binding.toolsList.setAdapter(adapter);
@@ -73,17 +74,15 @@ public class ListActivity extends AppCompatActivity {
         binding.toolsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        //startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        break;
+                switch ((position+1)){
                     case 1:
-                        searchDialog("ward", keyword->{
-                            Intent i = new Intent(ListActivity.this, SearchActivity.class);
-                            i.putExtra("keyword", keyword);
-                            i.putExtra("searchOn", "ward");
-                            startActivity(i);
-                        });
+//                        searchDialog("ward", keyword->{
+//                            Intent i = new Intent(ListActivity.this, SearchActivity.class);
+//                            i.putExtra("keyword", keyword);
+//                            i.putExtra("searchOn", "ward");
+//                            startActivity(i);
+//                        });
+                        startActivity(new Intent(ListActivity.this, SearchActivity.class));
                         break;
                     case 2:
                         Intent l = new Intent(ListActivity.this, PartSectionActivity.class);
@@ -149,12 +148,15 @@ public class ListActivity extends AppCompatActivity {
                         startActivity(m);
                         break;
                     case 7:
-                        searchDialog("village", keyword->{
-                            Intent i = new Intent(ListActivity.this, SearchActivity.class);
-                            i.putExtra("keyword", keyword);
-                            i.putExtra("searchOn", "polling_station");
-                            startActivity(i);
-                        });
+//                        searchDialog("lname", keyword->{
+//                            Intent i = new Intent(ListActivity.this, SearchActivity.class);
+//                            i.putExtra("keyword", keyword);
+//                            i.putExtra("searchOn", "lname");
+//                            startActivity(i);
+//                        });
+                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+                        mn.putExtra("name", "lname");
+                        startActivity(mn);
                         break;
                     case 8:
 //                        arrayListChoose.clear();
@@ -206,10 +208,15 @@ public class ListActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 13:
-
+                        Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);
+                        mno.putExtra("name", "cname");
+                        startActivity(mno);
                         break;
                     case 14:
-
+                        Intent ik = new Intent(ListActivity.this, SearchActivity.class);
+                        ik.putExtra("keyword", "Dead");
+                        ik.putExtra("searchOn", "status");
+                        startActivity(ik);
                         break;
                 }
             }

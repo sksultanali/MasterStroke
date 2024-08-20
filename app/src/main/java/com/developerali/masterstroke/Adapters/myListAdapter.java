@@ -1,11 +1,15 @@
 package com.developerali.masterstroke.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.developerali.masterstroke.R;
 
@@ -43,6 +47,12 @@ public class myListAdapter extends BaseAdapter {
 
         TextView textView = view1.findViewById(R.id.toolName);
         textView.setText(arrayList.get(i));
+
+        if (i % 2 == 0) {
+            view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+        } else {
+            view1.setBackgroundColor(ContextCompat.getColor(activity, R.color.darkGray));
+        }
 
         return view1;
     }

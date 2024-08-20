@@ -90,7 +90,7 @@ public class VoterDetails extends AppCompatActivity {
         }
 
         if (details != null){
-            binding.name.setText("Name : " + details.getName());
+            binding.name.setText("Name : " + details.getName() + " " + details.getLname());
             binding.voterId.setText("VoterId : " + details.getSl_no());
             binding.serialNo.setText("Sl No : "+ details.getVoter_id());
             binding.partGenderAge.setText("Part : " + details.getPartNo() + " | Gender : " + details.getSex() + " | Age : " + details.getAge());
@@ -121,11 +121,25 @@ public class VoterDetails extends AppCompatActivity {
             if (details.getLanguage() != null && !details.getLanguage().isEmpty()){
                 if (details.getLanguage().equalsIgnoreCase("Bengali")){
                     binding.bangla.setChecked(true);
-                }else {
+                }else if (details.getLanguage().equalsIgnoreCase("Hindi")){
                     binding.hindi.setChecked(true);
+                }else {
+                    binding.none.setChecked(true);
                 }
             }else {
                 binding.none.setChecked(true);
+            }
+
+            if (details.getStatus() != null && !details.getStatus().isEmpty()){
+                if (details.getStatus().equalsIgnoreCase("Relocated")){
+                    binding.relocated.setChecked(true);
+                } else if (details.getStatus().equalsIgnoreCase("Dead")) {
+                    binding.dead.setChecked(true);
+                }else {
+                    binding.present.setChecked(true);
+                }
+            }else {
+                binding.present.setChecked(true);
             }
 
             if (details.getNote() != null){
@@ -138,10 +152,20 @@ public class VoterDetails extends AppCompatActivity {
         }
 
         binding.slip.setOnClickListener(v->{
-            shareDialog();
+            if (mobileReturn(details) != null){
+                shareDialog(mobileReturn(details));
+            }else {
+                Helper.showCustomMessage(VoterDetails.this, "Error 405",
+                        "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
+            }
         });
         binding.share.setOnClickListener(v->{
-            shareDialog();
+            if (mobileReturn(details) != null){
+                shareDialog(mobileReturn(details));
+            }else {
+                Helper.showCustomMessage(VoterDetails.this, "Error 405",
+                        "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
+            }
         });
 
         ArrayList<String> parties = Helper.getPartyList(VoterDetails.this);
@@ -172,6 +196,22 @@ public class VoterDetails extends AppCompatActivity {
                 } else {
                     note = " _updated language no by " + Helper.NAME;
                     updateData(details.getConPhoneId(), "language", "", note);
+                }
+            }
+        });
+
+        binding.radioGroupP.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (radioGroup.getCheckedRadioButtonId() == R.id.present){
+                    note = " _updated relocated no by " + Helper.NAME;
+                    updateData(details.getConPhoneId(), "status", "Present", note);
+                } else if (radioGroup.getCheckedRadioButtonId() == R.id.relocated) {
+                    note = " _updated relocated no by " + Helper.NAME;
+                    updateData(details.getConPhoneId(), "status", "Relocated", note);
+                } else {
+                    note = " _updated relocated no by " + Helper.NAME;
+                    updateData(details.getConPhoneId(), "status", "Dead", note);
                 }
             }
         });
@@ -312,61 +352,69 @@ public class VoterDetails extends AppCompatActivity {
     }
 
 
-    public void shareDialog(){
+    public void shareDialog(String phoneNumber){
         DialogShareSlipBinding dialogBinding = DialogShareSlipBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogBinding.getRoot());
         // Create and show the dialog
         AlertDialog dialog = builder.create();
 
+        dialogBinding.whatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.businessWhatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp.w4b");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.sms.setOnClickListener(v -> {
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse("sms:" + phoneNumber));
+            sendIntent.putExtra("sms_body", slipText());
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.gmail.setOnClickListener(v->{
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.setType("message/rfc822");
+            sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
+            try {
+                startActivity(Intent.createChooser(sendIntent, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 //        dialogBinding.whatsapp.setOnClickListener(v->{
-//            Intent sendIntent = new Intent();
-//            sendIntent.setAction(Intent.ACTION_SEND);
-//            sendIntent.setPackage("com.whatsapp");
-//            sendIntent.setType("text/plain");
-//            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
-//            startActivity(sendIntent);
+//            dialogBinding.otherShare.performClick();
 //        });
-//
 //        dialogBinding.businessWhatsapp.setOnClickListener(v->{
-//            Intent sendIntent = new Intent();
-//            sendIntent.setAction(Intent.ACTION_SEND);
-//            sendIntent.setPackage("com.whatsapp.w4b");
-//            sendIntent.setType("text/plain");
-//            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
-//            startActivity(sendIntent);
-//        });
-//        dialogBinding.sms.setOnClickListener(v->{
-//            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-//            sendIntent.setType("vnd.android-dir/mms-sms");
-//            sendIntent.putExtra("sms_body", slipText());
-//            startActivity(sendIntent);
+//            dialogBinding.otherShare.performClick();
 //        });
 //        dialogBinding.gmail.setOnClickListener(v->{
-//            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-//            sendIntent.setType("message/rfc822");
-//            sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-//            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
-//            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
-//            try {
-//                startActivity(Intent.createChooser(sendIntent, "Send mail..."));
-//            } catch (android.content.ActivityNotFoundException ex) {
-//                Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-//            }
+//            dialogBinding.otherShare.performClick();
+//        });
+//        dialogBinding.sms.setOnClickListener(v->{
+//            dialogBinding.otherShare.performClick();
 //        });
 
-        dialogBinding.whatsapp.setOnClickListener(v->{
-            dialogBinding.otherShare.performClick();
-        });
-        dialogBinding.businessWhatsapp.setOnClickListener(v->{
-            dialogBinding.otherShare.performClick();
-        });
-        dialogBinding.gmail.setOnClickListener(v->{
-            dialogBinding.otherShare.performClick();
-        });
-        dialogBinding.sms.setOnClickListener(v->{
-            dialogBinding.otherShare.performClick();
-        });
+
         dialogBinding.otherShare.setOnClickListener(v->{
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
@@ -414,6 +462,19 @@ public class VoterDetails extends AppCompatActivity {
             setUpCallButton(newMobile);
         } else {
             binding.call.setVisibility(View.GONE);
+        }
+    }
+
+    public String mobileReturn(PhoneAddressModel.Item details){
+        String mobile = details.getMobile();
+        String newMobile = details.getNew_mobile();
+
+        if (mobile != null && mobile.length() > 9) {
+            return mobile;
+        } else if (newMobile != null && newMobile.length() > 9) {
+            return newMobile;
+        } else {
+            return null;
         }
     }
 
