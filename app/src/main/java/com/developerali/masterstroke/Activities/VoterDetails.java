@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -266,6 +267,10 @@ public class VoterDetails extends AppCompatActivity {
         });
 
 
+
+
+
+
     }
 
     public void updateData(String con_phone_id, String fieldName, String value, String note){
@@ -332,9 +337,9 @@ public class VoterDetails extends AppCompatActivity {
         DialogListSearchBinding dialogBinding = DialogListSearchBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogBinding.getRoot());
+
         // Create and show the dialog
         AlertDialog dialog = builder.create();
-
         dialogBinding.searchOn.setText(searchOn);
 
         myListAdapter adapter = new myListAdapter(VoterDetails.this, arrayListChoose);
@@ -401,20 +406,6 @@ public class VoterDetails extends AppCompatActivity {
             }
         });
 
-//        dialogBinding.whatsapp.setOnClickListener(v->{
-//            dialogBinding.otherShare.performClick();
-//        });
-//        dialogBinding.businessWhatsapp.setOnClickListener(v->{
-//            dialogBinding.otherShare.performClick();
-//        });
-//        dialogBinding.gmail.setOnClickListener(v->{
-//            dialogBinding.otherShare.performClick();
-//        });
-//        dialogBinding.sms.setOnClickListener(v->{
-//            dialogBinding.otherShare.performClick();
-//        });
-
-
         dialogBinding.otherShare.setOnClickListener(v->{
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
@@ -447,7 +438,9 @@ public class VoterDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.childMenu){
-            Toast.makeText(this, "api not found...!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(VoterDetails.this, ChildOrNewVoter.class);
+            i.putExtra("details", details);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

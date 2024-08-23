@@ -103,6 +103,12 @@ public class PhoneAddressModel {
         @SerializedName("intereset_party")
         private String intereset_party;
 
+        public Boolean isSelected = false;
+
+        public Item() {
+            this.isSelected = false; // Initialize to false in the default constructor
+        }
+
         public String getConPhoneId() {
             return conPhoneId;
         }
@@ -320,6 +326,7 @@ public class PhoneAddressModel {
             intereset_party = in.readString();
             status = in.readString();
             lname = in.readString();
+            isSelected = in.readByte() != 0; // Handle boolean conversion
         }
 
         public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -365,6 +372,8 @@ public class PhoneAddressModel {
             parcel.writeString(intereset_party);
             parcel.writeString(status);
             parcel.writeString(lname);
+            parcel.writeByte((byte) (isSelected ? 1 : 0)); // Handle boolean conversion
         }
     }
+
 }

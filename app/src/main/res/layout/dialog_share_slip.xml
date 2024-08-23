@@ -103,6 +103,7 @@
             android:textSize="@dimen/_12font_mdp"/>
     </LinearLayout>
     <View
+        android:id="@+id/gmailViewLine"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1mdp"
         android:layout_marginTop="@dimen/_6mdp"

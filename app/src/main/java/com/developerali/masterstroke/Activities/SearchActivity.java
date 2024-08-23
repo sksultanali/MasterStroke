@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -39,8 +41,10 @@ import com.developerali.masterstroke.ApiService;
 import com.developerali.masterstroke.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
+import com.developerali.masterstroke.SelectionListner;
 import com.developerali.masterstroke.databinding.ActivitySearchBinding;
 import com.developerali.masterstroke.databinding.DialogShareSlipBinding;
+import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 
 import java.util.ArrayList;
 
@@ -48,7 +52,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SelectionListner {
     ActivitySearchBinding binding;
     PhoneAddressModel apiResponse;
     ArrayList<String> arrayList = new ArrayList<>();
@@ -174,7 +178,7 @@ public class SearchActivity extends AppCompatActivity {
                 String txt = binding.pageText.getText().toString();
                 if (!txt.isEmpty()){
                     int page = Integer.parseInt(txt);
-                    if ((page-1) == currentPage){
+                    if (page == currentPage){
                         binding.goPage.setVisibility(View.GONE);
                     }else {
                         binding.goPage.setVisibility(View.VISIBLE);
@@ -183,10 +187,106 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        binding.shareSlip.setOnClickListener(v->{
+            editDialog();
+        });
+
 
         setupRecyclerView();
     }
 
+    private void editDialog() {
+        DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+
+        dialogBinding.textInputL.setInputType(InputType.TYPE_CLASS_PHONE);
+        dialogBinding.btn.setText("Share slip");
+        dialogBinding.btn.setOnClickListener(v->{
+            String text = dialogBinding.textInputL.getText().toString();
+            if (text.isEmpty()){
+                dialogBinding.textInputL.setError("*");
+            }else {
+                ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int ij = 0; ij < items.size(); ij++){
+                    if (ij == 0){
+                        stringBuilder.append((ij+1)+".\n").append(Helper.slipText(items.get(ij)));
+                    }else {
+                        stringBuilder.append("\n\n\n").append((ij+1)+".\n").append(Helper.slipText(items.get(ij)));
+                    }
+                }
+                //Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+                shareDialog(text, stringBuilder.toString());
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void shareDialog(String phoneNumber, String slipText){
+        DialogShareSlipBinding dialogBinding = DialogShareSlipBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+
+        dialogBinding.whatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.businessWhatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp.w4b");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.sms.setOnClickListener(v -> {
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse("sms:" + phoneNumber));
+            sendIntent.putExtra("sms_body", slipText);
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.gmail.setVisibility(View.GONE);
+        dialogBinding.gmailViewLine.setVisibility(View.GONE);
+        dialogBinding.gmail.setOnClickListener(v->{
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.setType("message/rfc822");
+            sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            try {
+                startActivity(Intent.createChooser(sendIntent, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialogBinding.otherShare.setOnClickListener(v->{
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
+        });
+
+        dialog.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,7 +354,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void getSearchVoters(int nextToken, String keyword, String field) {
+    void getSearchVoters(int nextToken, String keyword, String field) {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.loadMore.setVisibility(View.GONE);
         normalNextPage = false;
@@ -288,7 +388,7 @@ public class SearchActivity extends AppCompatActivity {
                         Toast.makeText(SearchActivity.this, "not found", Toast.LENGTH_SHORT).show();
                     }else {
                         if (adapter == null) {
-                            adapter = new VoterAdapter(SearchActivity.this, apiResponse.getItem());
+                            adapter = new VoterAdapter(SearchActivity.this, apiResponse.getItem(), SearchActivity.this);
                             binding.recView.setAdapter(adapter);
                         } else {
                             adapter.addItems(apiResponse.getItem()); // Modify your adapter to support adding new items
@@ -329,7 +429,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    private void getDetails(int nextToken) {
+    void getDetails(int nextToken) {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.loadMore.setVisibility(View.GONE);
         normalNextPage = true;
@@ -351,7 +451,7 @@ public class SearchActivity extends AppCompatActivity {
                         Toast.makeText(SearchActivity.this, "not found", Toast.LENGTH_SHORT).show();
                     }else {
                         if (adapter == null) {
-                            adapter = new VoterAdapter(SearchActivity.this, apiResponse.getItem());
+                            adapter = new VoterAdapter(SearchActivity.this, apiResponse.getItem(), SearchActivity.this);
                             binding.recView.setAdapter(adapter);
                         } else {
                             adapter.addItems(apiResponse.getItem()); // Modify your adapter to support adding new items
@@ -394,5 +494,18 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return super.onSupportNavigateUp();
+    }
+
+
+    @Override
+    public void onShowAction(Boolean isSelected) {
+        if (isSelected){
+            binding.shareSlip.setVisibility(View.VISIBLE);
+            binding.selectedNo.setVisibility(View.VISIBLE);
+            binding.selectedNo.setText(adapter.getSelectedRows().size() + " voters selected");
+        }else {
+            binding.shareSlip.setVisibility(View.GONE);
+            binding.selectedNo.setVisibility(View.GONE);
+        }
     }
 }

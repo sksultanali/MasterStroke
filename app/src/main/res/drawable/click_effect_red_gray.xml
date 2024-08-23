@@ -4,5 +4,5 @@
         android:state_pressed="true"
         android:drawable="@drawable/bg_dark_gray_corner8"/>
     <item
-        android:drawable="@drawable/bg_purple_corner_8"/>
+        android:drawable="@drawable/bg_orange_corners_round"/>
 </selector>

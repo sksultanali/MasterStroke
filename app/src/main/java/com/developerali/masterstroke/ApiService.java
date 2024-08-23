@@ -6,8 +6,10 @@ import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
+import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -91,6 +93,35 @@ public interface ApiService {
             @Query("booth_report_id") int booth_report_id,
             @Query("fieldName") int fieldName,
             @Query("newValue") int newValue
+    );
+
+    @GET("insert-student-new-voter")  // The endpoint
+    Call<UpdateModel> insertWardWiseChild(
+            @Query("token") String token,
+            @Query("con_phone_id") String conPhoneId,
+            @Query("constitution_id") String constitutionId,
+            @Query("part_no") String partNo,
+            @Query("section") String section,
+            @Query("name") String name,
+            @Query("address") String address,
+            @Query("religion") String religion,
+            @Query("polling_station") String pollingStation,
+            @Query("sex") String sex,
+            @Query("house") String house,
+            @Query("ward") String ward,
+            @Query("language") String language,
+            @Query("lname") String lname,
+            @Query("dob") String dob,
+            @Query("mobile") String mobile,
+            @Query("type") String type,
+            @Query("class") String sClass
+    );
+
+    @GET("getStudentNewVoter")
+    Call<UpdateModel> getStudentNewVoter(
+            @Query("token") String token,
+            @Query("con_phone_id") String conPhoneId,
+            @Query("type") String type
     );
 
 }

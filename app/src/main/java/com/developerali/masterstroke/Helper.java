@@ -370,6 +370,16 @@ public class Helper {
         editor.apply();
     }
 
+    public static String slipText(PhoneAddressModel.Item details){
+        String text = "Name : " + details.getName() + " " + details.getLname() + "\n" +
+                        "Sl No : " + details.getSl_no() + "\n" +
+                        "Voter Id : " + details.getVoter_id() + "\n" +
+                        "Booth Name : " + details.getPollingStation() + "\n" +
+                        "Section : " + details.getSection() + "\n" +
+                        "Part : " + details.getPartNo() + " Gender : "+ details.getSex() +" Age : " + details.getAge()+ "\n";
+        return text;
+    }
+
     @SuppressLint("ResourceAsColor")
     public static void showCustomMessage(Activity activity, String title, String message) {
         CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(activity));
