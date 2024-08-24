@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/backLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_10mdp"
+    android:layout_margin="@dimen/_5mdp"
+    android:elevation="@dimen/_3mdp"
+    android:background="@drawable/bg_white_color_corner8">
+
+    <TextView
+        android:id="@+id/voterName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Voter Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/_12font_mdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/otherDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5mdp"
+        android:text="Above Person Address | Part - 1/222"
+        android:textColor="@color/greenDark"
+        android:textSize="@dimen/_11font_mdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voterName" />
+    <TextView
+        android:id="@+id/detailsMobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Above Person Address | Part - 1/222"
+        android:textColor="@color/blue_purple"
+        android:textSize="@dimen/_11font_mdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherDetails" />
+    <TextView
+        android:id="@+id/detailsClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Above Person Address | Part - 1/222"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11font_mdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailsMobile" />
+
+    <TextView
+        android:id="@+id/voterType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_light_orange"
+        android:paddingStart="@dimen/_5mdp"
+        android:paddingEnd="@dimen/_5mdp"
+        android:text="Type"
+        android:textColor="@color/orange"
+        android:textSize="@dimen/_12font_mdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

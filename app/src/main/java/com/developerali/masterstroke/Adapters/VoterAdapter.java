@@ -46,7 +46,7 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
         details.isSelected = false;
         defaultColors(holder, details, position);
 
-        holder.binding.voterName.setText(details.getName() + " " + details.getLname());
+        holder.binding.voterName.setText(details.getName());
         String someString = details.getAddress();
 
         if (someString.length() >= 22) {

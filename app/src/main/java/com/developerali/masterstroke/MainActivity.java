@@ -27,6 +27,7 @@ import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
+import com.developerali.masterstroke.Activities.PartiesActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
 import com.developerali.masterstroke.Models.ToolsModel;
@@ -82,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ArrayList<String> arrayList = Helper.getPartyList(MainActivity.this);
+        if (arrayList == null){
+            arrayList = new ArrayList<>();
+            arrayList.add("Our Party");
+            arrayList.add("Opposition Party");
+            arrayList.add("Doubtful");
+            Helper.savePartyList(MainActivity.this, arrayList);
+        }
 
 
 

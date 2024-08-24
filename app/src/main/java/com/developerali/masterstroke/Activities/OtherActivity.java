@@ -65,10 +65,14 @@ public class OtherActivity extends AppCompatActivity {
                         startActivity(lj);
                         break;
                     case 3:
-                        //startActivity(new Intent(MainActivity.this, DonationActivity.class));
+                        Intent lij = new Intent(OtherActivity.this, ChildOrNewVoter.class);
+                        lij.putExtra("type", "New Voter");
+                        startActivity(lij);
                         break;
                     case 4:
-                        //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        Intent lik = new Intent(OtherActivity.this, ChildOrNewVoter.class);
+                        lik.putExtra("type", "Student");
+                        startActivity(lik);
                         break;
                     case 5:
                         Intent ik = new Intent(OtherActivity.this, SearchActivity.class);

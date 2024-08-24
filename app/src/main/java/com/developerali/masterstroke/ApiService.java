@@ -6,6 +6,7 @@ import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
+import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
 import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 
 import retrofit2.Call;
@@ -118,9 +119,15 @@ public interface ApiService {
     );
 
     @GET("getStudentNewVoter")
-    Call<UpdateModel> getStudentNewVoter(
+    Call<WardStudentVoterModel> getStudentNewVoter(
             @Query("token") String token,
             @Query("con_phone_id") String conPhoneId,
+            @Query("type") String type
+    );
+
+    @GET("getAllStudentNewVoter")
+    Call<WardStudentVoterModel> getAllStudentNewVoter(
+            @Query("token") String token,
             @Query("type") String type
     );
 

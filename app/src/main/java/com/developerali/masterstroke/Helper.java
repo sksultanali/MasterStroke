@@ -137,6 +137,25 @@ public class Helper {
         return simpleDateFormat.format(date);
     }
 
+    public static String wishBirthday(String lan, String name){
+        if (lan.equalsIgnoreCase("hi")){
+            return "जन्मदिन मुबारक हो, " + name + " 🎉 नए अनुभवों, ढेर सारी मुस्कान और सपनों को साकार करने वाले साल की शुभकामनाएं। आज और हमेशा आपको सेलिब्रेट कर रहे हैं! 🎂✨";
+        }else if (lan.equalsIgnoreCase("bn")){
+            return "শুভ জন্মদিন, " + name + " 🎉 নতুন অভিজ্ঞতা, অজস্র হাসি, আর স্বপ্ন পূরণের এক অসাধারণ বছর হোক তোমার জন্য। আজ এবং সবসময় তোমাকে উদযাপন করছি! 🎂✨";
+        }else {
+            return "Happy Birthday, " + name + " 🎉 Wishing you a year full of new adventures, endless smiles, and dreams that turn into reality. Here's to celebrating you today and always! 🎂✨";
+        }
+    }
+
+    public static String wishAnniversary(String lan, String name) {
+        if (lan.equalsIgnoreCase("hi")) {
+            return "शादी की सालगिरह मुबारक हो, " + name + " 🎉 प्यार, खुशियों और नए यादगार पलों से भरे साल की शुभकामनाएं। आपका रिश्ता सदा मजबूत और खूबसूरत बना रहे! 💍✨";
+        } else if (lan.equalsIgnoreCase("bn")) {
+            return "বিবাহবার্ষিকীর শুভেচ্ছা, " + name + " 🎉 ভালোবাসা, আনন্দ এবং নতুন স্মৃতি দিয়ে ভরপুর একটি বছর কাটুক। তোমাদের সম্পর্ক সবসময় মজবুত ও সুন্দর থাকুক! 💍✨";
+        } else {
+            return "Happy Anniversary, " + name + " 🎉 Wishing you a year filled with love, joy, and beautiful new memories. May your bond continue to grow stronger and more beautiful! 💍✨";
+        }
+    }
 
     public static String getDateKey(Long date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");

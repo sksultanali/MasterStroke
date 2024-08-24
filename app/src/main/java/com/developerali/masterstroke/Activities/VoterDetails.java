@@ -91,7 +91,7 @@ public class VoterDetails extends AppCompatActivity {
         }
 
         if (details != null){
-            binding.name.setText("Name : " + details.getName() + " " + details.getLname());
+            binding.name.setText("Name : " + details.getName());
             binding.voterId.setText("VoterId : " + details.getSl_no());
             binding.serialNo.setText("Sl No : "+ details.getVoter_id());
             binding.partGenderAge.setText("Part : " + details.getPartNo() + " | Gender : " + details.getSex() + " | Age : " + details.getAge());
@@ -147,6 +147,18 @@ public class VoterDetails extends AppCompatActivity {
                 note = details.getNote();
             }else {
                 note = "";
+            }
+
+            if (details.getDob() != null && !details.getDob().isEmpty() && details.getDob().equalsIgnoreCase(Helper.getToday())){
+                binding.wishBirthday.setVisibility(View.VISIBLE);
+            }else {
+                binding.wishBirthday.setVisibility(View.GONE);
+            }
+
+            if (details.getDoa() != null && !details.getDoa().isEmpty() && details.getDoa().equalsIgnoreCase(Helper.getToday())){
+                binding.wishAnni.setVisibility(View.VISIBLE);
+            }else {
+                binding.wishAnni.setVisibility(View.GONE);
             }
 
             handleMobileNumbers(details);
@@ -266,6 +278,51 @@ public class VoterDetails extends AppCompatActivity {
             datePickerDialog.show();
         });
 
+        binding.wishBirthday.setOnClickListener(v->{
+            if (details.getMobile() != null && !details.getMobile().isEmpty()){
+                if (binding.hindi.isChecked()){
+                    wishDialog(details.getMobile(), Helper.wishAnniversary("hi", details.getName()));
+                }else if (binding.bangla.isChecked()){
+                    wishDialog(details.getMobile(), Helper.wishAnniversary("bn", details.getName()));
+                }else {
+                    wishDialog(details.getMobile(), Helper.wishAnniversary("en", details.getName()));
+                }
+            }else if (details.getNew_mobile() != null && !details.getNew_mobile().isEmpty()){
+                if (binding.hindi.isChecked()){
+                    wishDialog(details.getNew_mobile(), Helper.wishAnniversary("hi", details.getName()));
+                }else if (binding.bangla.isChecked()){
+                    wishDialog(details.getNew_mobile(), Helper.wishAnniversary("bn", details.getName()));
+                }else {
+                    wishDialog(details.getNew_mobile(), Helper.wishAnniversary("en", details.getName()));
+                }
+            }else {
+                Helper.showCustomMessage(VoterDetails.this, "Error 405",
+                        "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
+            }
+        });
+
+        binding.wishAnni.setOnClickListener(v->{
+            if (details.getMobile() != null && !details.getMobile().isEmpty()){
+                if (binding.hindi.isChecked()){
+                    wishDialog(details.getMobile(), Helper.wishBirthday("hi", details.getName()));
+                }else if (binding.bangla.isChecked()){
+                    wishDialog(details.getMobile(), Helper.wishBirthday("bn", details.getName()));
+                }else {
+                    wishDialog(details.getMobile(), Helper.wishBirthday("en", details.getName()));
+                }
+            }else if (details.getNew_mobile() != null && !details.getNew_mobile().isEmpty()){
+                if (binding.hindi.isChecked()){
+                    wishDialog(details.getNew_mobile(), Helper.wishBirthday("hi", details.getName()));
+                }else if (binding.bangla.isChecked()){
+                    wishDialog(details.getNew_mobile(), Helper.wishBirthday("bn", details.getName()));
+                }else {
+                    wishDialog(details.getNew_mobile(), Helper.wishBirthday("en", details.getName()));
+                }
+            }else {
+                Helper.showCustomMessage(VoterDetails.this, "Error 405",
+                        "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
+            }
+        });
 
 
 
@@ -351,6 +408,66 @@ public class VoterDetails extends AppCompatActivity {
                 dialog.dismiss();
                 callback.onResult(arrayListChoose.get(i));
             }
+        });
+
+        dialog.show();
+    }
+
+    public void wishDialog(String phoneNumber, String slipText){
+        DialogShareSlipBinding dialogBinding = DialogShareSlipBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+
+        dialogBinding.whatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.businessWhatsapp.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setPackage("com.whatsapp.w4b");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.sms.setOnClickListener(v -> {
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse("sms:" + phoneNumber));
+            sendIntent.putExtra("sms_body", slipText);
+            startActivity(sendIntent);
+        });
+
+        dialogBinding.gmail.setVisibility(View.GONE);
+        dialogBinding.gmailViewLine.setVisibility(View.GONE);
+        dialogBinding.gmail.setOnClickListener(v->{
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.setType("message/rfc822");
+            sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            try {
+                startActivity(Intent.createChooser(sendIntent, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialogBinding.otherShare.setOnClickListener(v->{
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
+            startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
         });
 
         dialog.show();
