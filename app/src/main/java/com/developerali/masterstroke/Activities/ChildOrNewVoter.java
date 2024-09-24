@@ -14,25 +14,18 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Adapters.ChildVotersAdapter;
-import com.developerali.masterstroke.Adapters.VoterAdapter;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
-import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 import com.developerali.masterstroke.ApiService;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.ActivityChildOrNewVoterBinding;
@@ -52,7 +45,7 @@ public class ChildOrNewVoter extends AppCompatActivity {
     String typeTxt;
     ArrayList<String> classes = new ArrayList<>();
     Calendar calendar;
-    String[] types = {"Student", "New Voter"};
+    String[] types = {"Student", "Upcoming Voter"};
     int nextPageToken, currentPage = 0;
     String searchOn, searchKeyword;
     boolean normalNextPage, counted;

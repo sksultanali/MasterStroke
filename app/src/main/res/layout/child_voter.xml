@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/backLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -9,14 +10,29 @@
     android:layout_margin="@dimen/_5mdp"
     android:elevation="@dimen/_3mdp"
     android:background="@drawable/bg_white_color_corner8">
+
     <TextView
         android:id="@+id/voterName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Voter Name"
         android:textColor="@color/black"
         android:textSize="@dimen/_12font_mdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/slNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Voter Name"/>
+        android:text="0"
+        android:visibility="gone"
+        android:textColor="@color/main_blue"
+        android:textSize="@dimen/_11font_mdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/otherDetails"
         android:layout_width="wrap_content"
@@ -24,5 +40,8 @@
         android:textSize="@dimen/_11font_mdp"
         android:textColor="@color/icon_color"
         android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/voterName"
         android:text="Above Person Address | Part - 1/222"/>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

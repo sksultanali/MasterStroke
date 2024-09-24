@@ -2,59 +2,48 @@ package com.developerali.masterstroke.Activities;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.developerali.masterstroke.Adapters.VoterAdapter;
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiService;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.ActivityVoterDetailsBinding;
-import com.developerali.masterstroke.databinding.BottomListsBinding;
 import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogShareSlipBinding;
-import com.developerali.masterstroke.databinding.DialogSurveyPredicationBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -68,6 +57,8 @@ public class VoterDetails extends AppCompatActivity {
     private static final int REQUEST_CALL_PERMISSION = 1;
     ProgressDialog progressDialog;
     String note;
+    int ageBack;
+    Animation blinkAnimation;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -92,17 +83,32 @@ public class VoterDetails extends AppCompatActivity {
 
         if (details != null){
             binding.name.setText("Name : " + details.getName());
-            binding.voterId.setText("VoterId : " + details.getSl_no());
-            binding.serialNo.setText("Sl No : "+ details.getVoter_id());
+            binding.serialNo.setText("Sl No : "+ details.getSl_no());
+            binding.voterId.setText("VoterId : " + details.getVoter_id());
             binding.partGenderAge.setText("Part : " + details.getPartNo() + " | Gender : " + details.getSex() + " | Age : " + details.getAge());
             binding.section.setText("Section : " + details.getSection());
             binding.houseNo.setText("House No : " + details.getHouse());
             binding.address.setText("Address : " + details.getAddress());
-            binding.boothName.setText("Booth Name : " + details.getPollingStation());
-            binding.oldPhone.setText("Old Mobile No : " + details.getMobile());
+            binding.boothName.setText("Booth : " + details.getPollingStation());
+            if (Helper.ADMIN_APPLICATION){
+                binding.oldPhone.setText("Old Mobile No : " + details.getMobile());
+            }else {
+                binding.oldPhone.setText("Old Mobile No : " + Helper.maskPhone(details.getMobile()));
+            }
+
+            if (details.getIntereset_party() == null || details.getIntereset_party().isEmpty()){
+                blinkAnimation = AnimationUtils.loadAnimation(this, R.anim.blink_animation);
+                binding.surveyBtn.startAnimation(blinkAnimation);
+            }
+
+            ageBack = Integer.parseInt(details.getAge());
 
             if (details.getNew_mobile() != null){
-                binding.phone.setText("New Mobile No : "+ details.getNew_mobile());
+                if (Helper.ADMIN_APPLICATION){
+                    binding.phone.setText("New Mobile No : "+ details.getNew_mobile());
+                }else {
+                    binding.phone.setText("New Mobile No : "+ Helper.maskPhone(details.getNew_mobile()));
+                }
             }else {
                 binding.phone.setText("New Mobile No : ");
             }
@@ -124,8 +130,12 @@ public class VoterDetails extends AppCompatActivity {
                     binding.bangla.setChecked(true);
                 }else if (details.getLanguage().equalsIgnoreCase("Hindi")){
                     binding.hindi.setChecked(true);
-                }else {
+                }else if (details.getLanguage().equalsIgnoreCase("Urdu")){
                     binding.none.setChecked(true);
+                }else {
+                    binding.bangla.setChecked(false);
+                    binding.hindi.setChecked(false);
+                    binding.none.setChecked(false);
                 }
             }else {
                 binding.none.setChecked(true);
@@ -161,7 +171,29 @@ public class VoterDetails extends AppCompatActivity {
                 binding.wishAnni.setVisibility(View.GONE);
             }
 
-            handleMobileNumbers(details);
+            if (details.getHof() != null && !details.getHof().isEmpty()){
+                if (details.getHof().equalsIgnoreCase("Yes")){
+                    binding.fYes.setChecked(true);
+                }else {
+                    binding.fNo.setChecked(true);
+                }
+            }else {
+                binding.fNo.setChecked(true);
+            }
+
+            if (details.getParty_worker() != null && !details.getParty_worker().isEmpty()){
+                if (details.getParty_worker().equalsIgnoreCase("Yes")){
+                    binding.wYes.setChecked(true);
+                }else {
+                    binding.wNo.setChecked(true);
+                }
+            }else {
+                binding.wNo.setChecked(true);
+            }
+
+            if (Helper.ADMIN_APPLICATION){
+                handleMobileNumbers(details);
+            }
         }
 
         binding.slip.setOnClickListener(v->{
@@ -189,27 +221,33 @@ public class VoterDetails extends AppCompatActivity {
                         "Party list is empty. Please add some parties before proceed");
             }else {
                 surveyDialog("Select from below parties", parties, keyword->{
-                    note = " _updated survey by " + Helper.NAME;
+                    note = " _updated survey by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "intereset_party", keyword, note);
+
+                    updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
+                    binding.surveyBtn.setAnimation(null);
                 });
             }
         });
         binding.editBtn.setOnClickListener(v->{
-            editDialog();
+            //editDialog();
+            Helper.printText(VoterDetails.this, slipText());
         });
         binding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (radioGroup.getCheckedRadioButtonId() == R.id.bangla){
-                    note = " _updated language no by " + Helper.NAME;
+                    note = " _updated language no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "language", "Bengali", note);
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.hindi) {
-                    note = " _updated language no by " + Helper.NAME;
+                    note = " _updated language no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "language", "Hindi", note);
                 } else {
-                    note = " _updated language no by " + Helper.NAME;
-                    updateData(details.getConPhoneId(), "language", "", note);
+                    note = " _updated language no by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "language", "Urdu", note);
                 }
+
+                updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
 
@@ -217,18 +255,46 @@ public class VoterDetails extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (radioGroup.getCheckedRadioButtonId() == R.id.present){
-                    note = " _updated relocated no by " + Helper.NAME;
+                    note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Present", note);
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.relocated) {
-                    note = " _updated relocated no by " + Helper.NAME;
+                    note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Relocated", note);
                 } else {
-                    note = " _updated relocated no by " + Helper.NAME;
+                    note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Dead", note);
                 }
+                updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
 
+        binding.radioGroupF.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (radioGroup.getCheckedRadioButtonId() == R.id.fYes){
+                    note = " _updated HOF by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "hof", "Yes", note);
+                } else if (radioGroup.getCheckedRadioButtonId() == R.id.fNo) {
+                    note = " _updated HOF by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "hof", "No", note);
+                }
+                updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
+            }
+        });
+
+        binding.radioGroupW.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                if (radioGroup.getCheckedRadioButtonId() == R.id.wYes){
+                    note = " _updated party worker by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "party_worker", "Yes", note);
+                } else if (radioGroup.getCheckedRadioButtonId() == R.id.wNo) {
+                    note = " _updated party worker by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "party_worker", "No", note);
+                }
+                updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
+            }
+        });
 
         binding.phone.setOnClickListener(v->{
             editDialog();
@@ -236,7 +302,7 @@ public class VoterDetails extends AppCompatActivity {
 
         binding.dob.setOnClickListener(v->{
             final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
+            int year = calendar.get(Calendar.YEAR) - ageBack;
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
@@ -248,8 +314,9 @@ public class VoterDetails extends AppCompatActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
                         String formattedDate = dateFormat.format(selectedDate.getTime());
                         String selectedDateText = "DOB : " + formattedDate;
-                        note = " _updated DOB by " + Helper.NAME;
+                        note = " _updated DOB by " + Helper.USER_NAME;
                         updateData(details.getConPhoneId(), "dob", formattedDate, note);
+                        updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
                         binding.dob.setText(selectedDateText);
                     },
                     year, month, day);
@@ -270,8 +337,9 @@ public class VoterDetails extends AppCompatActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
                         String formattedDate = dateFormat.format(selectedDate.getTime());
                         String selectedDateText = "DOA : " + formattedDate;
-                        note = " _updated DOA by " + Helper.NAME;
+                        note = " _updated DOA by " + Helper.USER_NAME;
                         updateData(details.getConPhoneId(), "doa", formattedDate, note);
+                        updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
                         binding.doa.setText(selectedDateText);
                     },
                     year, month, day);
@@ -380,7 +448,7 @@ public class VoterDetails extends AppCompatActivity {
             if (text.isEmpty()){
                 dialogBinding.textInputL.setError("*");
             }else {
-                note = " _updated phone no by " + Helper.NAME;
+                note = " _updated phone no by " + Helper.USER_NAME;
                 updateData(details.getConPhoneId(), "new_mobile", text, note);
                 binding.phone.setText("New Mobile No : " + text);
                 dialog.dismiss();
@@ -399,7 +467,7 @@ public class VoterDetails extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialogBinding.searchOn.setText(searchOn);
 
-        myListAdapter adapter = new myListAdapter(VoterDetails.this, arrayListChoose);
+        myListAdapter adapter = new myListAdapter(VoterDetails.this, arrayListChoose, false);
         dialogBinding.chooseList.setAdapter(adapter);
 
         dialogBinding.chooseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -421,23 +489,26 @@ public class VoterDetails extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialogBinding.whatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-            startActivity(sendIntent);
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText);
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-
         dialogBinding.businessWhatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp.w4b");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-            startActivity(sendIntent);
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText);
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         dialogBinding.sms.setOnClickListener(v -> {
@@ -482,25 +553,26 @@ public class VoterDetails extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialogBinding.whatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-
-            startActivity(sendIntent);
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText());
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-
         dialogBinding.businessWhatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp.w4b");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-
-            startActivity(sendIntent);
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText());
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         dialogBinding.sms.setOnClickListener(v -> {
@@ -508,6 +580,7 @@ public class VoterDetails extends AppCompatActivity {
             sendIntent.setData(Uri.parse("sms:" + phoneNumber));
             sendIntent.putExtra("sms_body", slipText());
             startActivity(sendIntent);
+            dialog.dismiss();
         });
 
         dialogBinding.gmail.setOnClickListener(v->{
@@ -518,6 +591,7 @@ public class VoterDetails extends AppCompatActivity {
             sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
             try {
                 startActivity(Intent.createChooser(sendIntent, "Send mail..."));
+                dialog.dismiss();
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
             }
@@ -529,6 +603,7 @@ public class VoterDetails extends AppCompatActivity {
             sendIntent.setType("text/plain");
             sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
             startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
+            dialog.dismiss();
         });
 
         dialog.show();

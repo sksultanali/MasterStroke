@@ -1,44 +1,59 @@
-package com.developerali.masterstroke;
+package com.developerali.masterstroke.Helpers;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.pdf.PdfDocument;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
+import android.print.PageRange;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintDocumentInfo;
+import android.print.PrintManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
-import com.developerali.masterstroke.Activities.PartSectionActivity;
-import com.developerali.masterstroke.Activities.SearchActivity;
-import com.developerali.masterstroke.Adapters.VoterAdapter;
+import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
+import com.developerali.masterstroke.ApiService;
+import com.developerali.masterstroke.R;
+import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.CustomDialogBinding;
+import com.developerali.masterstroke.databinding.DialogListSearchBinding;
+import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +64,20 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.graphics.pdf.PdfDocument;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.ParcelFileDescriptor;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.print.pdf.PrintedPdfDocument;
+import android.app.Activity;
+import android.content.Context;
+import android.os.CancellationSignal;
+import android.print.PageRange;
+import android.print.PrintDocumentInfo;
 
 public class Helper {
 
@@ -61,11 +90,11 @@ public class Helper {
     public static String WARD;
     public static String SPLASH_LINK;
     public static String CANDIDATE;
-    public static boolean DELETE;
-    public static int PresentDays;
-    public static boolean EDIT;
-    public static boolean MANAGER;
-    public static boolean EMPLOYEE;
+    public static String LANGUAGE;
+    public static boolean RemoveMarked = false;
+    public static boolean MARKING_ENABLE;
+    public static boolean ADMIN_APPLICATION;
+
     public static String formatDate (Long date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd LLL yyyy");
         return simpleDateFormat.format(date);
@@ -94,6 +123,10 @@ public class Helper {
         return String.format("%.2f%%", percentage);
     }
 
+    public static String maskPhone(String Phone){
+        return Phone.substring(0,1) + "XXXXXX" + Phone.substring((Phone.length()-4),Phone.length());
+    }
+
     public static String convertDate(String dateString) {
         // Define the input format
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
@@ -114,6 +147,69 @@ public class Helper {
 
         return formattedDate;
     }
+
+    public static void searchDialog(Activity activity, String searchOn,ArrayList<String> arrayListChoose, DialogCallback callback) {
+        DialogListSearchBinding dialogBinding = DialogListSearchBinding.inflate(activity.getLayoutInflater());
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+
+        dialogBinding.searchOn.setText(searchOn);
+
+        myListAdapter adapter = new myListAdapter(activity, arrayListChoose, false);
+        dialogBinding.chooseList.setAdapter(adapter);
+
+        dialogBinding.chooseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                dialog.dismiss();
+                callback.onResult(arrayListChoose.get(i));
+            }
+        });
+
+
+
+        dialog.show();
+    }
+
+    public static double calculatePercentage(String obtained1, String total1) {
+        // Check to avoid division by zero
+        double obtained = Double.parseDouble(obtained1);
+        double total = Double.parseDouble(total1);
+        if (total == 0) {
+            return 0;
+        }
+        return (int) Math.round((obtained / total) * 100);
+    }
+
+    public static void searchDialog(Activity activity, String searchOn, DialogCallback callback) {
+        DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(activity.getLayoutInflater());
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(activity);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+
+        dialogBinding.inputHint.setHint(searchOn);
+        dialogBinding.btn.setText("Search");
+
+        dialogBinding.btn.setOnClickListener(v -> {
+            String text = dialogBinding.textInputL.getText().toString();
+            if (text.isEmpty()) {
+                dialogBinding.textInputL.setError("*");
+            } else {
+                dialog.dismiss();
+                callback.onResult(text);
+            }
+        });
+
+        dialog.show();
+    }
+
+    public interface DialogCallback {
+        void onResult(String keyword);
+    }
+
     public static String formatDateByMonth(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM, yyyy");
         return dateFormat.format(date);
@@ -132,6 +228,63 @@ public class Helper {
         String date = simpleDateFormat.format(new Date());
         return date;
     }
+
+    public static double getSimilarityPercentage(String str1, String str2) {
+        // Calculate the Levenshtein distance
+        int distance = calculateLevenshteinDistance(str1, str2);
+
+        // Get the maximum possible length between the two strings
+        int maxLength = Math.max(str1.length(), str2.length());
+
+        // If both strings are empty, they are 100% similar
+        if (maxLength == 0) {
+            return 100.0;
+        }
+
+        // Calculate the similarity percentage
+        double similarity = ((double)(maxLength - distance) / maxLength) * 100;
+
+        return similarity;
+    }
+
+    // Levenshtein Distance algorithm implementation
+    private static int calculateLevenshteinDistance(String str1, String str2) {
+        int len1 = str1.length();
+        int len2 = str2.length();
+
+        // Create a 2D array to store distances
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        // Initialize the first row and column
+        for (int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+
+        // Fill the rest of the dp array
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                int cost = (str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1;
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, // Deletion
+                                dp[i][j - 1] + 1), // Insertion
+                        dp[i - 1][j - 1] + cost); // Substitution
+            }
+        }
+
+        // The final value in the dp array is the Levenshtein distance
+        return dp[len1][len2];
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getTomorrowDate() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        return tomorrow.format(formatter);
+    }
+
     public static String getDateKey(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");
         return simpleDateFormat.format(date);
@@ -390,15 +543,97 @@ public class Helper {
     }
 
     public static String slipText(PhoneAddressModel.Item details){
-        String text = "Name : " + details.getName() + " " + details.getLname() + "\n" +
+        String text = "Name : " + details.getName() + "\n" +
                         "Sl No : " + details.getSl_no() + "\n" +
                         "Voter Id : " + details.getVoter_id() + "\n" +
-                        "Booth Name : " + details.getPollingStation() + "\n" +
+                        "Booth : " + details.getPollingStation() + "\n" +
                         "Section : " + details.getSection() + "\n" +
                         "Part : " + details.getPartNo() + " Gender : "+ details.getSex() +" Age : " + details.getAge()+ "\n";
         return text;
     }
 
+
+    public static String phoneNoWithCountryCode(String phone){
+        if (phone.length() == 10){
+            return "+91"+phone;
+        } else if (phone.length() == 12) {
+            return "+"+phone;
+        }else {
+            return phone;
+        }
+    }
+
+    public static void printText(Activity activity, String textToPrint) {
+        // Get the PrintManager system service
+        PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
+
+        // Name for the print job
+        String jobName = activity.getString(R.string.app_name) + " Document";
+
+        // Create a PrintDocumentAdapter with the text content
+        PrintDocumentAdapter printAdapter = new PrintDocumentAdapter() {
+            PrintedPdfDocument pdfDocument;
+
+            @Override
+            public void onLayout(PrintAttributes oldAttributes, PrintAttributes newAttributes,
+                                 CancellationSignal cancellationSignal,
+                                 LayoutResultCallback callback, android.os.Bundle extras) {
+                // Create a new PdfDocument with the requested attributes
+                pdfDocument = new PrintedPdfDocument(activity, newAttributes);
+
+                if (cancellationSignal.isCanceled()) {
+                    callback.onLayoutCancelled();
+                    return;
+                }
+
+                // Pass the layout result
+                PrintAttributes.MediaSize pageSize = newAttributes.getMediaSize();
+                callback.onLayoutFinished(
+                        new PrintDocumentInfo.Builder(jobName)
+                                .setPageCount(1) // Assuming 1 page
+                                .build(),
+                        true);
+            }
+
+            @Override
+            public void onWrite(PageRange[] pageRanges, ParcelFileDescriptor destination,
+                                CancellationSignal cancellationSignal, WriteResultCallback callback) {
+                // Start a page
+                PdfDocument.Page page = pdfDocument.startPage(0);
+
+                // Draw text content on the page
+                if (page != null) {
+                    Canvas canvas = page.getCanvas();
+                    Paint paint = new Paint();
+                    paint.setColor(android.graphics.Color.BLACK);
+                    paint.setTextSize(12);
+
+                    // Define the bounds for the text to be drawn
+                    int xPos = 10;
+                    int yPos = 25;
+
+                    // Draw the text on the canvas
+                    canvas.drawText(textToPrint, xPos, yPos, paint);
+
+                    // Finish the page
+                    pdfDocument.finishPage(page);
+
+                    try {
+                        // Write the document content to the file descriptor
+                        pdfDocument.writeTo(new FileOutputStream(destination.getFileDescriptor()));
+                        callback.onWriteFinished(new PageRange[]{PageRange.ALL_PAGES});
+                    } catch (IOException e) {
+                        callback.onWriteFailed(e.toString());
+                    } finally {
+                        pdfDocument.close();
+                    }
+                }
+            }
+        };
+
+        // Start a print job
+        printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
+    }
     @SuppressLint("ResourceAsColor")
     public static void showCustomMessage(Activity activity, String title, String message) {
         CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(activity));

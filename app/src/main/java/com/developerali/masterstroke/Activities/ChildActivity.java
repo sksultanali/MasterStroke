@@ -6,36 +6,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
-import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 import com.developerali.masterstroke.ApiService;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.ActivityChildBinding;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +37,7 @@ public class ChildActivity extends AppCompatActivity {
     String type, childClass, genderTxt, typeTxt;
     ArrayList<String> classes = new ArrayList<>();
     String[] gender = {"Male", "Female", "Other"};
-    String[] types = {"Student", "New Voter"};
+    String[] types = {"Student", "Upcoming Voter"};
     Calendar calendar;
 
     @Override
@@ -75,11 +64,12 @@ public class ChildActivity extends AppCompatActivity {
         }
 
         classes.clear();
-        classes.add("8");
-        classes.add("9");
-        classes.add("10");
-        classes.add("11");
-        classes.add("12");
+        int year = calendar.getWeekYear();
+        //year -= 20;
+        for (int i = 0; i <= 50; i++){
+            classes.add(String.valueOf(year));
+            year++;
+        }
 
         ArrayAdapter<String> obj2 = new ArrayAdapter<String>(ChildActivity.this, R.layout.layout_spinner_item, classes);
         binding.spinnerSem.setAdapter(obj2);

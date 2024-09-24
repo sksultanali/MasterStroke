@@ -12,6 +12,7 @@
         android:id="@+id/inputHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:hint="Phone Number">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -20,6 +21,34 @@
             android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:id="@+id/minMax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/minValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:layout_marginEnd="@dimen/_5mdp"
+            android:textSize="@dimen/_14font_mdp"
+            android:hint="Min"/>
+        <EditText
+            android:id="@+id/maxValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_5mdp"
+            android:gravity="center"
+            android:textSize="@dimen/_14font_mdp"
+            android:hint="Max"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn"
         android:layout_width="match_parent"

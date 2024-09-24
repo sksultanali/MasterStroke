@@ -102,6 +102,10 @@ public class PhoneAddressModel {
         private String note;
         @SerializedName("intereset_party")
         private String intereset_party;
+        @SerializedName("hof")
+        private String hof;
+        @SerializedName("party_worker")
+        private String party_worker;
 
         public Boolean isSelected = false;
 
@@ -112,6 +116,7 @@ public class PhoneAddressModel {
         public String getConPhoneId() {
             return conPhoneId;
         }
+
 
         public void setConPhoneId(String conPhoneId) {
             this.conPhoneId = conPhoneId;
@@ -301,6 +306,22 @@ public class PhoneAddressModel {
             this.lname = lname;
         }
 
+        public String getHof() {
+            return hof;
+        }
+
+        public String getParty_worker() {
+            return party_worker;
+        }
+
+        public void setParty_worker(String party_worker) {
+            this.party_worker = party_worker;
+        }
+
+        public void setHof(String hof) {
+            this.hof = hof;
+        }
+
         protected Item(Parcel in) {
             conPhoneId = in.readString();
             constitutionId = in.readString();
@@ -324,6 +345,8 @@ public class PhoneAddressModel {
             stat = in.readString();
             note = in.readString();
             intereset_party = in.readString();
+            hof = in.readString();
+            party_worker = in.readString();
             status = in.readString();
             lname = in.readString();
             isSelected = in.readByte() != 0; // Handle boolean conversion
@@ -370,6 +393,8 @@ public class PhoneAddressModel {
             parcel.writeString(stat);
             parcel.writeString(note);
             parcel.writeString(intereset_party);
+            parcel.writeString(hof);
+            parcel.writeString(party_worker);
             parcel.writeString(status);
             parcel.writeString(lname);
             parcel.writeByte((byte) (isSelected ? 1 : 0)); // Handle boolean conversion

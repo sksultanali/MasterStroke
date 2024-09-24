@@ -6,23 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.developerali.masterstroke.Adapters.VoterAdapter;
 import com.developerali.masterstroke.ApiModels.LoginModel;
-import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiService;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.MainActivity;
-import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.databinding.ActivityLoginBinding;
-import com.developerali.masterstroke.databinding.CustomDialogBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;

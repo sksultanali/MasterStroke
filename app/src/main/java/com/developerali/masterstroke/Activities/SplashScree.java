@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.MainActivity;
-import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivitySplashScreeBinding;
 
 public class SplashScree extends AppCompatActivity {

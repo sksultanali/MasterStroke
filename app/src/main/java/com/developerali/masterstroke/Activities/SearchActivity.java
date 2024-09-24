@@ -1,13 +1,11 @@
 package com.developerali.masterstroke.Activities;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -17,28 +15,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Adapters.VoterAdapter;
-import com.developerali.masterstroke.ApiModels.BoothReportModel;
-import com.developerali.masterstroke.ApiModels.ConstitutionModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiService;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.SelectionListner;
@@ -59,10 +47,11 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
     ArrayList<String> searchParameters = new ArrayList<>();
     VoterAdapter adapter;
     int nextPageToken, currentPage = 0;
-    String searchOn, searchKeyword;
+    String searchOn, searchKeyword, dualSearchPart;
     boolean normalNextPage, counted;
     private boolean isLoading = false;
     private boolean noMoreLoad = false;
+    private boolean dualSearch = false;
     int total;
 
     @Override
@@ -127,7 +116,15 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
             getSupportActionBar().setTitle("Searching By " + searchOn + " : " + searchKeyword);
             nextPageToken = 0;
+
+            if (i.hasExtra("dualSearch")){
+                dualSearch = true;
+                dualSearchPart = i.getStringExtra("dualSearch");
+            }else {
+                dualSearch = false;
+            }
             getSearchVoters(nextPageToken, searchKeyword, searchOn);
+
         }else {
             normalNextPage = true;
             getDetails(nextPageToken);
@@ -149,10 +146,9 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 int nextTok = (page-1)*50;
                 if (total >= nextTok){
                     if (!normalNextPage){
-                        getSearchVoters(nextTok, searchKeyword, searchOn);
-                        //Toast.makeText(this, "token : "+ nextTok, Toast.LENGTH_LONG).show();
+                        getSearchVoters(nextPageToken, searchKeyword, searchOn);
                     }else {
-                        getDetails(nextTok);
+                        getDetails(nextPageToken);
                     }
                     binding.recView.smoothScrollToPosition(nextTok);
                 }else {
@@ -235,25 +231,51 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         // Create and show the dialog
         AlertDialog dialog = builder.create();
 
+        // For regular WhatsApp
         dialogBinding.whatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-            startActivity(sendIntent);
+            // Format phone number for WhatsApp URL (example: "911234567890" for India)
+            String formattedPhoneNumber = phoneNumber.replace("+", "").replace(" ", "");
+
+            // Create the wa.me URL with the phone number
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText);
+
+            // Create an intent to open WhatsApp using the URL
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+
+            // Start activity directly without contact selection
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Handle exception if WhatsApp is not installed or any other error
+            }
         });
 
+// For WhatsApp Business
         dialogBinding.businessWhatsapp.setOnClickListener(v -> {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setPackage("com.whatsapp.w4b");
-            sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
-            sendIntent.putExtra("jid", phoneNumber + "@s.whatsapp.net");
-            startActivity(sendIntent);
+            // Format phone number for WhatsApp Business URL
+            String formattedPhoneNumber = phoneNumber.replace("+", "").replace(" ", "");
+
+            // Create the wa.me URL with the phone number
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText);
+
+            // Create an intent to open WhatsApp Business using the URL
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse(url));
+
+            // Start activity directly without contact selection
+            try {
+                startActivity(sendIntent);
+                dialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Handle exception if WhatsApp Business is not installed or any other error
+            }
         });
+
+
 
         dialogBinding.sms.setOnClickListener(v -> {
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
@@ -272,6 +294,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
             try {
                 startActivity(Intent.createChooser(sendIntent, "Send mail..."));
+                dialog.dismiss();
             } catch (android.content.ActivityNotFoundException ex) {
                 Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
             }
@@ -283,6 +306,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             sendIntent.setType("text/plain");
             sendIntent.putExtra(Intent.EXTRA_TEXT, slipText);
             startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
+            dialog.dismiss();
         });
 
         dialog.show();
@@ -367,7 +391,16 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                     nextToken,
                     Integer.parseInt(Helper.WARD)
             );
-        }else {
+        }else if (dualSearch){
+            call = apiService.SearchDualVoters(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    nextToken,
+                    Integer.parseInt(Helper.WARD),
+                    keyword,
+                    field,
+                    Integer.parseInt(dualSearchPart)
+            );
+        } else {
             call = apiService.SearchVoters(
                     "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                     nextToken,
@@ -435,11 +468,29 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         normalNextPage = true;
 
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<PhoneAddressModel> call = apiService.getVoters(
+        Call<PhoneAddressModel> call;
+//        if (dualSearch){
+//            call = apiService.SearchDualVoters(
+//                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+//                    nextToken,
+//                    Integer.parseInt(Helper.WARD),
+//                    keyword,
+//                    field,
+//                    Integer.parseInt(dualSearchPart)
+//            );
+//        }else {
+//            call = apiService.getVoters(
+//                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+//                    nextToken,
+//                    Integer.parseInt(Helper.WARD)
+//            );
+//        }
+        call = apiService.getVoters(
                 "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                 nextToken,
                 Integer.parseInt(Helper.WARD)
         );
+
 
         call.enqueue(new Callback<PhoneAddressModel>() {
             @Override
@@ -489,6 +540,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         });
 
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

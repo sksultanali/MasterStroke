@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Activities.VoterDetails;
-import com.developerali.masterstroke.ApiModels.BoothReportModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.SelectionListner;
@@ -46,12 +45,12 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
         details.isSelected = false;
         defaultColors(holder, details, position);
 
-        holder.binding.voterName.setText(details.getName());
+        holder.binding.voterName.setText(details.getSl_no() + ". " + details.getName());
         String someString = details.getAddress();
 
         if (someString.length() >= 22) {
             String substring = someString.substring(0, 22);
-            holder.binding.otherDetails.setText(substring+ " | Age - " + details.getAge());
+            holder.binding.otherDetails.setText(details.getHouse() + ", "+ substring+ " | Age - " + details.getAge());
         } else {
             holder.binding.otherDetails.setText(someString+ " | Age - " + details.getAge());
         }
@@ -98,8 +97,8 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
     void defaultColors(ViewHolder holder, PhoneAddressModel.Item details, int position){
         if (details.getStat() != null && details.getStat().equalsIgnoreCase("edited")){
             holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_dark_yellow));
-            holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
-            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.gray));
+            //holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
+            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.red));
         }else {
             if (position % 2 == 0){
                 holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_white_color_corner8));

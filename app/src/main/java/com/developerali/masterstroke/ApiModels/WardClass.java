@@ -9,6 +9,8 @@ public class WardClass {
     private List<Item> item;
     @SerializedName("status")
     private String status;
+    @SerializedName("grossTotal")
+    private String grossTotal;
     @SerializedName("message")
     private String message;
 
@@ -36,11 +38,26 @@ public class WardClass {
         this.message = message;
     }
 
+    public String getGrossTotal() {
+        return grossTotal;
+    }
+
+    public void setGrossTotal(String grossTotal) {
+        this.grossTotal = grossTotal;
+    }
+
     public static class Item{
         @SerializedName("txt")
         private String txt;
         @SerializedName("total")
         private String total;
+        @SerializedName("total_count")
+        private String total_count;
+        public Boolean isSelected = false;
+
+        public Item() {
+            this.isSelected = false; // Initialize to false in the default constructor
+        }
 
         public String getTxt() {
             return txt;
@@ -56,6 +73,14 @@ public class WardClass {
 
         public void setTotal(String total) {
             this.total = total;
+        }
+
+        public String getTotal_count() {
+            return total_count;
+        }
+
+        public void setTotal_count(String total_count) {
+            this.total_count = total_count;
         }
     }
 

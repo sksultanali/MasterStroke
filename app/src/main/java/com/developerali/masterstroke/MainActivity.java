@@ -3,33 +3,29 @@ package com.developerali.masterstroke;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
-import com.developerali.masterstroke.Activities.PartiesActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.Models.ToolsModel;
 import com.developerali.masterstroke.databinding.ActivityMainBinding;
 
@@ -47,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        //make below type false if want worker app
+        Helper.ADMIN_APPLICATION = true;
+
+
+
+
+
         if (Helper.CANDIDATE != null){
             getSupportActionBar().setTitle(Helper.CANDIDATE);
         }
@@ -54,9 +58,17 @@ public class MainActivity extends AppCompatActivity {
         arrayList.clear();
         arrayList.add(new ToolsModel("Search", getDrawable(R.drawable.search)));
         arrayList.add(new ToolsModel("List", getDrawable(R.drawable.list)));
-        arrayList.add(new ToolsModel("Survey", getDrawable(R.drawable.survey)));
-        arrayList.add(new ToolsModel("Charts", getDrawable(R.drawable.charts)));
-        arrayList.add(new ToolsModel("Others", getDrawable(R.drawable.more)));
+        if (Helper.ADMIN_APPLICATION){
+            binding.officerTag.setVisibility(View.GONE);
+            binding.imView.setImageDrawable(getDrawable(R.drawable.pubimg_min));
+            arrayList.add(new ToolsModel("Survey", getDrawable(R.drawable.survey)));
+            arrayList.add(new ToolsModel("Charts", getDrawable(R.drawable.charts)));
+            arrayList.add(new ToolsModel("Others", getDrawable(R.drawable.more)));
+        }else {
+            binding.officerTag.setVisibility(View.VISIBLE);
+            binding.imView.setImageDrawable(getDrawable(R.drawable.worker_image));
+            binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
+        }
 
         myListAdapter adapter = new myListAdapter();
         binding.toolsList.setAdapter(adapter);

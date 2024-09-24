@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".Activities.PartSectionActivity">
 
+
+
     <TextView
         android:id="@+id/wardName"
         android:layout_width="wrap_content"
@@ -21,6 +23,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/totalCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_10mdp"
+        android:layout_weight="1"
+        android:text="0"
+        android:textColor="@color/main_blue"
+        android:textSize="@dimen/_12font_mdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/sLay"
+        app:layout_constraintStart_toEndOf="@+id/wardName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/lan_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/recView"
+        app:layout_constraintEnd_toStartOf="@+id/sLay"
+        app:layout_constraintStart_toEndOf="@+id/totalCount"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/sLay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_5mdp"
+        android:layout_marginEnd="@dimen/_10mdp"
+        android:layout_marginBottom="@dimen/_5mdp"
+        android:background="@drawable/bg_dark_gray_corner8"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/recView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Spinner
+            android:id="@+id/spinnerSem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recView"
         android:layout_width="0dp"
@@ -31,6 +80,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/child_voter" />
+
+    <Button
+        android:id="@+id/shareSlip"
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/_8mdp"
+        android:layout_height="wrap_content"
+        android:text="Change Language"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/click_effect_red_gray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"

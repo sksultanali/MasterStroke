@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -69,7 +68,7 @@
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="Edit"
+                android:text="Print"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -104,9 +103,10 @@
                 android:text="Name : Person Name"
                 android:textColor="@color/orange"
                 android:paddingStart="@dimen/_5mdp"
+                android:textStyle="bold"
                 android:paddingEnd="@dimen/_5mdp"
                 android:background="@drawable/bg_light_orange"
-                android:textSize="@dimen/_12font_mdp" />
+                android:textSize="@dimen/_13font_mdp" />
             <TextView
                 android:id="@+id/serialNo"
                 android:layout_width="wrap_content"
@@ -291,7 +291,7 @@
                     android:id="@+id/none"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="None"/>
+                    android:text="Urdu"/>
             </RadioGroup>
             <TextView
                 android:layout_width="wrap_content"
@@ -324,6 +324,58 @@
                     android:layout_height="wrap_content"
                     android:text="Dead"/>
             </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:text="Head of The Family : "
+                android:visibility="visible"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <RadioGroup
+                android:id="@+id/radioGroupF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/fYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Yes"/>
+                <RadioButton
+                    android:id="@+id/fNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No"/>
+            </RadioGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5mdp"
+                android:text="Party Worker? "
+                android:visibility="visible"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12font_mdp" />
+            <RadioGroup
+                android:id="@+id/radioGroupW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/wYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"/>
+                <RadioButton
+                    android:id="@+id/wNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="No"/>
+            </RadioGroup>
         </LinearLayout>
         <Button
             android:id="@+id/wishBirthday"
@@ -345,8 +397,6 @@
             android:textColor="@color/white"
             android:background="@drawable/click_effect_red_gray"
             android:visibility="gone"/>
-
-
 
     </LinearLayout>
 

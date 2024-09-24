@@ -7,12 +7,9 @@ import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
-import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -45,6 +42,16 @@ public interface ApiService {
             @Query("searchOn") String searchOn
     );
 
+    @GET("phoneAddSearchDual")
+    Call<PhoneAddressModel> SearchDualVoters(
+            @Query("token") String token,
+            @Query("nextToken") int nextToken,
+            @Query("consId") int consId,
+            @Query("searchTerm") String searchTerm,
+            @Query("searchOn") String searchOn,
+            @Query("partNo") int partNo
+            );
+
     @GET("onlyMobileNo")
     Call<PhoneAddressModel> getOnlyMobileNo(
             @Query("token") String token,
@@ -71,6 +78,34 @@ public interface ApiService {
             @Query("values") String values
 
     );
+
+    @GET("uniquePartLang1")
+    Call<WardClass> getUniquePartLan(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("field") String field,
+            @Query("values") String values
+
+    );
+
+    @GET("uniqueWardsWithQuery")
+    Call<WardClass> getUniqueValuesWithQuery(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("values") String values,
+            @Query("query") String query,
+            @Query("check") String check
+
+    );
+
+//    @GET("uniquePartLang")
+//    Call<WardClass> getUniquePartLan(
+//            @Query("token") String token,
+//            @Query("consId") int consId,
+//            @Query("values") String values,
+//            @Query("lan") String lan
+//
+//    );
 
     @GET("updatePhoneAdd")
     Call<UpdateModel> UpdateVoter(
@@ -129,6 +164,16 @@ public interface ApiService {
     Call<WardStudentVoterModel> getAllStudentNewVoter(
             @Query("token") String token,
             @Query("type") String type
+    );
+
+    @GET("updateAllData")
+    Call<UpdateModel> updateAllData(
+            @Query("token") String token,
+            @Query("queryField") String queryField,
+            @Query("queryText") String queryText,
+            @Query("editField") String editField,
+            @Query("newValue") String newValue,
+            @Query("constitution_id") int constitution_id
     );
 
 }

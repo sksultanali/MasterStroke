@@ -17,12 +17,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/officerTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_blue_purple_corners"
+        android:paddingStart="@dimen/_10mdp"
+        android:paddingTop="@dimen/_5mdp"
+        android:paddingEnd="@dimen/_10mdp"
+        android:paddingBottom="@dimen/_5mdp"
+        android:text="Booth Relation Officer"
+        android:textColor="@color/white"
+        android:layout_margin="@dimen/_10mdp"
+        android:textSize="@dimen/_14font_mdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imView" />
+
     <GridView
         android:id="@+id/tools_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="2"
-        android:layout_marginTop="@dimen/_15mdp"
+        android:layout_marginTop="@dimen/_10mdp"
         android:verticalSpacing="@dimen/_5mdp"
         android:horizontalSpacing="@dimen/_5mdp"
         android:layout_marginStart="@dimen/_10mdp"
@@ -30,6 +48,6 @@
         tools:listitem="@layout/sample_tools"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imView"/>
+        app:layout_constraintTop_toBottomOf="@id/officerTag"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

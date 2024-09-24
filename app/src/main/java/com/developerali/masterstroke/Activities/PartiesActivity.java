@@ -3,22 +3,16 @@ package com.developerali.masterstroke.Activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.developerali.masterstroke.Adapters.myListAdapter;
-import com.developerali.masterstroke.Helper;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityPartiesBinding;
 
@@ -35,7 +29,7 @@ public class PartiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPartiesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getSupportActionBar().setTitle("Set Parties");
+        getSupportActionBar().setTitle("Party Surveys");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -47,7 +41,7 @@ public class PartiesActivity extends AppCompatActivity {
             arrayList.add("Doubtful");
             Helper.savePartyList(PartiesActivity.this, arrayList);
         }
-        adapter = new myListAdapter(PartiesActivity.this, arrayList);
+        adapter = new myListAdapter(PartiesActivity.this, arrayList, true);
         binding.listItems.setAdapter(adapter);
 
         binding.btnSave.setOnClickListener(v->{

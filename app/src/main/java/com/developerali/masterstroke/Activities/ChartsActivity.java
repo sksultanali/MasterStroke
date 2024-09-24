@@ -3,13 +3,8 @@ package com.developerali.masterstroke.Activities;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityChartsBinding;
 import com.mannan.translateapi.Language;
 import com.mannan.translateapi.TranslateAPI;

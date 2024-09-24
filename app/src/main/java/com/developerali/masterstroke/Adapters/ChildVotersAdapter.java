@@ -8,12 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.WardWiseChildVoters;
 import com.developerali.masterstroke.R;
-import com.developerali.masterstroke.SelectionListner;
 import com.developerali.masterstroke.databinding.ChildNewVotersAndChilddBinding;
-import com.developerali.masterstroke.databinding.ChildVoterBinding;
 
 import java.util.List;
 
@@ -54,7 +51,7 @@ public class ChildVotersAdapter extends RecyclerView.Adapter<ChildVotersAdapter.
 
         if (!details.getsClass().isEmpty()){
             holder.binding.detailsClass.setVisibility(View.VISIBLE);
-            holder.binding.detailsClass.setText("Class - " + details.getsClass());
+            holder.binding.detailsClass.setText("10th passing year - " + details.getsClass());
         }else {
             holder.binding.detailsClass.setVisibility(View.GONE);
         }
