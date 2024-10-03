@@ -137,10 +137,10 @@ public class ListActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 12:
-                        Intent ik = new Intent(ListActivity.this, SearchActivity.class);
-                        ik.putExtra("keyword", "Dead");
-                        ik.putExtra("searchOn", "status");
-                        startActivity(ik);
+                        Intent ml = new Intent(ListActivity.this, PartSectionActivity.class);
+                        ml.putExtra("name", "Dead_Part");
+                        ml.putExtra("lan", "Dead");
+                        startActivity(ml);
                         break;
                     case 13:
                         Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);

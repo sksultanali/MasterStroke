@@ -70,7 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (apiResponse.getItem().get(0).getPassword().equalsIgnoreCase(password)){
                                 LoginModel.Item userDetails = apiResponse.getItem().get(0);
                                 Helper.accountDetails(userDetails.getUsername(), userDetails.getName(), userDetails.getPhone(),
-                                        userDetails.getPassword(), userDetails.getUserId(), userDetails.getWard_id(), userDetails.getSplash_link(),
+                                        userDetails.getPassword(), userDetails.getUserId(), userDetails.getWard_id(),
+                                        userDetails.getSplash_link(), userDetails.getHome_link(), userDetails.getParty_suggest(),
                                         userDetails.getCandidate_name(), LoginActivity.this);
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }else {

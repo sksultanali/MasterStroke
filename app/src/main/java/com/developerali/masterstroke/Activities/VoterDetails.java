@@ -196,8 +196,11 @@ public class VoterDetails extends AppCompatActivity {
             }
         }
 
+        binding.favourText.setText(Helper.getFavourText(VoterDetails.this));
+
         binding.slip.setOnClickListener(v->{
             if (mobileReturn(details) != null){
+                Helper.saveFavourText(binding.favourText.getText().toString(), VoterDetails.this);
                 shareDialog(mobileReturn(details));
             }else {
                 Helper.showCustomMessage(VoterDetails.this, "Error 405",
@@ -206,6 +209,7 @@ public class VoterDetails extends AppCompatActivity {
         });
         binding.share.setOnClickListener(v->{
             if (mobileReturn(details) != null){
+                Helper.saveFavourText(binding.favourText.getText().toString(), VoterDetails.this);
                 shareDialog(mobileReturn(details));
             }else {
                 Helper.showCustomMessage(VoterDetails.this, "Error 405",
@@ -230,8 +234,9 @@ public class VoterDetails extends AppCompatActivity {
             }
         });
         binding.editBtn.setOnClickListener(v->{
-            //editDialog();
-            Helper.printText(VoterDetails.this, slipText());
+            print();
+            Helper.saveFavourText(binding.favourText.getText().toString(), VoterDetails.this);
+            //Helper.printText(VoterDetails.this, Helper.slipText(details, VoterDetails.this));
         });
         binding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -435,6 +440,36 @@ public class VoterDetails extends AppCompatActivity {
 
     }
 
+    public void print(){
+        DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(getLayoutInflater());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogBinding.getRoot());
+        // Create and show the dialog
+        AlertDialog dialog = builder.create();
+
+        dialogBinding.otherLayout.setVisibility(View.GONE);
+        dialogBinding.printLayout.setVisibility(View.VISIBLE);
+
+
+        dialogBinding.btnPrint.setOnClickListener(v->{
+            if (dialogBinding.logo.isChecked()){
+                Helper.printText(VoterDetails.this, Helper.slipText(details, VoterDetails.this), true);
+            }else {
+                Helper.printText(VoterDetails.this, Helper.slipTextWithoutLogo(details, VoterDetails.this), false);
+            }
+            dialog.dismiss();
+        });
+
+        dialogBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
     private void editDialog() {
         DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -553,7 +588,7 @@ public class VoterDetails extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialogBinding.whatsapp.setOnClickListener(v -> {
-            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText());
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(Helper.slipText(details, VoterDetails.this));
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse(url));
             try {
@@ -564,7 +599,7 @@ public class VoterDetails extends AppCompatActivity {
             }
         });
         dialogBinding.businessWhatsapp.setOnClickListener(v -> {
-            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText());
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(Helper.slipText(details, VoterDetails.this));
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse(url));
             try {
@@ -578,7 +613,7 @@ public class VoterDetails extends AppCompatActivity {
         dialogBinding.sms.setOnClickListener(v -> {
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse("sms:" + phoneNumber));
-            sendIntent.putExtra("sms_body", slipText());
+            sendIntent.putExtra("sms_body", Helper.slipText(details, VoterDetails.this));
             startActivity(sendIntent);
             dialog.dismiss();
         });
@@ -588,7 +623,7 @@ public class VoterDetails extends AppCompatActivity {
             sendIntent.setType("message/rfc822");
             sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
             sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, Helper.slipText(details, VoterDetails.this));
             try {
                 startActivity(Intent.createChooser(sendIntent, "Send mail..."));
                 dialog.dismiss();
@@ -601,23 +636,12 @@ public class VoterDetails extends AppCompatActivity {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, slipText());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, Helper.slipText(details, VoterDetails.this));
             startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
             dialog.dismiss();
         });
 
         dialog.show();
-    }
-
-    public String slipText(){
-        String text =
-                binding.name.getText().toString() + "\n" +
-                binding.serialNo.getText().toString() + "\n" +
-                binding.voterId.getText().toString() + "\n" +
-                binding.boothName.getText().toString() + "\n" +
-                binding.section.getText().toString() + "\n" +
-                binding.partGenderAge.getText().toString() + "\n";
-        return text;
     }
 
     @Override

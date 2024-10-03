@@ -266,6 +266,18 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", "religion");
                     activity.startActivity(i);
                 });
+            }else if (type.equalsIgnoreCase("Dead_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "status");
+                    activity.startActivity(i);
+                });
             } else if (type.equalsIgnoreCase("part_no")) {
                 holder.binding.otherDetails.setText("Total - " + details.getTotal());
 

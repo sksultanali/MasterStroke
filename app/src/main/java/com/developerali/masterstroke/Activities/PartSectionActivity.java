@@ -100,6 +100,10 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("religion", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("Dead_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("status", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
         }else {
             getRequestedData(txt, null);
         }

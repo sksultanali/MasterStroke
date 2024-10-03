@@ -85,6 +85,18 @@
                 android:textColor="@color/white" />
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/favourText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10mdp"
+            android:enabled="false"
+            android:gravity="center"
+            android:layout_margin="@dimen/_10mdp"
+            android:background="@drawable/bg_dark_gray_corner8"
+            android:textColor="@color/black"
+            android:text="Please vote in favour of "/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

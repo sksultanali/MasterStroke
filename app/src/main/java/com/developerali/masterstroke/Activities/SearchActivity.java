@@ -1,6 +1,7 @@
 package com.developerali.masterstroke.Activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,6 +55,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
     private boolean noMoreLoad = false;
     private boolean dualSearch = false;
     int total;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,10 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         searchOn = "name";
         normalNextPage = true;
         counted = false;
+
+        progressDialog = new ProgressDialog(SearchActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("printing in process...");
 
         Intent i = getIntent();
         if (i.hasExtra("searchOn")){
@@ -200,6 +207,8 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
         dialogBinding.textInputL.setInputType(InputType.TYPE_CLASS_PHONE);
         dialogBinding.btn.setText("Share slip");
+        dialogBinding.printLayout.setVisibility(View.VISIBLE);
+
         dialogBinding.btn.setOnClickListener(v->{
             String text = dialogBinding.textInputL.getText().toString();
             if (text.isEmpty()){
@@ -209,9 +218,9 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int ij = 0; ij < items.size(); ij++){
                     if (ij == 0){
-                        stringBuilder.append((ij+1)+".\n").append(Helper.slipText(items.get(ij)));
+                        stringBuilder.append((ij+1)+".\n").append(Helper.slipText(items.get(ij), this));
                     }else {
-                        stringBuilder.append("\n\n\n").append((ij+1)+".\n").append(Helper.slipText(items.get(ij)));
+                        stringBuilder.append("\n\n\n").append((ij+1)+".\n").append(Helper.slipText(items.get(ij), this));
                     }
                 }
                 //Toast.makeText(this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
@@ -221,8 +230,46 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             }
         });
 
+        dialogBinding.btnPrint.setOnClickListener(v->{
+            ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int ij = 0; ij < items.size(); ij++){
+                progressDialog.setMessage("Slip no " + (ij+1) + " is printing in process...");
+                progressDialog.show();
+                if (dialogBinding.logo.isChecked()){
+                    if (ij == 0){
+                        stringBuilder.append(Helper.slipText(items.get(ij), this));
+                    }else {
+                        stringBuilder.append("\n\n").append(Helper.slipText(items.get(ij), this));
+                    }
+                    Helper.printText(SearchActivity.this, stringBuilder.toString(), true);
+                }else {
+                    if (ij == 0){
+                        stringBuilder.append(Helper.slipTextWithoutLogo(items.get(ij), this));
+                    }else {
+                        stringBuilder.append("\n\n").append(Helper.slipTextWithoutLogo(items.get(ij), this));
+                    }
+                    Helper.printText(SearchActivity.this, stringBuilder.toString(), false);
+                }
+
+                progressDialog.dismiss();
+            }
+
+            dialog.dismiss();
+            progressDialog.dismiss();
+        });
+
+        dialogBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+            }
+        });
+
         dialog.show();
     }
+
+
 
     public void shareDialog(String phoneNumber, String slipText){
         DialogShareSlipBinding dialogBinding = DialogShareSlipBinding.inflate(getLayoutInflater());
@@ -236,14 +283,12 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             // Format phone number for WhatsApp URL (example: "911234567890" for India)
             String formattedPhoneNumber = phoneNumber.replace("+", "").replace(" ", "");
 
-            // Create the wa.me URL with the phone number
             String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(slipText);
 
             // Create an intent to open WhatsApp using the URL
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse(url));
 
-            // Start activity directly without contact selection
             try {
                 startActivity(sendIntent);
                 dialog.dismiss();

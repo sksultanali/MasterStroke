@@ -98,10 +98,10 @@ public class OtherActivity extends AppCompatActivity {
                         break;
                     case 7:
                         if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
-                            Helper.openChromeTab("http://obd2.bulksmsserver.in/", OtherActivity.this);
+                            Helper.openChromeTab("https://obd2.bulksmsserver.in/", OtherActivity.this);
                         }else {
                             Intent i = new Intent(OtherActivity.this, WebView.class);
-                            i.putExtra("share" ,"http://obd2.bulksmsserver.in/");
+                            i.putExtra("share" ,"https://obd2.bulksmsserver.in/");
                             startActivity(i);
                         }
                         break;

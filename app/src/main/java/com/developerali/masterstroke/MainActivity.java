@@ -19,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //make below type false if want worker app
-        Helper.ADMIN_APPLICATION = true;
+        Helper.ADMIN_APPLICATION =  true;
 
 
 
@@ -66,7 +68,15 @@ public class MainActivity extends AppCompatActivity {
             arrayList.add(new ToolsModel("Others", getDrawable(R.drawable.more)));
         }else {
             binding.officerTag.setVisibility(View.VISIBLE);
-            binding.imView.setImageDrawable(getDrawable(R.drawable.worker_image));
+            if (Helper.HOME_LINK.equalsIgnoreCase("NA")) {
+                binding.imView.setImageDrawable(getDrawable(R.drawable.worker_image));
+            }else {
+                Glide.with(MainActivity.this)
+                        .load(Helper.HOME_LINK)
+                        .placeholder(getDrawable(R.drawable.worker_image))
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .into(binding.imView);
+            }
             binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
         }
 

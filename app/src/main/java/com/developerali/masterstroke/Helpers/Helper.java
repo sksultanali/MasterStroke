@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -89,6 +91,7 @@ public class Helper {
     public static String USER_NAME;
     public static String WARD;
     public static String SPLASH_LINK;
+    public static String HOME_LINK;
     public static String CANDIDATE;
     public static String LANGUAGE;
     public static boolean RemoveMarked = false;
@@ -204,6 +207,14 @@ public class Helper {
         });
 
         dialog.show();
+    }
+
+    public static String getTextBeforeParenthesis(String address) {
+        int index = address.indexOf('(');
+        if (index != -1) {
+            return address.substring(0, index).trim();
+        }
+        return address;
     }
 
     public interface DialogCallback {
@@ -368,7 +379,8 @@ public class Helper {
 
     public static void accountDetails(String username, String password,
                                  String userId, String name, String phone,
-                                      String ward, String link, String candidate,
+                                      String ward, String link, String homeLink,
+                                      String party_slogan, String candidate,
                                       Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -379,9 +391,19 @@ public class Helper {
         editor.putString("userId", userId);
         editor.putString("ward_id", ward);
         editor.putString("splash_link", link);
+        editor.putString("home_link", homeLink);
+        editor.putString("party_suggest", homeLink);
         editor.putString("candidate_name", candidate);
         editor.apply();
     }
+
+    public static void saveFavourText(String text, Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("favour", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("text", text);
+        editor.apply();
+    }
+
     public static boolean getUserLogin(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.USER_NAME = sharedPreferences.getString("username", "NA");
@@ -391,6 +413,8 @@ public class Helper {
         Helper.USER_ID = sharedPreferences.getString("userId", "NA");
         Helper.WARD = sharedPreferences.getString("ward_id", "0");
         Helper.SPLASH_LINK = sharedPreferences.getString("splash_link", "NA");
+        Helper.HOME_LINK = sharedPreferences.getString("home_link", "NA");
+        Helper.saveFavourText(sharedPreferences.getString("party_suggest", "Please vote in favour of party."), context);
         Helper.CANDIDATE = sharedPreferences.getString("candidate_name", "NA");
 
         if (Helper.USER_NAME.equalsIgnoreCase("NA")){
@@ -398,6 +422,11 @@ public class Helper {
         }else {
             return true;
         }
+    }
+
+    public static String getFavourText(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("favour", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("text", "Please vote in favour of ");
     }
 
     public static void startCounter(int countTill, TextView textView){
@@ -542,13 +571,32 @@ public class Helper {
         editor.apply();
     }
 
-    public static String slipText(PhoneAddressModel.Item details){
-        String text = "Name : " + details.getName() + "\n" +
-                        "Sl No : " + details.getSl_no() + "\n" +
-                        "Voter Id : " + details.getVoter_id() + "\n" +
-                        "Booth : " + details.getPollingStation() + "\n" +
-                        "Section : " + details.getSection() + "\n" +
-                        "Part : " + details.getPartNo() + " Gender : "+ details.getSex() +" Age : " + details.getAge()+ "\n";
+    public static String slipText(PhoneAddressModel.Item details, Context context){
+        String text =
+                "*******************************\n\n"+
+                "Name: "+ details.getName() + "\n\n" +
+                        "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
+                        "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
+                        "Voter Id: "+ details.getVoter_id() + "\n\n" +
+                        "Add: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Booth: " + details.getPollingStation() + "\n\n\n" +
+
+                        "*********************\n"+Helper.getFavourText(context)+
+                        "\nGenerated By Master Stroke\n*********************\n\n";
+        return text;
+    }
+
+    public static String slipTextWithoutLogo(PhoneAddressModel.Item details, Context context){
+        String text =
+                "*******************************\n\n"+
+                        "Name: "+ details.getName() + "\n\n" +
+                        "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
+                        "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
+                        "Voter Id: "+ details.getVoter_id() + "\n\n" +
+                        "Add: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Booth: " + details.getPollingStation()+ "\n\n" +
+
+                        "*******************************\n\n";
         return text;
     }
 
@@ -563,7 +611,7 @@ public class Helper {
         }
     }
 
-    public static void printText(Activity activity, String textToPrint) {
+    public static void printText(Activity activity, String textToPrint, boolean logo) {
         // Get the PrintManager system service
         PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
 
@@ -587,7 +635,6 @@ public class Helper {
                 }
 
                 // Pass the layout result
-                PrintAttributes.MediaSize pageSize = newAttributes.getMediaSize();
                 callback.onLayoutFinished(
                         new PrintDocumentInfo.Builder(jobName)
                                 .setPageCount(1) // Assuming 1 page
@@ -601,19 +648,33 @@ public class Helper {
                 // Start a page
                 PdfDocument.Page page = pdfDocument.startPage(0);
 
-                // Draw text content on the page
+                // Draw content on the page
                 if (page != null) {
                     Canvas canvas = page.getCanvas();
                     Paint paint = new Paint();
                     paint.setColor(android.graphics.Color.BLACK);
-                    paint.setTextSize(12);
+                    paint.setTextSize(16);
 
-                    // Define the bounds for the text to be drawn
-                    int xPos = 10;
-                    int yPos = 25;
+                    // Step 1: Draw the image first
+                    int xPos = 10;  // Starting x position
+                    int yPos = 25;  // Starting y position for image
 
-                    // Draw the text on the canvas
-                    canvas.drawText(textToPrint, xPos, yPos, paint);
+                    if (logo){
+                        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.slip_logo);
+                        // Resize the bitmap if necessary
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+                        int pageWidth = canvas.getWidth();
+                        int xPos1 = (pageWidth - resizedBitmap.getWidth()) / 2;
+                        canvas.drawBitmap(resizedBitmap, xPos1, yPos, null);
+                        yPos += resizedBitmap.getHeight() + 20;
+                    }
+
+                    // Step 2: Draw the text after the image
+                    String[] lines = textToPrint.split("\n");
+                    for (String line : lines) {
+                        canvas.drawText(line, xPos, yPos, paint);
+                        yPos += paint.descent() - paint.ascent(); // Move the Y position down for the next line
+                    }
 
                     // Finish the page
                     pdfDocument.finishPage(page);
@@ -634,6 +695,8 @@ public class Helper {
         // Start a print job
         printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
     }
+
+
     @SuppressLint("ResourceAsColor")
     public static void showCustomMessage(Activity activity, String title, String message) {
         CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(activity));
