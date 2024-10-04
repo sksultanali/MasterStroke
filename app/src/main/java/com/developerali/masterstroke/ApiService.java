@@ -2,6 +2,7 @@ package com.developerali.masterstroke;
 
 import com.developerali.masterstroke.ApiModels.BoothReportModel;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
+import com.developerali.masterstroke.ApiModels.FamilyCountResponse;
 import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
@@ -64,6 +65,12 @@ public interface ApiService {
             @Query("token") String token
     );
 
+    @GET("familyCount")
+    Call<FamilyCountResponse> getFamilyCount(
+            @Query("token") String token,
+            @Query("consId") int consId
+    );
+
     @GET("consDetails")
     Call<ConstitutionModel> getConstitutionDetails(
             @Query("token") String token,
@@ -88,7 +95,7 @@ public interface ApiService {
 
     );
 
-    @GET("uniqueWardsWithQuery")
+    @GET("uniqueWardsWithQuery2")
     Call<WardClass> getUniqueValuesWithQuery(
             @Query("token") String token,
             @Query("consId") int consId,
@@ -117,7 +124,14 @@ public interface ApiService {
     );
 
     @GET("updateConstitutionName")
-    Call<UpdateModel> UpdateConstitution(
+    Call<UpdateModel> updateConstitution(
+            @Query("token") String token,
+            @Query("conId") int conId,
+            @Query("newValue") String newValue
+    );
+
+    @GET("updateFamilyCount")
+    Call<UpdateModel> updateFamilyCount(
             @Query("token") String token,
             @Query("conId") int conId,
             @Query("newValue") int newValue

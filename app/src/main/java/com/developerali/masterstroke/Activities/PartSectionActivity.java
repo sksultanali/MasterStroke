@@ -100,7 +100,20 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("religion", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("Dead_Part")){
+        }else if (txt.equalsIgnoreCase("family_Part")){
+
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("family", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on family");
+
+        } else if (txt.equalsIgnoreCase("family_Part_Part")){
+
+            Helper.LANGUAGE = intent.getStringExtra("lan"); // part_no
+            String F = Helper.LANGUAGE;
+            getRequestedData(txt, "family");
+            getSupportActionBar().setTitle("Search on family");
+
+        } else if (txt.equalsIgnoreCase("Dead_Part")){
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("status", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
@@ -305,7 +318,15 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     Integer.parseInt(Helper.WARD),
                     txt
             );
-        }else {
+        } else if (t.equalsIgnoreCase("family")) {
+            call = apiService.getUniqueValuesWithQuery(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD),
+                    "family",
+                    "part_no",
+                    Helper.LANGUAGE
+            );
+        } else {
             call = apiService.getUniqueValuesWithQuery(
                     "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                     Integer.parseInt(Helper.WARD),

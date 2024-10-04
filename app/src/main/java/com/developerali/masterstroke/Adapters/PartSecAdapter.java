@@ -220,7 +220,6 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     holder.itemView.setOnClickListener(v->{
                         Helper.LANGUAGE = "";
                         Intent mn = new Intent(activity.getApplicationContext(), PartSectionActivity.class);
-                        //mn.putExtra("name", "lname");
                         mn.putExtra("name", "language_Part");
                         mn.putExtra("lan", details.getTxt());
                         activity.startActivity(mn);
@@ -264,6 +263,32 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("keyword", Helper.LANGUAGE);
                     i.putExtra("dualSearch", details.getTxt());
                     i.putExtra("searchOn", "religion");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("family_Part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal());
+                Helper.LANGUAGE = "F";
+
+
+                holder.itemView.setOnClickListener(v->{
+                    Intent mn = new Intent(activity.getApplicationContext(), PartSectionActivity.class);
+                    mn.putExtra("name", "family_Part_Part");
+                    mn.putExtra("lan", details.getTxt());
+                    activity.startActivity(mn);
+                });
+            }else if (type.equalsIgnoreCase("family_Part_Part")){
+                if (details.getTxt() == null || details.getTxt().isEmpty()){
+                    holder.binding.voterName.setText("UNDEFINED");
+                }else{
+                    holder.binding.voterName.setText(details.getHof_name() + " - " + details.getTxt());
+                }
+                holder.binding.otherDetails.setText("Total - " + details.getTotal());
+
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", details.getTxt());
+                    i.putExtra("searchOn", "family");
                     activity.startActivity(i);
                 });
             }else if (type.equalsIgnoreCase("Dead_part")){

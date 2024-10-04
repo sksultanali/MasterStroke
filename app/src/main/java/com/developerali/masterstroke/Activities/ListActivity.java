@@ -46,6 +46,7 @@ public class ListActivity extends AppCompatActivity {
         arrayList.add("By Name");  //3
         arrayList.add("By Voter Id No"); //4
         arrayList.add("By House No"); //4
+        arrayList.add("By Family"); //4
         if (Helper.ADMIN_APPLICATION){
             arrayList.add("By Age"); //5
             arrayList.add("By Language"); //6
@@ -78,6 +79,7 @@ public class ListActivity extends AppCompatActivity {
                         Intent k = new Intent(ListActivity.this, PartSectionActivity.class);
                         k.putExtra("name", "part_no");
                         startActivity(k);
+                        break;
                     case 3:
                         searchDialog("name", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
@@ -103,6 +105,15 @@ public class ListActivity extends AppCompatActivity {
                         });
                         break;
                     case 6:
+                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+                        mn.putExtra("name", "family_Part");
+                        mn.putExtra("lan", "F");
+                        startActivity(mn);
+//                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+//                        mn.putExtra("name", "family");
+//                        startActivity(mn);
+                        break;
+                    case 7:
                         searchDialog("age", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -110,48 +121,48 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 7:
+                    case 8:
                         //Religion
                         Intent q = new Intent(ListActivity.this, PartSectionActivity.class);
                         q.putExtra("name", "language");
                         Helper.RemoveMarked = true;
                         startActivity(q);
                         break;
-                    case 8:
+                    case 9:
                         Intent m = new Intent(ListActivity.this, PartSectionActivity.class);
                         m.putExtra("name", "religion");
                         startActivity(m);
                         break;
-                    case 9:
-                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+                    case 10:
+                        Intent mon = new Intent(ListActivity.this, PartSectionActivity.class);
                         Helper.MARKING_ENABLE = true;
                         Helper.RemoveMarked = false;
-                        mn.putExtra("name", "lname");
-                        startActivity(mn);
+                        mon.putExtra("name", "lname");
+                        startActivity(mon);
                         break;
-                    case 10:
+                    case 11:
                         Intent s = new Intent(ListActivity.this, PartSectionActivity.class);
                         s.putExtra("name", "sex");
                         startActivity(s);
                         break;
-                    case 11:
+                    case 12:
                         Intent j = new Intent(ListActivity.this, PartSectionActivity.class);
                         j.putExtra("name", "section");
                         startActivity(j);
                         break;
-                    case 12:
+                    case 13:
                         Intent i = new Intent(ListActivity.this, SearchActivity.class);
                         i.putExtra("keyword", "");
                         i.putExtra("searchOn", "mobile");
                         startActivity(i);
                         break;
-                    case 13:
+                    case 14:
                         Intent ml = new Intent(ListActivity.this, PartSectionActivity.class);
                         ml.putExtra("name", "Dead_Part");
                         ml.putExtra("lan", "Dead");
                         startActivity(ml);
                         break;
-                    case 14:
+                    case 15:
                         Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);
                         mno.putExtra("name", "lname");
                         mno.putExtra("merge", "cname");

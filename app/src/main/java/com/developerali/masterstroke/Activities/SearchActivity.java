@@ -26,7 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Adapters.VoterAdapter;
+import com.developerali.masterstroke.ApiModels.FamilyCountResponse;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
+import com.developerali.masterstroke.ApiModels.UpdateModel;
+import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiService;
 import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
@@ -194,8 +197,125 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             editDialog();
         });
 
+        binding.btnFamily.setOnClickListener(v->{
+
+            ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+            Call<FamilyCountResponse> call = apiService.getFamilyCount(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD)
+
+            );
+
+            progressDialog.show();
+
+            call.enqueue(new Callback<FamilyCountResponse>() {
+                @Override
+                public void onResponse(Call<FamilyCountResponse> call, Response<FamilyCountResponse> response) {
+                    progressDialog.dismiss();
+                    if (response.isSuccessful() && response.body() != null) {
+                        FamilyCountResponse apiResponse = response.body();
+                        progressDialog.show();
+                        ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
+                        updateItemsSequentially(items, "family", apiResponse.getCount(), 0);
+                    } else {
+                        Toast.makeText(SearchActivity.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.d("PartSecAd.this", "URL: " + call.request().url());
+                }
+
+                @Override
+                public void onFailure(Call<FamilyCountResponse> call, Throwable t) {
+                    progressDialog.dismiss();
+                    Log.d("PartSecAd.this", "URL: " + call.request().url());
+                    Toast.makeText(SearchActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
 
         setupRecyclerView();
+    }
+
+    private void updateItemsSequentially(ArrayList<PhoneAddressModel.Item> items, String fieldname, int keyword, int index) {
+        if (index < items.size()) {
+            // Process the current item and move to the next on completion
+            updateAllData(items.get(index).getConPhoneId(), fieldname, "H-" + items.get(index).getHouse() +"/F" + keyword, index, success -> {
+                // Proceed to the next item after the current update is complete
+                updateItemsSequentially(items, fieldname, keyword, index + 1);
+            });
+        } else {
+            // All updates are done
+            UpdateFamilyCount(keyword);
+        }
+    }
+
+    private void UpdateFamilyCount(int newCount) {
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<UpdateModel> call = apiService.updateFamilyCount(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                Integer.parseInt(Helper.WARD),
+                (newCount+1)
+        );
+
+        progressDialog.show();
+        call.enqueue(new Callback<UpdateModel>() {
+            @Override
+            public void onResponse(Call<UpdateModel> call, Response<UpdateModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    UpdateModel apiResponse = response.body();
+                    Toast.makeText(SearchActivity.this, "Consideration as family is completed!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SearchActivity.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<UpdateModel> call, Throwable t) {
+                progressDialog.dismiss();
+                Toast.makeText(SearchActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void updateAllData(String queryText, String fieldname, String changeValue, int position, PartSectionActivity.UpdateCallback callback) {
+        progressDialog.setMessage(position + ". " + queryText + " changing to " + changeValue + "...");
+        progressDialog.show();
+
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<UpdateModel> call = apiService.updateAllData(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                "con_phone_id",
+                queryText,
+                fieldname,
+                changeValue,
+                Integer.parseInt(Helper.WARD)
+        );
+
+        call.enqueue(new Callback<UpdateModel>() {
+            @Override
+            public void onResponse(Call<UpdateModel> call, Response<UpdateModel> response) {
+                progressDialog.dismiss();
+                if (response.isSuccessful() && response.body() != null) {
+                    UpdateModel apiResponse = response.body();
+                    Toast.makeText(SearchActivity.this, position + " updated", Toast.LENGTH_SHORT).show();
+                    callback.onUpdateComplete(true); // Notify success
+                } else {
+                    Toast.makeText(SearchActivity.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                    callback.onUpdateComplete(false); // Notify failure
+                }
+                Log.d("PartSecAd.this", "URL: " + call.request().url());
+            }
+
+            @Override
+            public void onFailure(Call<UpdateModel> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.d("PartSecAd.this", "URL: " + call.request().url());
+                Toast.makeText(SearchActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                callback.onUpdateComplete(false); // Notify failure
+            }
+        });
     }
 
     private void editDialog() {
@@ -599,10 +719,12 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         if (isSelected){
             binding.shareSlip.setVisibility(View.VISIBLE);
             binding.selectedNo.setVisibility(View.VISIBLE);
+            binding.btnFamily.setVisibility(View.VISIBLE);
             binding.selectedNo.setText(adapter.getSelectedRows().size() + " voters selected");
         }else {
             binding.shareSlip.setVisibility(View.GONE);
             binding.selectedNo.setVisibility(View.GONE);
+            binding.btnFamily.setVisibility(View.GONE);
         }
     }
 }

@@ -51,6 +51,8 @@ public class WardClass {
         private String txt;
         @SerializedName("total")
         private String total;
+        @SerializedName("hof_name")
+        private String hof_name;
         @SerializedName("total_count")
         private String total_count;
         public Boolean isSelected = false;
@@ -81,6 +83,14 @@ public class WardClass {
 
         public void setTotal_count(String total_count) {
             this.total_count = total_count;
+        }
+
+        public String getHof_name() {
+            return hof_name;
+        }
+
+        public void setHof_name(String hof_name) {
+            this.hof_name = hof_name;
         }
     }
 
