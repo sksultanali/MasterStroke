@@ -94,6 +94,7 @@ public class Helper {
     public static String HOME_LINK;
     public static String CANDIDATE;
     public static String LANGUAGE;
+    public static String PART_NO;
     public static boolean RemoveMarked = false;
     public static boolean MARKING_ENABLE;
     public static boolean ADMIN_APPLICATION;

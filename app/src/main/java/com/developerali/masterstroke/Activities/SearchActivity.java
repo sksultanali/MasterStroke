@@ -124,12 +124,13 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             searchOn = i.getStringExtra("searchOn");
             searchKeyword = i.getStringExtra("keyword");
 
-            getSupportActionBar().setTitle("Searching By " + searchOn + " : " + searchKeyword);
+            getSupportActionBar().setTitle(searchOn + " : " + searchKeyword);
             nextPageToken = 0;
 
             if (i.hasExtra("dualSearch")){
                 dualSearch = true;
                 dualSearchPart = i.getStringExtra("dualSearch");
+                getSupportActionBar().setTitle(searchOn + " : " + searchKeyword + " in " + dualSearchPart);
             }else {
                 dualSearch = false;
             }
@@ -138,6 +139,15 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         }else {
             normalNextPage = true;
             getDetails(nextPageToken);
+        }
+
+        if (searchOn != null){
+            if (searchOn.equalsIgnoreCase("part_no")){
+                binding.searchOption.setVisibility(View.VISIBLE);
+                Helper.PART_NO = searchKeyword;
+            }else {
+                binding.searchOption.setVisibility(View.GONE);
+            }
         }
 
         Helper.getWardName(Helper.WARD, binding.wardName);
@@ -230,6 +240,19 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                     Toast.makeText(SearchActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+
+        binding.goHouse.setOnClickListener(v->{
+            String hNo = binding.homeNoText.getText().toString();
+            if (hNo.isEmpty()){
+                binding.homeNoText.setError("*");
+            }else {
+                Intent ij = new Intent(getApplicationContext(), SearchActivity.class);
+                ij.putExtra("keyword", hNo);
+                ij.putExtra("dualSearch", Helper.PART_NO);
+                ij.putExtra("searchOn", "house");
+                startActivity(ij);
+            }
         });
 
 

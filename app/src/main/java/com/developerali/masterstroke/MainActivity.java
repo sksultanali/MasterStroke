@@ -41,16 +41,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //EdgeToEdge.enable(this);
+        //EdgeToEdge.enable(this);`
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
 
         //make below type false if want worker app
         Helper.ADMIN_APPLICATION =  true;
-
-
-
 
 
         if (Helper.CANDIDATE != null){

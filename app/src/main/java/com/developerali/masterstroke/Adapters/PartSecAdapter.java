@@ -291,7 +291,7 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", "family");
                     activity.startActivity(i);
                 });
-            }else if (type.equalsIgnoreCase("Dead_part")){
+            }else if (type.equalsIgnoreCase("Dead_part") || type.equalsIgnoreCase("Relocated_part")){
                 holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
                 holder.binding.otherDetails.setText("Total - " + details.getTotal()+
                         (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
@@ -303,8 +303,57 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", "status");
                     activity.startActivity(i);
                 });
-            } else if (type.equalsIgnoreCase("part_no")) {
+            } else if (type.equalsIgnoreCase("intereset_party")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "intereset_party");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("hof_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "hof");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("doa_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "doa");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("dob_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "dob");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("part_no")) {
                 holder.binding.otherDetails.setText("Total - " + details.getTotal());
+                Helper.PART_NO = details.getTxt();
 
                 holder.itemView.setOnClickListener(v->{
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);

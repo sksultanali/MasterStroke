@@ -34,17 +34,22 @@ public class OtherActivity extends AppCompatActivity {
         arrayList.clear();
         arrayList.add("Party Workers"); //0
         arrayList.add("Head of Family"); //1
-        arrayList.add("Survey"); //2
+        arrayList.add("Our Party Favoured"); //2
         arrayList.add("Upcoming Voters");  //3
         arrayList.add("Students");  //4
         arrayList.add("Relocated Voters");  //5
         arrayList.add("Whatsapp Message Forward");  //6
         arrayList.add("Tele Calling Facility");  //7
-        arrayList.add("Today Birthday");  //8
-        arrayList.add("Today Anniversary");  //9
-        arrayList.add("Tomorrow Birthday");  //10
-        arrayList.add("Tomorrow Anniversary");  //11
+        arrayList.add("Today Birthday (All)");  //8
+        arrayList.add("Today Anniversary (All)");  //9
+        arrayList.add("Tomorrow Birthday (All)");  //10
+        arrayList.add("Tomorrow Anniversary (All)");  //11
+        arrayList.add("Today Birthday (Part Wise)");  //8
+        arrayList.add("Today Anniversary (Part Wise)");  //9
+        arrayList.add("Tomorrow Birthday (Part Wise)");  //10
+        arrayList.add("Tomorrow Anniversary (Part Wise)");  //11
         arrayList.add("Party Surveys");  //12
+        arrayList.add("Dead");  //12
 
         myListAdapter adapter = new myListAdapter(OtherActivity.this, arrayList, true);
         binding.toolsList.setAdapter(adapter);
@@ -61,14 +66,19 @@ public class OtherActivity extends AppCompatActivity {
                         startActivity(i0k);
                         break;
                     case 1:
-                        Intent ik = new Intent(OtherActivity.this, SearchActivity.class);
-                        ik.putExtra("keyword", "Yes");
-                        ik.putExtra("searchOn", "hof");
-                        startActivity(ik);
+                        Intent mll1 = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        mll1.putExtra("name", "hof_Part");
+                        mll1.putExtra("lan", "Yes");
+                        startActivity(mll1);
+//                        Intent ik = new Intent(OtherActivity.this, SearchActivity.class);
+//                        ik.putExtra("keyword", "Yes");
+//                        ik.putExtra("searchOn", "hof");
+//                        startActivity(ik);
                         break;
                     case 2:
                         Intent lj = new Intent(OtherActivity.this, PartSectionActivity.class);
                         lj.putExtra("name", "intereset_party");
+                        lj.putExtra("lan", "Our Party");
                         startActivity(lj);
                         break;
                     case 3:
@@ -82,10 +92,14 @@ public class OtherActivity extends AppCompatActivity {
                         startActivity(lik);
                         break;
                     case 5:
-                        Intent ixk = new Intent(OtherActivity.this, SearchActivity.class);
-                        ixk.putExtra("keyword", "Relocated");
-                        ixk.putExtra("searchOn", "status");
-                        startActivity(ixk);
+                        Intent mll = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        mll.putExtra("name", "Relocated_Part");
+                        mll.putExtra("lan", "Relocated");
+                        startActivity(mll);
+//                        Intent ixk = new Intent(OtherActivity.this, SearchActivity.class);
+//                        ixk.putExtra("keyword", "Relocated");
+//                        ixk.putExtra("searchOn", "status");
+//                        startActivity(ixk);
                         break;
                     case 6:
                         if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
@@ -130,7 +144,53 @@ public class OtherActivity extends AppCompatActivity {
                         startActivity(jkl);
                         break;
                     case 12:
+                        Intent ml4 = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        ml4.putExtra("name", "Dob_Part");
+                        ml4.putExtra("lan", Helper.getToday());
+                        startActivity(ml4);
+//                        Intent i = new Intent(OtherActivity.this, SearchActivity.class);
+//                        i.putExtra("keyword", Helper.getToday());
+//                        i.putExtra("searchOn", "dob");
+//                        startActivity(i);
+                        break;
+                    case 13:
+                        Intent ml5 = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        ml5.putExtra("name", "Doa_Part");
+                        ml5.putExtra("lan", Helper.getToday());
+                        startActivity(ml5);
+//                        Intent j = new Intent(OtherActivity.this, SearchActivity.class);
+//                        j.putExtra("keyword", Helper.getToday());
+//                        j.putExtra("searchOn", "doa");
+//                        startActivity(j);
+                        break;
+                    case 14:
+                        Intent ml6 = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        ml6.putExtra("name", "Dob_Part");
+                        ml6.putExtra("lan", Helper.getTomorrowDate());
+                        startActivity(ml6);
+//                        Intent ij = new Intent(OtherActivity.this, SearchActivity.class);
+//                        ij.putExtra("keyword", Helper.getTomorrowDate());
+//                        ij.putExtra("searchOn", "dob");
+//                        startActivity(ij);
+                        break;
+                    case 15:
+                        Intent ml7 = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        ml7.putExtra("name", "Doa_Part");
+                        ml7.putExtra("lan", Helper.getTomorrowDate());
+                        startActivity(ml7);
+//                        Intent jkl = new Intent(OtherActivity.this, SearchActivity.class);
+//                        jkl.putExtra("keyword", Helper.getTomorrowDate());
+//                        jkl.putExtra("searchOn", "doa");
+//                        startActivity(jkl);
+                        break;
+                    case 16:
                         startActivity(new Intent(OtherActivity.this, PartiesActivity.class));
+                        break;
+                    case 17:
+                        Intent ml = new Intent(OtherActivity.this, PartSectionActivity.class);
+                        ml.putExtra("name", "Dead_Part");
+                        ml.putExtra("lan", "Dead");
+                        startActivity(ml);
                         break;
                 }
             }

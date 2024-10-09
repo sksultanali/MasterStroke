@@ -113,10 +113,26 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             getRequestedData(txt, "family");
             getSupportActionBar().setTitle("Search on family");
 
-        } else if (txt.equalsIgnoreCase("Dead_Part")){
+        } else if (txt.equalsIgnoreCase("Dead_Part") || txt.equalsIgnoreCase("Relocated_Part")){
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("status", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("Doa_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("doa", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("DOA " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("Dob_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("dob", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("DOB " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("intereset_party")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("intereset_party", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("hof_part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("hof", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Head of Family Partwise");
         }else {
             getRequestedData(txt, null);
         }

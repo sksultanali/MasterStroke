@@ -55,7 +55,7 @@ public class ListActivity extends AppCompatActivity {
             arrayList.add("By Sex");  //9
             arrayList.add("By Section");  //10
             arrayList.add("By Mobile No List"); //11
-            arrayList.add("Dead");  //12
+            //arrayList.add("Dead");  //12
             arrayList.add("By Common Name"); //13
         }
 
@@ -157,12 +157,6 @@ public class ListActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 14:
-                        Intent ml = new Intent(ListActivity.this, PartSectionActivity.class);
-                        ml.putExtra("name", "Dead_Part");
-                        ml.putExtra("lan", "Dead");
-                        startActivity(ml);
-                        break;
-                    case 15:
                         Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);
                         mno.putExtra("name", "lname");
                         mno.putExtra("merge", "cname");
