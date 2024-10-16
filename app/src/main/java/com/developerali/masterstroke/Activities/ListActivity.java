@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityListBinding;
 import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
@@ -35,28 +36,26 @@ public class ListActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.WARD = sharedPreferences.getString("ward_id", "0");
 
-        getSupportActionBar().setTitle("List Page");
+        getSupportActionBar().setTitle(R.string.list_page);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Complete list"); //0
-        arrayList.add("By Address"); //1
-        arrayList.add("By Booth"); //2
-        arrayList.add("By Name");  //3
-        arrayList.add("By Voter Id No"); //4
-        arrayList.add("By House No"); //4
-        arrayList.add("By Family"); //4
+        arrayList.add(getString(R.string.complete_list)); //0
+        arrayList.add(getString(R.string.address)); //1
+        arrayList.add(getString(R.string.boothName)); //2
+        arrayList.add(getString(R.string.names));  //3
+        arrayList.add(getString(R.string.by_voter_id_no)); //4
+        arrayList.add(getString(R.string.by_house_no)); //4
+        arrayList.add(getString(R.string.by_family)); //4
         if (Helper.ADMIN_APPLICATION){
-            arrayList.add("By Age"); //5
-            arrayList.add("By Language"); //6
-            arrayList.add("By Religion"); //7
-            arrayList.add("By Last Name");  //8
-            arrayList.add("By Sex");  //9
-            arrayList.add("By Section");  //10
-            arrayList.add("By Mobile No List"); //11
-            //arrayList.add("Dead");  //12
-            arrayList.add("By Common Name"); //13
+            arrayList.add(getString(R.string.by_age)); //5
+            arrayList.add(getString(R.string.by_language)); //6
+            arrayList.add(getString(R.string.by_religions)); //7
+            arrayList.add(getString(R.string.last_names));  //8
+            arrayList.add(getString(R.string.sexs));  //9
+            //arrayList.add("By Section");  //10
+            arrayList.add(getString(R.string.obile_no_lists)); //11
         }
 
 
@@ -145,22 +144,16 @@ public class ListActivity extends AppCompatActivity {
                         s.putExtra("name", "sex");
                         startActivity(s);
                         break;
+//                    case 12:
+//                        Intent j = new Intent(ListActivity.this, PartSectionActivity.class);
+//                        j.putExtra("name", "section");
+//                        startActivity(j);
+//                        break;
                     case 12:
-                        Intent j = new Intent(ListActivity.this, PartSectionActivity.class);
-                        j.putExtra("name", "section");
-                        startActivity(j);
-                        break;
-                    case 13:
                         Intent i = new Intent(ListActivity.this, SearchActivity.class);
                         i.putExtra("keyword", "");
                         i.putExtra("searchOn", "mobile");
                         startActivity(i);
-                        break;
-                    case 14:
-                        Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);
-                        mno.putExtra("name", "lname");
-                        mno.putExtra("merge", "cname");
-                        startActivity(mno);
                         break;
                 }
             }

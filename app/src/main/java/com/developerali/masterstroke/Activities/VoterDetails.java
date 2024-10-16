@@ -195,6 +195,7 @@ public class VoterDetails extends AppCompatActivity {
                 handleMobileNumbers(details);
             }
         }
+        translatePage();
 
         binding.favourText.setText(Helper.getFavourText(VoterDetails.this));
 
@@ -401,6 +402,132 @@ public class VoterDetails extends AppCompatActivity {
 
 
 
+
+
+    }
+
+    private void translatePage() {
+        Helper.translateText(VoterDetails.this, binding.name.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.name.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.partGenderAge.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.partGenderAge.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.address.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.address.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.boothName.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.boothName.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.serialNo.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.serialNo.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.houseNo.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.houseNo.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.section.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.section.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.oldPhone.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.oldPhone.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.doa.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.doa.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.dob.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.dob.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+        Helper.translateText(VoterDetails.this, binding.phone.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                binding.phone.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
     }
 
     public void updateData(String con_phone_id, String fieldName, String value, String note){

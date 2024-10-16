@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Activities.VoterDetails;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.SelectionListner;
 import com.developerali.masterstroke.databinding.ChildVoterBinding;
@@ -48,6 +49,7 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
         holder.binding.voterName.setText(details.getSl_no() + ". " + details.getName());
         String someString = details.getAddress();
 
+
         if (someString.length() >= 22) {
             String substring = someString.substring(0, 22);
             holder.binding.otherDetails.setText(details.getHouse() + ", "+ substring+ " | Age - " + details.getAge());
@@ -74,6 +76,31 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
                 return true;
             }
         });
+
+        Helper.translateText(activity, holder.binding.voterName.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                holder.binding.voterName.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+
+        Helper.translateText(activity, holder.binding.otherDetails.getText().toString(), new Helper.TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                holder.binding.otherDetails.setText(translatedText);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+
+            }
+        });
+
 
         holder.itemView.setOnClickListener(v->{
             Intent i = new Intent(activity.getApplicationContext(), VoterDetails.class);

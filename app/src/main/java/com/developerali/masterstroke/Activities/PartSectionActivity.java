@@ -95,6 +95,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + "vasi by L_Name");
                 Helper.MARKING_ENABLE = false;
                 txt = "lname";
+                adType = "lname_language";
             }
         }else if (txt.equalsIgnoreCase("religion_Part")){
             Helper.LANGUAGE = intent.getStringExtra("lan");
@@ -174,8 +175,8 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
 
         arrayListChoose = new ArrayList<>();
         arrayListChoose.clear();
-        arrayListChoose.add("Bengali");
-        arrayListChoose.add("Hindi");
+        arrayListChoose.add("Bengali/Hindu");
+        arrayListChoose.add("Hindi/Hindu");
         arrayListChoose.add("Urdu/Muslim");
 
         binding.shareSlip.setOnClickListener(v -> {
@@ -186,8 +187,12 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 if (keyword.equalsIgnoreCase("Urdu/Muslim")){
                     updateItemsSequentially(items, "language", "Urdu", 0);
                     updateItemsSequentially(items, "religion", "Muslim", 0);
+                }else if (keyword.equalsIgnoreCase("Hindi/Hindu")){
+                    updateItemsSequentially(items, "language", "Hindi", 0);
+                    updateItemsSequentially(items, "religion", "Hindu", 0);
                 }else {
-                    updateItemsSequentially(items, "language", keyword, 0);
+                    updateItemsSequentially(items, "language", "Bengali", 0);
+                    updateItemsSequentially(items, "religion", "Hindu", 0);
                 }
 
             });
@@ -346,9 +351,9 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             call = apiService.getUniqueValuesWithQuery(
                     "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                     Integer.parseInt(Helper.WARD),
-                    txt,
+                    txt, //lname
                     "language",
-                    t
+                    t //''
             );
         }
 

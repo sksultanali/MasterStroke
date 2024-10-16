@@ -199,6 +199,7 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
 
             }else {
                 holder.itemView.setOnClickListener(v->{
+//                    Toast.makeText(activity, "cli", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
                     i.putExtra("keyword", details.getTxt());
                     i.putExtra("searchOn", type);
@@ -225,7 +226,12 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                         activity.startActivity(mn);
                     });
                 }else {
-                    holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vasi");
+                    if (details.getTxt().equalsIgnoreCase("Hindi") || details.getTxt().equalsIgnoreCase("Bengali")){
+                        holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vashi + Hindu");
+                    }else {
+                        holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vashi + Muslim");
+                    }
+
                     holder.itemView.setOnClickListener(v->{
                         Intent q = new Intent(activity, PartSectionActivity.class);
                         q.putExtra("name", "language_Part");
@@ -361,8 +367,41 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", type);
                     activity.startActivity(i);
                 });
-            } else{
+            } else if (type.equalsIgnoreCase("address")) {
+
+                Helper.translateText(activity, holder.binding.voterName.getText().toString(), new Helper.TranslationCallback() {
+                    @Override
+                    public void onTranslationSuccess(String translatedText) {
+                        holder.binding.voterName.setText(translatedText);
+                    }
+
+                    @Override
+                    public void onTranslationFailure(String errorText) {
+
+                    }
+                });
+
+                Helper.translateText(activity, holder.binding.otherDetails.getText().toString(), new Helper.TranslationCallback() {
+                    @Override
+                    public void onTranslationSuccess(String translatedText) {
+                        holder.binding.otherDetails.setText(translatedText);
+                    }
+
+                    @Override
+                    public void onTranslationFailure(String errorText) {
+
+                    }
+                });
+
                 holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", details.getTxt());
+                    i.putExtra("searchOn", type);
+                    activity.startActivity(i);
+                });
+            }else {
+                holder.itemView.setOnClickListener(v->{
+//                    Toast.makeText(activity, "cli2", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
                     i.putExtra("keyword", details.getTxt());
                     i.putExtra("searchOn", type);
@@ -380,6 +419,8 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
 //                removeMatchedList(arrayList, itemsToRemove);
 //            }
 //        }
+
+
 
     }
 

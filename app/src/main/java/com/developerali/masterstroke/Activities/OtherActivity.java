@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityOtherBinding;
 
 import java.util.ArrayList;
@@ -27,29 +28,29 @@ public class OtherActivity extends AppCompatActivity {
         binding = ActivityOtherBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getSupportActionBar().setTitle("Other Options");
+        getSupportActionBar().setTitle(R.string.other_options);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Party Workers"); //0
-        arrayList.add("Head of Family"); //1
-        arrayList.add("Our Party Favoured"); //2
-        arrayList.add("Upcoming Voters");  //3
-        arrayList.add("Students");  //4
-        arrayList.add("Relocated Voters");  //5
-        arrayList.add("Whatsapp Message Forward");  //6
-        arrayList.add("Tele Calling Facility");  //7
-        arrayList.add("Today Birthday (All)");  //8
-        arrayList.add("Today Anniversary (All)");  //9
-        arrayList.add("Tomorrow Birthday (All)");  //10
-        arrayList.add("Tomorrow Anniversary (All)");  //11
-        arrayList.add("Today Birthday (Part Wise)");  //8
-        arrayList.add("Today Anniversary (Part Wise)");  //9
-        arrayList.add("Tomorrow Birthday (Part Wise)");  //10
-        arrayList.add("Tomorrow Anniversary (Part Wise)");  //11
-        arrayList.add("Party Surveys");  //12
-        arrayList.add("Dead");  //12
+        arrayList.add(getString(R.string.party_workers)); //0
+        arrayList.add(getString(R.string.headOfFamily)); //1
+        arrayList.add(getString(R.string.ourPartySupporters)); //2
+        arrayList.add(getString(R.string.upcomingVoters));  //3
+        arrayList.add(getString(R.string.studen));  //4
+        arrayList.add(getString(R.string.locatedVoters));  //5
+        //arrayList.add(getString(R.string.whatsForward));  //6
+        //arrayList.add(getString(R.string.tele_calling_facility));  //7
+        arrayList.add(getString(R.string.today_birthday_all));  //8
+        arrayList.add(getString(R.string.today_anniversary_all));  //9
+        arrayList.add(getString(R.string.tomorrow_birthday_all));  //10
+        arrayList.add(getString(R.string.tomorrow_anniversary_all));  //11
+        arrayList.add(getString(R.string.today_birthday_part_wise));  //8
+        arrayList.add(getString(R.string.today_anniversary_part_wise));  //9
+        arrayList.add(getString(R.string.tomorrow_birthday_part_wise));  //10
+        arrayList.add(getString(R.string.tomorrow_anniversary_part_wise));  //11
+        arrayList.add(getString(R.string.party_surveys));  //12
+        arrayList.add(getString(R.string.dead));  //12
 
         myListAdapter adapter = new myListAdapter(OtherActivity.this, arrayList, true);
         binding.toolsList.setAdapter(adapter);
@@ -101,49 +102,49 @@ public class OtherActivity extends AppCompatActivity {
 //                        ixk.putExtra("searchOn", "status");
 //                        startActivity(ixk);
                         break;
+//                    case 6:
+//                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
+//                            Helper.openChromeTab("https://whatsapp2.bulksmsserver.in/", OtherActivity.this);
+//                        }else {
+//                            Intent i = new Intent(OtherActivity.this, WebView.class);
+//                            i.putExtra("share" ,"https://whatsapp2.bulksmsserver.in/");
+//                            startActivity(i);
+//                        }
+//                        break;
+//                    case 7:
+//                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
+//                            Helper.openChromeTab("https://obd2.bulksmsserver.in/", OtherActivity.this);
+//                        }else {
+//                            Intent i = new Intent(OtherActivity.this, WebView.class);
+//                            i.putExtra("share" ,"https://obd2.bulksmsserver.in/");
+//                            startActivity(i);
+//                        }
+//                        break;
                     case 6:
-                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
-                            Helper.openChromeTab("https://whatsapp2.bulksmsserver.in/", OtherActivity.this);
-                        }else {
-                            Intent i = new Intent(OtherActivity.this, WebView.class);
-                            i.putExtra("share" ,"https://whatsapp2.bulksmsserver.in/");
-                            startActivity(i);
-                        }
-                        break;
-                    case 7:
-                        if (Helper.isChromeCustomTabsSupported(OtherActivity.this)){
-                            Helper.openChromeTab("https://obd2.bulksmsserver.in/", OtherActivity.this);
-                        }else {
-                            Intent i = new Intent(OtherActivity.this, WebView.class);
-                            i.putExtra("share" ,"https://obd2.bulksmsserver.in/");
-                            startActivity(i);
-                        }
-                        break;
-                    case 8:
                         Intent i = new Intent(OtherActivity.this, SearchActivity.class);
                         i.putExtra("keyword", Helper.getToday());
                         i.putExtra("searchOn", "dob");
                         startActivity(i);
                         break;
-                    case 9:
+                    case 7:
                         Intent j = new Intent(OtherActivity.this, SearchActivity.class);
                         j.putExtra("keyword", Helper.getToday());
                         j.putExtra("searchOn", "doa");
                         startActivity(j);
                         break;
-                    case 10:
+                    case 8:
                         Intent ij = new Intent(OtherActivity.this, SearchActivity.class);
                         ij.putExtra("keyword", Helper.getTomorrowDate());
                         ij.putExtra("searchOn", "dob");
                         startActivity(ij);
                         break;
-                    case 11:
+                    case 9:
                         Intent jkl = new Intent(OtherActivity.this, SearchActivity.class);
                         jkl.putExtra("keyword", Helper.getTomorrowDate());
                         jkl.putExtra("searchOn", "doa");
                         startActivity(jkl);
                         break;
-                    case 12:
+                    case 10:
                         Intent ml4 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml4.putExtra("name", "Dob_Part");
                         ml4.putExtra("lan", Helper.getToday());
@@ -153,7 +154,7 @@ public class OtherActivity extends AppCompatActivity {
 //                        i.putExtra("searchOn", "dob");
 //                        startActivity(i);
                         break;
-                    case 13:
+                    case 11:
                         Intent ml5 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml5.putExtra("name", "Doa_Part");
                         ml5.putExtra("lan", Helper.getToday());
@@ -163,7 +164,7 @@ public class OtherActivity extends AppCompatActivity {
 //                        j.putExtra("searchOn", "doa");
 //                        startActivity(j);
                         break;
-                    case 14:
+                    case 12:
                         Intent ml6 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml6.putExtra("name", "Dob_Part");
                         ml6.putExtra("lan", Helper.getTomorrowDate());
@@ -173,7 +174,7 @@ public class OtherActivity extends AppCompatActivity {
 //                        ij.putExtra("searchOn", "dob");
 //                        startActivity(ij);
                         break;
-                    case 15:
+                    case 13:
                         Intent ml7 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml7.putExtra("name", "Doa_Part");
                         ml7.putExtra("lan", Helper.getTomorrowDate());
@@ -183,10 +184,10 @@ public class OtherActivity extends AppCompatActivity {
 //                        jkl.putExtra("searchOn", "doa");
 //                        startActivity(jkl);
                         break;
-                    case 16:
+                    case 14:
                         startActivity(new Intent(OtherActivity.this, PartiesActivity.class));
                         break;
-                    case 17:
+                    case 15:
                         Intent ml = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml.putExtra("name", "Dead_Part");
                         ml.putExtra("lan", "Dead");

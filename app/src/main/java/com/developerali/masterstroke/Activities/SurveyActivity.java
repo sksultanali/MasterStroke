@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.developerali.masterstroke.Adapters.myListAdapter;
+import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivitySurveyBinding;
 
 import java.util.ArrayList;
@@ -29,12 +30,12 @@ public class SurveyActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Survey");
-        arrayList.add("Export Survey");
-        arrayList.add("Import Survey");
-        arrayList.add("Upcoming Voters");
-        arrayList.add("View Voted");
-        arrayList.add("Clear Voted Marking");
+        arrayList.add(getString(R.string.surveyss));
+        arrayList.add(getString(R.string.export_survey));
+        arrayList.add(getString(R.string.import_surveyss));
+        arrayList.add(getString(R.string.upcomingVoters));
+        arrayList.add(getString(R.string.viewVoted));
+        arrayList.add(getString(R.string.clear_voted_marking));
 
         myListAdapter adapter = new myListAdapter(SurveyActivity.this, arrayList, true);
         binding.toolsList.setAdapter(adapter);

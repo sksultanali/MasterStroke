@@ -29,7 +29,7 @@ public class PartiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPartiesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getSupportActionBar().setTitle("Party Surveys");
+        getSupportActionBar().setTitle(R.string.partySurveys);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

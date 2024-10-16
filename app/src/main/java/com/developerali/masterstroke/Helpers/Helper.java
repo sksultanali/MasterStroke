@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -38,6 +39,7 @@ import androidx.annotation.RequiresApi;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
+import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
@@ -49,6 +51,8 @@ import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mannan.translateapi.Language;
+import com.mannan.translateapi.TranslateAPI;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -151,6 +155,53 @@ public class Helper {
 
         return formattedDate;
     }
+
+    public interface TranslationCallback {
+        void onTranslationSuccess(String translatedText);
+        void onTranslationFailure(String errorText);
+    }
+
+    public static void translateText(Activity activity, String text, TranslationCallback callback) {
+        TranslateAPI translateAPI = new TranslateAPI(
+                Language.ENGLISH,   // Source Language
+                Helper.getLanguagePreference(activity),       // Target Language
+                text                     // Query Text
+        );
+
+        translateAPI.setTranslateListener(new TranslateAPI.TranslateListener() {
+            @Override
+            public void onSuccess(String translatedText) {
+                callback.onTranslationSuccess(translatedText); // Return the translated text through callback
+            }
+
+            @Override
+            public void onFailure(String errorText) {
+                callback.onTranslationFailure(errorText); // Return the error through callback
+            }
+        });
+    }
+
+    public static String getLanguagePreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("language_code", "null"); // default to "en" if not set
+    }
+
+    public static void saveLanguagePreference(Context context, String languageCode) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("language_code", languageCode);
+        //editor.apply(); // or commit()
+        editor.commit();
+    }
+
+    public static void updateLocale(Context context, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+    }
+
 
     public static void searchDialog(Activity activity, String searchOn,ArrayList<String> arrayListChoose, DialogCallback callback) {
         DialogListSearchBinding dialogBinding = DialogListSearchBinding.inflate(activity.getLayoutInflater());
@@ -572,14 +623,14 @@ public class Helper {
         editor.apply();
     }
 
-    public static String slipText(PhoneAddressModel.Item details, Context context){
+    public static String slipText(PhoneAddressModel.Item details, Activity context){
         String text =
                 "*******************************\n\n"+
                 "Name: "+ details.getName() + "\n\n" +
                         "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
                         "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
                         "Voter Id: "+ details.getVoter_id() + "\n\n" +
-                        "Add: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Address: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
                         "Booth: " + details.getPollingStation() + "\n\n\n" +
 
                         "*********************\n"+Helper.getFavourText(context)+
@@ -587,20 +638,19 @@ public class Helper {
         return text;
     }
 
-    public static String slipTextWithoutLogo(PhoneAddressModel.Item details, Context context){
+    public static String slipTextWithoutLogo(PhoneAddressModel.Item details, Activity context){
         String text =
                 "*******************************\n\n"+
                         "Name: "+ details.getName() + "\n\n" +
                         "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
                         "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
                         "Voter Id: "+ details.getVoter_id() + "\n\n" +
-                        "Add: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Address: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
                         "Booth: " + details.getPollingStation()+ "\n\n" +
 
                         "*******************************\n\n";
         return text;
     }
-
 
     public static String phoneNoWithCountryCode(String phone){
         if (phone.length() == 10){
@@ -612,7 +662,21 @@ public class Helper {
         }
     }
 
-    public static void printText(Activity activity, String textToPrint, boolean logo) {
+    public static void printText(Activity activity, String textToPrint, boolean logo){
+        Helper.translateText(activity, textToPrint, new TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                Helper.executePrint(activity, translatedText, logo);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+                Helper.executePrint(activity, textToPrint, logo);
+            }
+        });
+    }
+
+    public static void executePrint(Activity activity, String textToPrint, boolean logo) {
         // Get the PrintManager system service
         PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
 

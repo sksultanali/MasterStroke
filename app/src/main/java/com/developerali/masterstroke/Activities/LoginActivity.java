@@ -73,7 +73,17 @@ public class LoginActivity extends AppCompatActivity {
                                         userDetails.getPassword(), userDetails.getUserId(), userDetails.getWard_id(),
                                         userDetails.getSplash_link(), userDetails.getHome_link(), userDetails.getParty_suggest(),
                                         userDetails.getCandidate_name(), LoginActivity.this);
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                                if (Helper.getUserLogin(LoginActivity.this)){
+//                                    if (Helper.getLanguagePreference(LoginActivity.this).equalsIgnoreCase("null")){
+//                                        startActivity(new Intent(LoginActivity.this, TranslationPage.class));
+//                                    }else {
+//                                        startActivity(new Intent(LoginActivity.this, SplashScree.class));
+//
+//                                    }
+//                                    finish();
+//                                }
+                                startActivity(new Intent(LoginActivity.this, SplashScree.class));
+                                finish();
                             }else {
                                 Toast.makeText(LoginActivity.this, "wrong password..!", Toast.LENGTH_SHORT).show();
                             }
@@ -105,9 +115,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        if (Helper.getUserLogin(LoginActivity.this)){
-            startActivity(new Intent(LoginActivity.this, SplashScree.class));
-        }
+//        if (Helper.getUserLogin(LoginActivity.this)){
+//            if (Helper.getLanguagePreference(LoginActivity.this).equalsIgnoreCase("null")){
+//                startActivity(new Intent(LoginActivity.this, TranslationPage.class));
+//            }else {
+//                startActivity(new Intent(LoginActivity.this, SplashScree.class));
+//            }
+//        finish();
+//        }
+
+        startActivity(new Intent(LoginActivity.this, SplashScree.class));
+        finish();
         super.onStart();
     }
 }
