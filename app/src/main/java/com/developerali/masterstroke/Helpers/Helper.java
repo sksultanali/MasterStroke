@@ -101,7 +101,8 @@ public class Helper {
     public static String PART_NO;
     public static boolean RemoveMarked = false;
     public static boolean MARKING_ENABLE;
-    public static boolean ADMIN_APPLICATION;
+    public static boolean ADMIN_APPLICATION = false;
+    public static boolean WB = true;
 
     public static String formatDate (Long date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd LLL yyyy");

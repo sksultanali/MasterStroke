@@ -49,7 +49,6 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
         holder.binding.voterName.setText(details.getSl_no() + ". " + details.getName());
         String someString = details.getAddress();
 
-
         if (someString.length() >= 22) {
             String substring = someString.substring(0, 22);
             holder.binding.otherDetails.setText(details.getHouse() + ", "+ substring+ " | Age - " + details.getAge());

@@ -42,6 +42,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
     ArrayList<String> sort = new ArrayList<>();
     ProgressDialog progressDialog;
     ArrayList<String> arrayListChoose;
+    ArrayList<String> casteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +194,28 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 }else {
                     updateItemsSequentially(items, "language", "Bengali", 0);
                     updateItemsSequentially(items, "religion", "Hindu", 0);
+                }
+
+            });
+        });
+
+        casteArray = new ArrayList<>();
+        casteArray.clear();
+        casteArray.add("Upper");
+        casteArray.add("OBC");
+        casteArray.add("SC/ST");
+
+        binding.casteUpdate.setOnClickListener(v -> {
+            Helper.searchDialog(PartSectionActivity.this, "Set Caste", casteArray, keyword -> {
+                ArrayList<WardClass.Item> items = adapter.getSelectedRows();
+                progressDialog.show();
+
+                if (keyword.equalsIgnoreCase("Upper")){
+                    updateItemsSequentially(items, "caste", "Upper", 0);
+                }else if (keyword.equalsIgnoreCase("OBC")){
+                    updateItemsSequentially(items, "caste", "OBC", 0);
+                }else {
+                    updateItemsSequentially(items, "caste", "SC/ST", 0);
                 }
 
             });

@@ -115,17 +115,18 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-//        if (Helper.getUserLogin(LoginActivity.this)){
+        if (Helper.getUserLogin(LoginActivity.this)){
 //            if (Helper.getLanguagePreference(LoginActivity.this).equalsIgnoreCase("null")){
 //                startActivity(new Intent(LoginActivity.this, TranslationPage.class));
 //            }else {
-//                startActivity(new Intent(LoginActivity.this, SplashScree.class));
+//
 //            }
-//        finish();
-//        }
+            startActivity(new Intent(LoginActivity.this, SplashScree.class));
+            finish();
+        }
 
-        startActivity(new Intent(LoginActivity.this, SplashScree.class));
-        finish();
+//        startActivity(new Intent(LoginActivity.this, SplashScree.class));
+//        finish();
         super.onStart();
     }
 }

@@ -57,6 +57,9 @@ public class ListActivity extends AppCompatActivity {
             //arrayList.add("By Section");  //10
             arrayList.add(getString(R.string.obile_no_lists)); //11
         }
+        if (!Helper.WB){
+            arrayList.add(getString(R.string.by_hindu_caste)); //11
+        }
 
 
         myListAdapter adapter = new myListAdapter(ListActivity.this, arrayList, true);
@@ -154,6 +157,11 @@ public class ListActivity extends AppCompatActivity {
                         i.putExtra("keyword", "");
                         i.putExtra("searchOn", "mobile");
                         startActivity(i);
+                        break;
+                    case 13:
+                        Intent ilp = new Intent(ListActivity.this, PartSectionActivity.class);
+                        ilp.putExtra("name", "caste");
+                        startActivity(ilp);
                         break;
                 }
             }

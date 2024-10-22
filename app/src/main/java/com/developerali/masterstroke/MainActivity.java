@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         //make below type false if want worker app
         Helper.ADMIN_APPLICATION =  true;
+        Helper.WB =  false;
 
 
         if (Helper.CANDIDATE != null){
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 //        } else
 
         if (itemId == R.id.logout) {
-            Helper.saveLanguagePreference(MainActivity.this, "bn");
+            //Helper.saveLanguagePreference(MainActivity.this, "bn");
             Helper.clearSharedPreferences(MainActivity.this);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
