@@ -86,6 +86,14 @@ public interface ApiService {
 
     );
 
+    @GET("uniqueWardsFF")
+    Call<WardClass> getUniqueWardsFF(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("values") String values
+
+    );
+
     @GET("uniquePartLang1")
     Call<WardClass> getUniquePartLan(
             @Query("token") String token,

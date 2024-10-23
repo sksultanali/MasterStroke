@@ -12,11 +12,15 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.developerali.masterstroke.Adapters.MergeAdapter;
 import com.developerali.masterstroke.Adapters.PartSecAdapter;
-import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiService;
@@ -24,7 +28,7 @@ import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.SelectionListner;
-import com.developerali.masterstroke.databinding.ActivityPartSectionBinding;
+import com.developerali.masterstroke.databinding.ActivityMergeBinding;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,20 +38,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PartSectionActivity extends AppCompatActivity implements SelectionListner {
+public class MergeActivity extends AppCompatActivity implements SelectionListner {
 
-    ActivityPartSectionBinding binding;
-    String txt, sortType, adType;
-    PartSecAdapter adapter;
+    ActivityMergeBinding binding;
+    MergeAdapter adapter;
     ArrayList<String> sort = new ArrayList<>();
     ProgressDialog progressDialog;
     ArrayList<String> arrayListChoose;
+    String sortType, txt;
     ArrayList<String> casteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPartSectionBinding.inflate(getLayoutInflater());
+        binding = ActivityMergeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -58,11 +62,11 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         sort.add("A-Z");
         sort.add("Z-A");
 
-        ArrayAdapter<String> obj2 = new ArrayAdapter<String>(PartSectionActivity.this, R.layout.layout_spinner_item, sort);
+        ArrayAdapter<String> obj2 = new ArrayAdapter<String>(MergeActivity.this, R.layout.layout_spinner_item, sort);
         binding.spinnerSem.setAdapter(obj2);
         sortType = sort.get(0);
 
-        progressDialog = new ProgressDialog(PartSectionActivity.this);
+        progressDialog = new ProgressDialog(MergeActivity.this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("updating data...");
 
@@ -71,73 +75,13 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
 
         Intent intent = getIntent();
         txt = intent.getStringExtra("name");
-        adType = null;
-        if (intent.hasExtra("merge")){
-            adType = intent.getStringExtra("merge");
-        }
 
         getSupportActionBar().setTitle("Search on " + txt);
-
         Helper.getWardName(Helper.WARD, binding.wardName);
-        Helper.getWardNo(Helper.WARD, PartSectionActivity.this, getSupportActionBar());
-        LinearLayoutManager lnm = new LinearLayoutManager(PartSectionActivity.this);
+        Helper.getWardNo(Helper.WARD, MergeActivity.this, getSupportActionBar());
+        LinearLayoutManager lnm = new LinearLayoutManager(MergeActivity.this);
         binding.recView.setLayoutManager(lnm);
 
-        if (txt.equalsIgnoreCase("language_Part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            binding.lanChange.setVisibility(View.VISIBLE);
-
-            if (!binding.lanChange.isChecked()){
-                getLanPartData("language", Helper.LANGUAGE );
-                getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + "vasi partwise");
-                txt = "language_Part";
-            }else {
-                getRequestedData("language", Helper.LANGUAGE);
-                getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + "vasi by L_Name");
-                Helper.MARKING_ENABLE = false;
-                txt = "lname";
-                adType = "lname_language";
-            }
-        }else if (txt.equalsIgnoreCase("religion_Part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("religion", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("family_Part")){
-
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("family", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("Search on family");
-
-        } else if (txt.equalsIgnoreCase(" ")){
-
-            Helper.LANGUAGE = intent.getStringExtra("lan"); // part_no
-            String F = Helper.LANGUAGE;
-            getRequestedData(txt, "family");
-            getSupportActionBar().setTitle("Search on family");
-
-        } else if (txt.equalsIgnoreCase("Dead_Part") || txt.equalsIgnoreCase("Relocated_Part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("status", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("Doa_Part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("doa", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("DOA " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("Dob_Part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("dob", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("DOB " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("intereset_party")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("intereset_party", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
-        }else if (txt.equalsIgnoreCase("hof_part")){
-            Helper.LANGUAGE = intent.getStringExtra("lan");
-            getLanPartData("hof", Helper.LANGUAGE );
-            getSupportActionBar().setTitle("Head of Family Partwise");
-        }else {
-            getRequestedData(txt, null);
-        }
 
         binding.lanChange.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -181,19 +125,19 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         arrayListChoose.add("Urdu/Muslim");
 
         binding.shareSlip.setOnClickListener(v -> {
-            Helper.searchDialog(PartSectionActivity.this, "Set Language", arrayListChoose, keyword -> {
+            Helper.searchDialog(MergeActivity.this, "Set Language", arrayListChoose, keyword -> {
                 ArrayList<WardClass.Item> items = adapter.getSelectedRows();
                 progressDialog.show();
 
                 if (keyword.equalsIgnoreCase("Urdu/Muslim")){
-                    updateItemsSequentially(items, "language", "Urdu", 0);
-                    updateItemsSequentially(items, "religion", "Muslim", 0);
+                    updateItemsSequentiallyLname(items, "language", "Urdu", 0);
+                    updateItemsSequentiallyLname(items, "religion", "Muslim", 0);
                 }else if (keyword.equalsIgnoreCase("Hindi/Hindu")){
-                    updateItemsSequentially(items, "language", "Hindi", 0);
-                    updateItemsSequentially(items, "religion", "Hindu", 0);
+                    updateItemsSequentiallyLname(items, "language", "Hindi", 0);
+                    updateItemsSequentiallyLname(items, "religion", "Hindu", 0);
                 }else {
-                    updateItemsSequentially(items, "language", "Bengali", 0);
-                    updateItemsSequentially(items, "religion", "Hindu", 0);
+                    updateItemsSequentiallyLname(items, "language", "Bengali", 0);
+                    updateItemsSequentiallyLname(items, "religion", "Hindu", 0);
                 }
 
             });
@@ -206,38 +150,30 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         casteArray.add("SC/ST");
 
         binding.casteUpdate.setOnClickListener(v -> {
-            Helper.searchDialog(PartSectionActivity.this, "Set Caste", casteArray, keyword -> {
+            Helper.searchDialog(MergeActivity.this, "Set Caste", casteArray, keyword -> {
                 ArrayList<WardClass.Item> items = adapter.getSelectedRows();
                 progressDialog.show();
 
                 if (keyword.equalsIgnoreCase("Upper")){
-                    updateItemsSequentially(items, "caste", "Upper", 0);
+                    updateItemsSequentiallyLname(items, "caste", "Upper", 0);
                 }else if (keyword.equalsIgnoreCase("OBC")){
-                    updateItemsSequentially(items, "caste", "OBC", 0);
+                    updateItemsSequentiallyLname(items, "caste", "OBC", 0);
                 }else {
-                    updateItemsSequentially(items, "caste", "SC/ST", 0);
+                    updateItemsSequentiallyLname(items, "caste", "SC/ST", 0);
                 }
 
             });
         });
 
+        getRequestedData("lname", null);
+
+
+
+
 
 
     }
 
-    private void updateItemsSequentially(ArrayList<WardClass.Item> items, String fieldname, String keyword, int index) {
-        if (index < items.size()) {
-            // Process the current item and move to the next on completion
-            updateAllData(items.get(index).getTxt(), fieldname, keyword, index, success -> {
-                // Proceed to the next item after the current update is complete
-                updateItemsSequentially(items, fieldname, keyword, index + 1);
-            });
-        } else {
-            // All updates are done
-            progressDialog.dismiss();
-            Toast.makeText(this, "All updates completed!", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private void updateItemsSequentiallyLname(ArrayList<WardClass.Item> items, String fieldname, String keyword, int index) {
         if (index < items.size()) {
@@ -274,7 +210,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         void onUpdateComplete(boolean success);
     }
 
-    public void updateAllData(String queryText, String fieldname, String changeValue, int position, UpdateCallback callback) {
+    public void updateAllData(String queryText, String fieldname, String changeValue, int position, MergeActivity.UpdateCallback callback) {
         progressDialog.setMessage(position + ". " + queryText + " changing to " + changeValue + "...");
         progressDialog.show();
 
@@ -294,11 +230,11 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 progressDialog.dismiss();
                 if (response.isSuccessful() && response.body() != null) {
                     UpdateModel apiResponse = response.body();
-                    Toast.makeText(PartSectionActivity.this, apiResponse.getStatus()
+                    Toast.makeText(MergeActivity.this, apiResponse.getStatus()
                             + " : " + position + " updated", Toast.LENGTH_SHORT).show();
                     callback.onUpdateComplete(true); // Notify success
                 } else {
-                    Toast.makeText(PartSectionActivity.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MergeActivity.this, "Failed here...!", Toast.LENGTH_SHORT).show();
                     callback.onUpdateComplete(false); // Notify failure
                 }
                 Log.d("PartSecAd.this", "URL: " + call.request().url());
@@ -308,12 +244,11 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             public void onFailure(Call<UpdateModel> call, Throwable t) {
                 progressDialog.dismiss();
                 Log.d("PartSecAd.this", "URL: " + call.request().url());
-                Toast.makeText(PartSectionActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MergeActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                 callback.onUpdateComplete(false); // Notify failure
             }
         });
     }
-
 
     private void getLanPartData(String field, String values) {
         binding.progressBar.setVisibility(View.VISIBLE);
@@ -331,7 +266,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     WardClass apiResponse = response.body();
 
                     if (apiResponse.getItem() == null){
-                        Toast.makeText(PartSectionActivity.this, "not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MergeActivity.this, "not found", Toast.LENGTH_SHORT).show();
                     }else {
 
                         if (sortType.equalsIgnoreCase("Large to Small") && txt.equalsIgnoreCase("lname")){
@@ -360,8 +295,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
 
                         }
 
-                        adapter = new PartSecAdapter(PartSectionActivity.this, apiResponse.getItem(), txt, adType,
-                                apiResponse.getGrossTotal(), PartSectionActivity.this);
+                        adapter = new MergeAdapter(MergeActivity.this, apiResponse.getItem(), apiResponse.getGrossTotal(), MergeActivity.this);
                         binding.recView.setAdapter(adapter);
                         Helper.startCounter(apiResponse.getItem().size(), binding.totalCount);
 
@@ -369,7 +303,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     }
                     binding.progressBar.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(PartSectionActivity.this, "Failed...!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MergeActivity.this, "Failed...!", Toast.LENGTH_SHORT).show();
                 }
 
                 Log.d("SearchActivity.this", "URL: " + call.request().url());
@@ -388,7 +322,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<WardClass> call;
         if (t == null){
-            call = apiService.getUniqueWards(
+            call = apiService.getUniqueWardsFF(
                     "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                     Integer.parseInt(Helper.WARD),
                     txt
@@ -419,7 +353,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     WardClass apiResponse = response.body();
 
                     if (apiResponse.getItem() == null){
-                        Toast.makeText(PartSectionActivity.this, "not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MergeActivity.this, "not found", Toast.LENGTH_SHORT).show();
                     }else {
 
                         if (sortType.equalsIgnoreCase("Large to Small") && txt.equalsIgnoreCase("lname")){
@@ -455,7 +389,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
 
                         }
 
-                        adapter = new PartSecAdapter(PartSectionActivity.this, apiResponse.getItem(), txt, adType, apiResponse.getGrossTotal(), PartSectionActivity.this);
+                        adapter = new MergeAdapter(MergeActivity.this, apiResponse.getItem(), apiResponse.getGrossTotal(), MergeActivity.this);
                         binding.recView.setAdapter(adapter);
                         Helper.startCounter(apiResponse.getItem().size(), binding.totalCount);
 
@@ -463,7 +397,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     }
                     binding.progressBar.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(PartSectionActivity.this, "Failed...!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MergeActivity.this, "Failed...!", Toast.LENGTH_SHORT).show();
                 }
 
                 Log.d("SearchActivity.this", "URL: " + call.request().url());
@@ -477,7 +411,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
     }
     @Override
     protected void onStart() {
-        Helper.getUserLogin(PartSectionActivity.this);
+        Helper.getUserLogin(MergeActivity.this);
         super.onStart();
     }
 

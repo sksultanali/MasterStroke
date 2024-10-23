@@ -56,6 +56,7 @@ public class ListActivity extends AppCompatActivity {
             arrayList.add(getString(R.string.sexs));  //9
             //arrayList.add("By Section");  //10
             arrayList.add(getString(R.string.obile_no_lists)); //11
+            arrayList.add(getString(R.string.merged_last_names)); //11
         }
         if (!Helper.WB){
             arrayList.add(getString(R.string.by_hindu_caste)); //11
@@ -159,6 +160,11 @@ public class ListActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 13:
+                        Intent iolp = new Intent(ListActivity.this, MergeActivity.class);
+                        iolp.putExtra("name", "merged_lname");
+                        startActivity(iolp);
+                        break;
+                    case 14:
                         Intent ilp = new Intent(ListActivity.this, PartSectionActivity.class);
                         ilp.putExtra("name", "caste");
                         startActivity(ilp);

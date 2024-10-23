@@ -67,4 +67,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="by_hindu_caste">By Hindu Caste</string>
+    <string name="merged_last_names">Merged Last Names</string>
 </resources>
