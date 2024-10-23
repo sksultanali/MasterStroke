@@ -239,6 +239,37 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         }
     }
 
+    private void updateItemsSequentiallyLname(ArrayList<WardClass.Item> items, String fieldname, String keyword, int index) {
+        if (index < items.size()) {
+            WardClass.Item currentItem = items.get(index);
+            ArrayList<String> subnames = currentItem.getSubnames();
+
+            // Process each subname sequentially
+            updateSubnamesSequentially2(subnames, fieldname, keyword, 0, () -> {
+                // Once all subnames are processed, proceed to the next main item
+                updateItemsSequentiallyLname(items, fieldname, keyword, index + 1);
+            });
+        } else {
+            // All updates are done
+            progressDialog.dismiss();
+            Toast.makeText(this, "All updates completed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateSubnamesSequentially2(ArrayList<String> subnames, String fieldname, String keyword, int subIndex, Runnable onComplete) {
+        if (subIndex < subnames.size()) {
+            // Update the current subname
+            updateAllData(subnames.get(subIndex), fieldname, keyword, subIndex, success -> {
+                // Proceed to the next subname after the current update is complete
+                updateSubnamesSequentially2(subnames, fieldname, keyword, subIndex + 1, onComplete);
+            });
+        } else {
+            // All subnames are done, call the completion callback
+            onComplete.run();
+        }
+    }
+
+
     interface UpdateCallback {
         void onUpdateComplete(boolean success);
     }
