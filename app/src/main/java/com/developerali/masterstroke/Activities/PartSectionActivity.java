@@ -102,18 +102,22 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("religion", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("ageDual")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("ageDual", Helper.MIN_AGE );
+            getSupportActionBar().setTitle("Age between " + Helper.MIN_AGE + " & " + Helper.MAX_AGE + " partwise");
         }else if (txt.equalsIgnoreCase("family_Part")){
 
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("family", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on family");
 
-        } else if (txt.equalsIgnoreCase(" ")){
+        } else if (txt.equalsIgnoreCase("family_Part_Part")){
 
             Helper.LANGUAGE = intent.getStringExtra("lan"); // part_no
             String F = Helper.LANGUAGE;
             getRequestedData(txt, "family");
-            getSupportActionBar().setTitle("Search on family");
+            getSupportActionBar().setTitle("Search on family in " + Helper.LANGUAGE);
 
         } else if (txt.equalsIgnoreCase("Dead_Part") || txt.equalsIgnoreCase("Relocated_Part")){
             Helper.LANGUAGE = intent.getStringExtra("lan");
@@ -319,10 +323,18 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         binding.progressBar.setVisibility(View.VISIBLE);
 
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<WardClass> call = apiService.getUniquePartLan(
-                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
-                Integer.parseInt(Helper.WARD), field, values
-        );
+        Call<WardClass> call;
+        if (field.equalsIgnoreCase("ageDual")){
+            call = apiService.getUniquePartAge(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD), Helper.MIN_AGE, Helper.MAX_AGE
+            );
+        }else {
+            call = apiService.getUniquePartLan(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD), field, values
+            );
+        }
 
         call.enqueue(new Callback<WardClass>() {
             @Override
@@ -491,10 +503,12 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
     public void onShowAction(Boolean isSelected) {
         if (isSelected){
             binding.shareSlip.setVisibility(View.VISIBLE);
+            binding.casteUpdate.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setText(adapter.getSelectedRows().size() + " voters selected");
         }else {
             binding.shareSlip.setVisibility(View.GONE);
+            binding.casteUpdate.setVisibility(View.GONE);
 //            binding.selectedNo.setVisibility(View.GONE);
         }
     }

@@ -550,6 +550,29 @@ public class VoterDetails extends AppCompatActivity {
                     Toast.makeText(VoterDetails.this, apiResponse.getStatus()
                             + " : " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
 
+                    if (fieldName.equalsIgnoreCase("hof") && value.equalsIgnoreCase("Yes")){
+                        if (details.getMobile() != null && !details.getMobile().isEmpty()){
+                            if (binding.hindi.isChecked()){
+                                wishDialog(details.getMobile(), Helper.wishToHof("hi", details.getName()));
+                            }else if (binding.bangla.isChecked()){
+                                wishDialog(details.getMobile(), Helper.wishToHof("bn", details.getName()));
+                            }else {
+                                wishDialog(details.getMobile(), Helper.wishToHof("en", details.getName()));
+                            }
+                        }else if (details.getNew_mobile() != null && !details.getNew_mobile().isEmpty()){
+                            if (binding.hindi.isChecked()){
+                                wishDialog(details.getNew_mobile(), Helper.wishToHof("hi", details.getName()));
+                            }else if (binding.bangla.isChecked()){
+                                wishDialog(details.getNew_mobile(), Helper.wishToHof("bn", details.getName()));
+                            }else {
+                                wishDialog(details.getNew_mobile(), Helper.wishToHof("en", details.getName()));
+                            }
+                        }else {
+                            Helper.showCustomMessage(VoterDetails.this, "Error 405",
+                                    "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
+                        };
+                    }
+
                 } else {
                     Toast.makeText(VoterDetails.this, "Failed here...!", Toast.LENGTH_SHORT).show();
                 }

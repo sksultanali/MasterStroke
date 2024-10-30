@@ -596,6 +596,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                     keyword,
                     field
             );
+            //Toast.makeText(this, keyword + " " + field, Toast.LENGTH_SHORT).show();
         }
 
 

@@ -98,6 +98,8 @@ public class Helper {
     public static String HOME_LINK;
     public static String CANDIDATE;
     public static String LANGUAGE;
+    public static String MIN_AGE;
+    public static String MAX_AGE;
     public static String PART_NO;
     public static boolean RemoveMarked = false;
     public static boolean MARKING_ENABLE;
@@ -352,6 +354,37 @@ public class Helper {
     public static String getDateKey(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");
         return simpleDateFormat.format(date);
+    }
+
+    public static String wishToHof(String lan, String name){
+        if (lan.equalsIgnoreCase("hi")){
+            return "नमस्कार, "+ name +"\n" +
+                    "\n" +
+                    "आप और आपका पूरा परिवार वार्ड की बेहतरी के लिए हमारे साथ जुड़ें। मैं आपके सुख-दुख में आपके साथ हूं.\n" +
+                    "\n" +
+                    "वेबसाइट - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "धन्यवाद,\n" +
+                    Helper.CANDIDATE;
+        }else if (lan.equalsIgnoreCase("bn")){
+            return "নমস্কার, " + name +"\n" +
+                    "\n" +
+                    "আপনি এবং আপনার পুরো পরিবার ওয়ার্ডের উন্নতির জন্য আমাদের সঙ্গে যুক্ত হয়েছেন। আপনার সুখ দুঃখে আমি আপনাদের পাশে আছি। \n" +
+                    "\n" +
+                    "website - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "ধন্নবাদন্তে, \n" +
+                    Helper.CANDIDATE;
+        }else {
+            return "Hello, "+ name +"\n" +
+                    "\n" +
+                    "You and your entire family join us for the betterment of the ward. I am with you in your happiness and sadness.\n" +
+                    "\n" +
+                    "website - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "Thank you,\n" +
+                    Helper.CANDIDATE;
+        }
     }
 
     public static String wishBirthday(String lan, String name){

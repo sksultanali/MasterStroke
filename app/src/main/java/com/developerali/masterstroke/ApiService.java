@@ -103,6 +103,14 @@ public interface ApiService {
 
     );
 
+    @GET("uniquePartByAge")
+    Call<WardClass> getUniquePartAge(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("minAge") String minAge,
+            @Query("maxAge") String maxAge
+    );
+
     @GET("uniqueWardsWithQuery2")
     Call<WardClass> getUniqueValuesWithQuery(
             @Query("token") String token,

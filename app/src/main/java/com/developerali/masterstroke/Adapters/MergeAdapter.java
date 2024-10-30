@@ -116,21 +116,23 @@ public class MergeAdapter extends RecyclerView.Adapter<MergeAdapter.ViewHolder>{
         }
 
         holder.itemView.setOnClickListener(v->{
-//            Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
-//            i.putExtra("keyword", details.getTxt());
-//            i.putExtra("searchOn", "lname");
-//            activity.startActivity(i);
-
-            searchDialog(details.getSubnames(), new ListActivity.DialogCallback() {
-                @Override
-                public void onResult(String keyword) {
-                    //Toast.makeText(activity, keyword, Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
-                    i.putExtra("keyword", keyword);
-                    i.putExtra("searchOn", "lname");
-                    activity.startActivity(i);
-                }
-            });
+            if (details.getSubnames().size() > 1){
+                searchDialog(details.getSubnames(), new ListActivity.DialogCallback() {
+                    @Override
+                    public void onResult(String keyword) {
+                        //Toast.makeText(activity, keyword, Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                        i.putExtra("keyword", keyword);
+                        i.putExtra("searchOn", "lname");
+                        activity.startActivity(i);
+                    }
+                });
+            }else {
+                Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                i.putExtra("keyword", details.getSubnames().get(0));
+                i.putExtra("searchOn", "lname");
+                activity.startActivity(i);
+            }
         });
 
 
