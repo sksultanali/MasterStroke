@@ -3,8 +3,11 @@ package com.developerali.masterstroke;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -34,17 +38,29 @@ import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.Helpers.LocationService;
 import com.developerali.masterstroke.Models.ToolsModel;
 import com.developerali.masterstroke.databinding.ActivityMainBinding;
 import com.developerali.masterstroke.databinding.DialogChooseLanguageBinding;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.mannan.translateapi.Language;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationService.LocationUpdateListener{
 
     ActivityMainBinding binding;
     ArrayList<ToolsModel> arrayList = new ArrayList<>();
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private LocationService locationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         //EdgeToEdge.enable(this);`
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        checkLocationAndUpdateTime();
 
         String currentLanguage = Helper.getLanguagePreference(MainActivity.this);
         String defaultLanguage = getResources().getConfiguration().locale.getLanguage();
@@ -131,8 +149,77 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        //checkLocationAndUpdateTime();
 
 
+    }
+
+    private void startLocationSer(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            locationService = new LocationService(MainActivity.this, MainActivity.this);
+            locationService.startLocationUpdates();
+        }
+    }
+
+    private void checkLocationAndUpdateTime() {
+        if (Helper.isLocationEnabled(MainActivity.this)){
+            startLocationSer();
+        }else {
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(5000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest);
+            SettingsClient client = LocationServices.getSettingsClient(this);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+            task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                    checkLocationAndUpdateTime();
+                }
+            });
+
+            task.addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof ResolvableApiException) {
+                        try {
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(MainActivity.this, 100);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                            Toast.makeText(MainActivity.this, "PendingIntent unable to execute request.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Initialize LocationService after permission is granted
+                locationService = new LocationService(this, this);
+            } else {
+                // Handle the case when permission is denied
+                checkLocationAndUpdateTime();
+                Toast.makeText(this, "Location permission is required to use this feature.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+        Helper.UPDATED_LOCATION = location;
+        //Toast.makeText(this, Helper.getCurrentAddress(MainActivity.this, location), Toast.LENGTH_SHORT).show();
     }
 
     @Override

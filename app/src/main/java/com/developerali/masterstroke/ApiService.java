@@ -43,6 +43,16 @@ public interface ApiService {
             @Query("searchOn") String searchOn
     );
 
+    @GET("insertWorkRecord")
+    Call<UpdateModel> insertWorkRecord(
+            @Query("token") String token,
+            @Query("username") String username,
+            @Query("location") String location,
+            @Query("date") String date,
+            @Query("ward") String ward,
+            @Query("note") String note
+    );
+
     @GET("phoneAddSearchDual")
     Call<PhoneAddressModel> SearchDualVoters(
             @Query("token") String token,

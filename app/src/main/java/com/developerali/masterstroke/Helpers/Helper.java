@@ -15,6 +15,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfDocument;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -84,6 +88,7 @@ import android.content.Context;
 import android.os.CancellationSignal;
 import android.print.PageRange;
 import android.print.PrintDocumentInfo;
+import com.google.android.gms.maps.model.LatLng;
 
 public class Helper {
 
@@ -98,6 +103,8 @@ public class Helper {
     public static String HOME_LINK;
     public static String CANDIDATE;
     public static String LANGUAGE;
+    public static Location UPDATED_LOCATION;
+    public static String UPDATED_DISTANCE;
     public static String MIN_AGE;
     public static String MAX_AGE;
     public static String PART_NO;
@@ -105,6 +112,56 @@ public class Helper {
     public static boolean MARKING_ENABLE;
     public static boolean ADMIN_APPLICATION = false;
     public static boolean WB = true;
+
+    public static boolean isLocationEnabled(Activity activity) {
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return isGpsEnabled || isNetworkEnabled;
+    }
+
+    public static String getCurrentAddress(Activity activity, Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+            String address = addresses.get(0).getAddressLine(0);
+            return address;
+        }catch (Exception e){
+            return "NA";
+        }
+    }
+
+    private double calculateTotalDistance(ArrayList<LatLng> points) {
+        double totalDistance = 0;
+        for (int i = 0; i < points.size() - 1; i++) {
+            totalDistance += haversineDistance(points.get(i), points.get(i + 1));
+        }
+        return totalDistance;
+    }
+
+    public static String formattedHaversineDistance(LatLng start, LatLng end) {
+        double distance = haversineDistance(start, end); // Distance in kilometers
+
+        if (distance < 1) {
+            // Convert to meters if distance is less than 1 kilometer
+            int distanceInMeters = (int) (distance * 1000);
+            return distanceInMeters + "m";
+        } else {
+            // Format to 1 decimal place for kilometers
+            return String.format("%.1fkm", distance);
+        }
+    }
+
+    public static double haversineDistance(LatLng start, LatLng end) {
+        final int EARTH_RADIUS = 6371; // Radius of the earth in kilometers
+        double dLat = Math.toRadians(end.latitude - start.latitude);
+        double dLng = Math.toRadians(end.longitude - start.longitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(start.latitude)) * Math.cos(Math.toRadians(end.latitude))
+                * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
+    }
 
     public static String formatDate (Long date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd LLL yyyy");

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,11 +41,14 @@ import com.developerali.masterstroke.databinding.ActivityVoterDetailsBinding;
 import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogShareSlipBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -402,8 +407,42 @@ public class VoterDetails extends AppCompatActivity {
 
 
 
+        getLatLongFromAddress(details.getAddress());
 
 
+    }
+
+    private void getLatLongFromAddress(String address) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            // Get a list of addresses (usually one) for the provided address string
+            List<Address> addresses = geocoder.getFromLocationName(address, 1);
+
+            if (addresses != null && !addresses.isEmpty()) {
+                Address location = addresses.get(0);
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                //Toast.makeText(this, latitude + "  +  " + longitude , Toast.LENGTH_SHORT).show();
+
+                LatLng start = new LatLng(latitude, longitude);
+                LatLng end = new LatLng(Helper.UPDATED_LOCATION.getLatitude(), Helper.UPDATED_LOCATION.getLongitude());
+
+                Helper.UPDATED_DISTANCE = Helper.formattedHaversineDistance(start, end);
+
+
+                Toast.makeText(this, Helper.UPDATED_DISTANCE, Toast.LENGTH_SHORT).show();
+                Log.d("Geocoder", "Address: " + address + "\nLatitude: " + latitude + "\nLongitude: " + longitude);
+                // You can use latitude and longitude as needed in your app
+            } else {
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+                Log.e("Geocoder", "No location found for address: " + address);
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Geocoder", "Geocoding error", e);
+        }
     }
 
     private void translatePage() {
@@ -590,6 +629,42 @@ public class VoterDetails extends AppCompatActivity {
 
     }
 
+    public void RecordLocation(String note){
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<UpdateModel> call = apiService.insertWorkRecord(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                Helper.USER_NAME,
+                Helper.getCurrentAddress(VoterDetails.this, Helper.UPDATED_LOCATION),
+                Helper.formatDateTime(new Date().getTime()),
+                Helper.WARD,
+                note
+        );
+
+        progressDialog.show();
+        call.enqueue(new Callback<UpdateModel>() {
+            @Override
+            public void onResponse(Call<UpdateModel> call, Response<UpdateModel> response) {
+                if (response.isSuccessful()) {
+                    UpdateModel apiResponse = response.body();
+//                    Toast.makeText(VoterDetails.this, apiResponse.getStatus()
+//                            + " : " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+//                    Toast.makeText(VoterDetails.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("VoterDetails.this", "URL: " + call.request().url());
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<UpdateModel> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.d("VoterDetails.this", "URL: " + call.request().url());
+                //Toast.makeText(VoterDetails.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     public void print(){
         DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -607,6 +682,7 @@ public class VoterDetails extends AppCompatActivity {
             }else {
                 Helper.printText(VoterDetails.this, Helper.slipTextWithoutLogo(details, VoterDetails.this), false);
             }
+            RecordLocation("voter slip printed : " + details.getName() + " , Distance : " + Helper.UPDATED_DISTANCE);
             dialog.dismiss();
         });
 
