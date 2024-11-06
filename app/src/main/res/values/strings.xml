@@ -69,4 +69,5 @@
     <string name="by_hindu_caste">By Hindu Caste</string>
     <string name="merged_last_names">Merged Last Names</string>
     <string name="by_age_partwise">By Age (PartWise)</string>
+    <string name="track_workings">Track Workings</string>
 </resources>

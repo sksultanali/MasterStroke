@@ -50,7 +50,10 @@ public interface ApiService {
             @Query("location") String location,
             @Query("date") String date,
             @Query("ward") String ward,
-            @Query("note") String note
+            @Query("note") String note,
+            @Query("part_no") String part_no,
+            @Query("actual_address") String actual_address,
+            @Query("distance") String distance
     );
 
     @GET("phoneAddSearchDual")

@@ -407,7 +407,7 @@ public class VoterDetails extends AppCompatActivity {
 
 
 
-        getLatLongFromAddress(details.getAddress());
+        getLatLongFromAddress(Helper.getTextBeforeParenthesis(details.getAddress()));
 
 
     }
@@ -637,7 +637,10 @@ public class VoterDetails extends AppCompatActivity {
                 Helper.getCurrentAddress(VoterDetails.this, Helper.UPDATED_LOCATION),
                 Helper.formatDateTime(new Date().getTime()),
                 Helper.WARD,
-                note
+                note,
+                details.getPartNo(),
+                Helper.getTextBeforeParenthesis(details.getAddress()),
+                Helper.UPDATED_DISTANCE
         );
 
         progressDialog.show();
@@ -652,6 +655,7 @@ public class VoterDetails extends AppCompatActivity {
 //                    Toast.makeText(VoterDetails.this, "Failed here...!", Toast.LENGTH_SHORT).show();
                 }
                 Log.d("VoterDetails.this", "URL: " + call.request().url());
+                Helper.UPDATED_DISTANCE = "0m";
                 progressDialog.dismiss();
             }
 
@@ -682,7 +686,7 @@ public class VoterDetails extends AppCompatActivity {
             }else {
                 Helper.printText(VoterDetails.this, Helper.slipTextWithoutLogo(details, VoterDetails.this), false);
             }
-            RecordLocation("voter slip printed : " + details.getName() + " , Distance : " + Helper.UPDATED_DISTANCE);
+            RecordLocation("printed : " + details.getName());
             dialog.dismiss();
         });
 

@@ -30,12 +30,13 @@ public class SurveyActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add(getString(R.string.surveyss));
-        arrayList.add(getString(R.string.export_survey));
-        arrayList.add(getString(R.string.import_surveyss));
-        arrayList.add(getString(R.string.upcomingVoters));
-        arrayList.add(getString(R.string.viewVoted));
-        arrayList.add(getString(R.string.clear_voted_marking));
+        arrayList.add(getString(R.string.surveyss));//0
+        arrayList.add(getString(R.string.export_survey));//1
+        arrayList.add(getString(R.string.import_surveyss));//2
+        arrayList.add(getString(R.string.upcomingVoters));//3
+        arrayList.add(getString(R.string.viewVoted));//4
+        arrayList.add(getString(R.string.clear_voted_marking));//5
+        arrayList.add(getString(R.string.track_workings));//6
 
         myListAdapter adapter = new myListAdapter(SurveyActivity.this, arrayList, true);
         binding.toolsList.setAdapter(adapter);
@@ -60,6 +61,12 @@ public class SurveyActivity extends AppCompatActivity {
                         //startActivity(new Intent(MainActivity.this, DonationActivity.class));
                         break;
                     case 4:
+                        //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 6:
                         //Toast.makeText(MainActivity.this, "not available...!", Toast.LENGTH_SHORT).show();
                         break;
                 }
