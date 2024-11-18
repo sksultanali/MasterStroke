@@ -122,32 +122,32 @@ public class OtherActivity extends AppCompatActivity {
 //                        break;
                     case 6:
                         Intent i = new Intent(OtherActivity.this, SearchActivity.class);
-                        i.putExtra("keyword", Helper.getToday());
+                        i.putExtra("keyword", Helper.getTodayS());
                         i.putExtra("searchOn", "dob");
                         startActivity(i);
                         break;
                     case 7:
                         Intent j = new Intent(OtherActivity.this, SearchActivity.class);
-                        j.putExtra("keyword", Helper.getToday());
+                        j.putExtra("keyword", Helper.getTodayS());
                         j.putExtra("searchOn", "doa");
                         startActivity(j);
                         break;
                     case 8:
                         Intent ij = new Intent(OtherActivity.this, SearchActivity.class);
-                        ij.putExtra("keyword", Helper.getTomorrowDate());
+                        ij.putExtra("keyword", Helper.getTomorrowDateS());
                         ij.putExtra("searchOn", "dob");
                         startActivity(ij);
                         break;
                     case 9:
                         Intent jkl = new Intent(OtherActivity.this, SearchActivity.class);
-                        jkl.putExtra("keyword", Helper.getTomorrowDate());
+                        jkl.putExtra("keyword", Helper.getTomorrowDateS());
                         jkl.putExtra("searchOn", "doa");
                         startActivity(jkl);
                         break;
                     case 10:
                         Intent ml4 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml4.putExtra("name", "Dob_Part");
-                        ml4.putExtra("lan", Helper.getToday());
+                        ml4.putExtra("lan", Helper.getTodayS());
                         startActivity(ml4);
 //                        Intent i = new Intent(OtherActivity.this, SearchActivity.class);
 //                        i.putExtra("keyword", Helper.getToday());
@@ -157,7 +157,7 @@ public class OtherActivity extends AppCompatActivity {
                     case 11:
                         Intent ml5 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml5.putExtra("name", "Doa_Part");
-                        ml5.putExtra("lan", Helper.getToday());
+                        ml5.putExtra("lan", Helper.getTodayS());
                         startActivity(ml5);
 //                        Intent j = new Intent(OtherActivity.this, SearchActivity.class);
 //                        j.putExtra("keyword", Helper.getToday());
@@ -167,7 +167,7 @@ public class OtherActivity extends AppCompatActivity {
                     case 12:
                         Intent ml6 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml6.putExtra("name", "Dob_Part");
-                        ml6.putExtra("lan", Helper.getTomorrowDate());
+                        ml6.putExtra("lan", Helper.getTomorrowDateS());
                         startActivity(ml6);
 //                        Intent ij = new Intent(OtherActivity.this, SearchActivity.class);
 //                        ij.putExtra("keyword", Helper.getTomorrowDate());
@@ -177,7 +177,7 @@ public class OtherActivity extends AppCompatActivity {
                     case 13:
                         Intent ml7 = new Intent(OtherActivity.this, PartSectionActivity.class);
                         ml7.putExtra("name", "Doa_Part");
-                        ml7.putExtra("lan", Helper.getTomorrowDate());
+                        ml7.putExtra("lan", Helper.getTomorrowDateS());
                         startActivity(ml7);
 //                        Intent jkl = new Intent(OtherActivity.this, SearchActivity.class);
 //                        jkl.putExtra("keyword", Helper.getTomorrowDate());

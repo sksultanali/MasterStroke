@@ -88,13 +88,19 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
         arrayList.clear();
         arrayList.add(new ToolsModel(getString(R.string.search), getDrawable(R.drawable.search)));
-        arrayList.add(new ToolsModel(getString(R.string.list), getDrawable(R.drawable.list)));
-        arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.google_translate)));
+        if (Helper.ADMIN_APPLICATION){
+            arrayList.add(new ToolsModel(getString(R.string.updates), getDrawable(R.drawable.list)));
+        }else {
+            arrayList.add(new ToolsModel(getString(R.string.list), getDrawable(R.drawable.list)));
+        }
+        //arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.google_translate)));
+        arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.lan)));
+        arrayList.add(new ToolsModel(getString(R.string.voter_slip), getDrawable(R.drawable.slip)));
         if (Helper.ADMIN_APPLICATION){
             binding.officerTag.setVisibility(View.GONE);
-            binding.imView.setImageDrawable(getDrawable(R.drawable.pubimg_min));
+            binding.imView.setImageDrawable(getDrawable(R.drawable.img));
             arrayList.add(new ToolsModel(getString(R.string.surveyss), getDrawable(R.drawable.survey)));
-            arrayList.add(new ToolsModel(getString(R.string.chartsmao), getDrawable(R.drawable.charts)));
+            //arrayList.add(new ToolsModel(getString(R.string.chartsmao), getDrawable(R.drawable.charts)));
             arrayList.add(new ToolsModel(getString(R.string.erssss), getDrawable(R.drawable.more)));
         }else {
             binding.officerTag.setVisibility(View.VISIBLE);
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .into(binding.imView);
             }
-            binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
+            //binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
         }
 
         myListAdapter adapter = new myListAdapter();
@@ -127,11 +133,15 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                         showBottomDialog();
                         break;
                     case 3:
-                        startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+                        //same
+                        startActivity(new Intent(MainActivity.this, ListActivity.class));
                         break;
                     case 4:
-                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
+                        startActivity(new Intent(MainActivity.this, SurveyActivity.class));
                         break;
+//                    case 5:
+//                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
+//                        break;
                     case 5:
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                         break;

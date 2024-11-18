@@ -36,14 +36,14 @@
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/slip"
+                android:id="@+id/scrutiny"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5mdp"
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="@string/slip"
+                android:text="@string/scrutiny"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -118,6 +118,15 @@
                 android:textStyle="bold"
                 android:paddingEnd="@dimen/_5mdp"
                 android:background="@drawable/bg_light_orange"
+                android:textSize="@dimen/_13font_mdp" />
+            <TextView
+                android:id="@+id/gname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Name : Person Name"
+                android:paddingStart="@dimen/_5mdp"
+                android:paddingEnd="@dimen/_5mdp"
                 android:textSize="@dimen/_13font_mdp" />
             <TextView
                 android:id="@+id/serialNo"

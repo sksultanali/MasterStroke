@@ -15,7 +15,7 @@
     <string name="sexs">By Sex</string>
     <string name="obile_no_lists">By Mobile No List</string>
     <string name="search">Search</string>
-    <string name="list">List</string>
+    <string name="list">Scrutiny</string>
     <string name="surveyss">Survey</string>
     <string name="chartsmao">Charts</string>
     <string name="erssss">Others</string>
@@ -70,4 +70,7 @@
     <string name="merged_last_names">Merged Last Names</string>
     <string name="by_age_partwise">By Age (PartWise)</string>
     <string name="track_workings">Track Workings</string>
+    <string name="scrutiny">Scrutiny</string>
+    <string name="voter_slip">Voter Slip</string>
+    <string name="updates">Updates</string>
 </resources>

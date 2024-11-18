@@ -352,6 +352,12 @@ public class Helper {
         return date;
     }
 
+    public static String getTodayS(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM");
+        String date = simpleDateFormat.format(new Date());
+        return date;
+    }
+
     public static double getSimilarityPercentage(String str1, String str2) {
         // Calculate the Levenshtein distance
         int distance = calculateLevenshteinDistance(str1, str2);
@@ -405,6 +411,14 @@ public class Helper {
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        return tomorrow.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getTomorrowDateS() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
         return tomorrow.format(formatter);
     }
 

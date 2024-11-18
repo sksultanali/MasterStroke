@@ -41,14 +41,14 @@ public class ListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add(getString(R.string.complete_list)); //0
-        arrayList.add(getString(R.string.address)); //1
         arrayList.add(getString(R.string.boothName)); //2
         arrayList.add(getString(R.string.names));  //3
         arrayList.add(getString(R.string.by_voter_id_no)); //4
         arrayList.add(getString(R.string.by_house_no)); //4
         arrayList.add(getString(R.string.by_family)); //4
         if (Helper.ADMIN_APPLICATION){
+            arrayList.add(getString(R.string.complete_list)); //0
+            arrayList.add(getString(R.string.address)); //1
             arrayList.add(getString(R.string.by_age)); //5
             arrayList.add(getString(R.string.by_age_partwise)); //5
             arrayList.add(getString(R.string.by_language)); //6
@@ -72,19 +72,11 @@ public class ListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch ((position)){
                     case 0:
-                        startActivity(new Intent(ListActivity.this, SearchActivity.class));
-                        break;
-                    case 1:
-                        Intent l = new Intent(ListActivity.this, PartSectionActivity.class);
-                        l.putExtra("name", "address");
-                        startActivity(l);
-                        break;
-                    case 2:
                         Intent k = new Intent(ListActivity.this, PartSectionActivity.class);
                         k.putExtra("name", "part_no");
                         startActivity(k);
                         break;
-                    case 3:
+                    case 1:
                         searchDialog("name", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -92,7 +84,7 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 4:
+                    case 2:
                         searchDialog("voter_id", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -100,7 +92,7 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 5:
+                    case 3:
                         searchDialog("house", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -108,11 +100,19 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 6:
+                    case 4:
                         Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
                         mn.putExtra("name", "family_Part");
                         mn.putExtra("lan", "F");
                         startActivity(mn);
+                        break;
+                    case 5:
+                        startActivity(new Intent(ListActivity.this, SearchActivity.class));
+                        break;
+                    case 6:
+                        Intent l = new Intent(ListActivity.this, PartSectionActivity.class);
+                        l.putExtra("name", "address");
+                        startActivity(l);
                         break;
                     case 7:
                         searchDialog("age", keyword->{

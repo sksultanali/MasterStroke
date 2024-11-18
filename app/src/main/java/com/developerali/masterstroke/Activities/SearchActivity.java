@@ -40,6 +40,7 @@ import com.developerali.masterstroke.databinding.DialogShareSlipBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -341,6 +342,46 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         });
     }
 
+    public void RecordLocation(String note, String partNo, String address){
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<UpdateModel> call = apiService.insertWorkRecord(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                Helper.USER_NAME,
+                Helper.getCurrentAddress(SearchActivity.this, Helper.UPDATED_LOCATION),
+                Helper.formatDateTime(new Date().getTime()),
+                Helper.WARD,
+                note,
+                partNo,
+                Helper.getTextBeforeParenthesis(address),
+                Helper.UPDATED_DISTANCE
+        );
+
+        progressDialog.show();
+        call.enqueue(new Callback<UpdateModel>() {
+            @Override
+            public void onResponse(Call<UpdateModel> call, Response<UpdateModel> response) {
+                if (response.isSuccessful()) {
+                    UpdateModel apiResponse = response.body();
+//                    Toast.makeText(VoterDetails.this, apiResponse.getStatus()
+//                            + " : " + apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+//                    Toast.makeText(VoterDetails.this, "Failed here...!", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("VoterDetails.this", "URL: " + call.request().url());
+                Helper.UPDATED_DISTANCE = "0m";
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<UpdateModel> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.d("VoterDetails.this", "URL: " + call.request().url());
+                //Toast.makeText(VoterDetails.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void editDialog() {
         DialogTextInputBinding dialogBinding = DialogTextInputBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -358,6 +399,8 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 dialogBinding.textInputL.setError("*");
             }else {
                 ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
+                RecordLocation("Slip SMS Delivered : Family (" + items.size() + ")",
+                        items.get(0).getPartNo(), items.get(0).getAddress());
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int ij = 0; ij < items.size(); ij++){
                     if (ij == 0){
@@ -375,6 +418,8 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
         dialogBinding.btnPrint.setOnClickListener(v->{
             ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
+            RecordLocation("Printed : Family (" + items.size() + ")",
+                    items.get(0).getPartNo(), items.get(0).getAddress());
             StringBuilder stringBuilder = new StringBuilder();
             for (int ij = 0; ij < items.size(); ij++){
                 progressDialog.setMessage("Slip no " + (ij+1) + " is printing in process...");
