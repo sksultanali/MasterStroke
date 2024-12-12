@@ -342,7 +342,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         });
     }
 
-    public void RecordLocation(String note, String partNo, String address){
+    public void RecordLocation(String note, String partNo, String slNo, String address){
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<UpdateModel> call = apiService.insertWorkRecord(
                 "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
@@ -352,6 +352,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 Helper.WARD,
                 note,
                 partNo,
+                slNo,
                 Helper.getTextBeforeParenthesis(address),
                 Helper.UPDATED_DISTANCE
         );
@@ -400,7 +401,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             }else {
                 ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
                 RecordLocation("Slip SMS Delivered : Family (" + items.size() + ")",
-                        items.get(0).getPartNo(), items.get(0).getAddress());
+                        items.get(0).getPartNo(), items.get(0).getSl_no(), items.get(0).getAddress());
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int ij = 0; ij < items.size(); ij++){
                     if (ij == 0){
@@ -419,7 +420,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
         dialogBinding.btnPrint.setOnClickListener(v->{
             ArrayList<PhoneAddressModel.Item> items = adapter.getSelectedRows();
             RecordLocation("Printed : Family (" + items.size() + ")",
-                    items.get(0).getPartNo(), items.get(0).getAddress());
+                    items.get(0).getPartNo(), items.get(0).getSl_no(), items.get(0).getAddress());
             StringBuilder stringBuilder = new StringBuilder();
             for (int ij = 0; ij < items.size(); ij++){
                 progressDialog.setMessage("Slip no " + (ij+1) + " is printing in process...");

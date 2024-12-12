@@ -63,11 +63,27 @@
 
             <Button
                 android:id="@+id/btnLog"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:drawableStart="@drawable/baseline_login_24"
                 android:layout_marginTop="@dimen/_20mdp"
                 android:text="Login" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:layout_gravity="center"
+                android:text="--or--"/>
+
+            <Button
+                android:id="@+id/btnQr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5mdp"
+                android:drawableStart="@drawable/baseline_qr_code_scanner_24"
+                android:text="Qr Login" />
         </LinearLayout>
 
     </LinearLayout>

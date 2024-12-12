@@ -222,7 +222,8 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                         Helper.LANGUAGE = "";
                         Intent mn = new Intent(activity.getApplicationContext(), PartSectionActivity.class);
                         mn.putExtra("name", "language_Part");
-                        mn.putExtra("lan", details.getTxt());
+                        //mn.putExtra("lan", details.getTxt());
+                        mn.putExtra("lan", "");
                         activity.startActivity(mn);
                     });
                 }else {

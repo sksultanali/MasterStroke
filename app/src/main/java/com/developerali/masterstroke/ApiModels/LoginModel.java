@@ -45,6 +45,8 @@ public class LoginModel {
         private String party_suggest;
         @SerializedName("candidate_name")
         private String candidate_name;
+        @SerializedName("suspend")
+        private String suspend;
 
         public String getUserId() {
             return userId;
@@ -108,6 +110,14 @@ public class LoginModel {
 
         public void setCandidate_name(String candidate_name) {
             this.candidate_name = candidate_name;
+        }
+
+        public String getSuspend() {
+            return suspend;
+        }
+
+        public void setSuspend(String suspend) {
+            this.suspend = suspend;
         }
 
         public String getHome_link() {

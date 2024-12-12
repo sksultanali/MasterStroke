@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +37,9 @@ import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
+import com.developerali.masterstroke.Activities.SplashScree;
 import com.developerali.masterstroke.Activities.SurveyActivity;
+import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.Helpers.LocationService;
 import com.developerali.masterstroke.Models.ToolsModel;
@@ -54,6 +57,10 @@ import com.google.android.gms.tasks.Task;
 import com.mannan.translateapi.Language;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements LocationService.LocationUpdateListener{
 
@@ -160,7 +167,43 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
 
 
         //checkLocationAndUpdateTime();
+        if (Helper.getUserLogin(MainActivity.this)){
+            getDetails(Helper.USER_NAME, Helper.PASSWORD);
+        }
 
+    }
+
+    private void getDetails(String userName, String password) {
+
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<LoginModel> call = apiService.getLoginCredentials(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                userName
+        );
+
+        call.enqueue(new Callback<LoginModel>() {
+            @Override
+            public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginModel apiResponse = response.body();
+
+                    if (apiResponse.getItem() != null && !apiResponse.getItem().isEmpty()){
+                        LoginModel.Item userDetails = apiResponse.getItem().get(0);
+                        if (userDetails.getSuspend().equalsIgnoreCase("yes")){
+                            Toast.makeText(MainActivity.this, "Account Suspended..!", Toast.LENGTH_LONG).show();
+                            Helper.clearSharedPreferences(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginModel> call, Throwable t) {
+                //Toast.makeText(MainActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -251,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
             //Helper.saveLanguagePreference(MainActivity.this, "bn");
             Helper.clearSharedPreferences(MainActivity.this);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

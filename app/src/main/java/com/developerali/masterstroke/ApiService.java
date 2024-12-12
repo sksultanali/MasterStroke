@@ -52,6 +52,22 @@ public interface ApiService {
             @Query("ward") String ward,
             @Query("note") String note,
             @Query("part_no") String part_no,
+            @Query("sl_no") String sl_no,
+            @Query("works") String works,
+            @Query("actual_address") String actual_address,
+            @Query("distance") String distance
+    );
+
+    @GET("insertWorkRecord")
+    Call<UpdateModel> insertWorkRecord(
+            @Query("token") String token,
+            @Query("username") String username,
+            @Query("location") String location,
+            @Query("date") String date,
+            @Query("ward") String ward,
+            @Query("note") String note,
+            @Query("part_no") String part_no,
+            @Query("sl_no") String sl_no,
             @Query("actual_address") String actual_address,
             @Query("distance") String distance
     );

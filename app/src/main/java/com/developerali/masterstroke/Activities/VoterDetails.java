@@ -64,6 +64,7 @@ public class VoterDetails extends AppCompatActivity {
     String note;
     int ageBack;
     Animation blinkAnimation;
+    int worksDone = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -237,7 +238,9 @@ public class VoterDetails extends AppCompatActivity {
 //        });
 
         binding.scrutiny.setOnClickListener(v->{
-            updateData(details.getConPhoneId(), "stat", "edited", note);
+            //updateData(details.getConPhoneId(), "stat", "edited", note + "\n" + Helper.UPDATED_DISTANCE + "  |  From- " + Helper.getCurrentAddress(VoterDetails.this, Helper.UPDATED_LOCATION));
+            updateData(details.getConPhoneId(), "stat", "edited", note + "  |  From- " + Helper.UPDATED_DISTANCE);
+            RecordLocation("edited : " + details.getName());
             binding.scrutiny.setAnimation(null);
         });
 
@@ -246,7 +249,7 @@ public class VoterDetails extends AppCompatActivity {
         binding.share.setOnClickListener(v->{
             if (mobileReturn(details) != null){
                 Helper.saveFavourText(binding.favourText.getText().toString(), VoterDetails.this);
-                shareDialog(mobileReturn(details));
+                shareDialog(mobileReturn(details), " ");
             }else {
                 Helper.showCustomMessage(VoterDetails.this, "Error 405",
                         "Mobile number is not available for this voter. Please make sure voter has a valid mobile number.");
@@ -262,9 +265,11 @@ public class VoterDetails extends AppCompatActivity {
             }else {
                 surveyDialog("Select from below parties", parties, keyword->{
                     note = " _updated survey by " + Helper.USER_NAME;
+                    worksDone++;
                     updateData(details.getConPhoneId(), "intereset_party", keyword, note);
 
                     updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
+                    RecordLocation("survey : " + details.getName());
                     binding.surveyBtn.setAnimation(null);
                 });
             }
@@ -288,6 +293,7 @@ public class VoterDetails extends AppCompatActivity {
                     updateData(details.getConPhoneId(), "language", "Urdu", note);
                 }
 
+                worksDone++;
                 updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
@@ -305,6 +311,7 @@ public class VoterDetails extends AppCompatActivity {
                     note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Dead", note);
                 }
+                worksDone++;
                 updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
@@ -319,6 +326,7 @@ public class VoterDetails extends AppCompatActivity {
                     note = " _updated HOF by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "hof", "No", note);
                 }
+                worksDone++;
                 updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
@@ -333,6 +341,7 @@ public class VoterDetails extends AppCompatActivity {
                     note = " _updated party worker by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "party_worker", "No", note);
                 }
+                worksDone++;
                 updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
             }
         });
@@ -359,6 +368,7 @@ public class VoterDetails extends AppCompatActivity {
                         updateData(details.getConPhoneId(), "dob", formattedDate, note);
                         updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
                         binding.dob.setText(selectedDateText);
+                        worksDone++;
                     },
                     year, month, day);
             datePickerDialog.show();
@@ -382,12 +392,13 @@ public class VoterDetails extends AppCompatActivity {
                         updateData(details.getConPhoneId(), "doa", formattedDate, note);
                         updateData(details.getConPhoneId(), "update_date", Helper.formatDate(new Date().getTime()), note);
                         binding.doa.setText(selectedDateText);
+                        worksDone++;
                     },
                     year, month, day);
             datePickerDialog.show();
         });
 
-        binding.wishBirthday.setOnClickListener(v->{
+        binding.wishAnni.setOnClickListener(v->{
             if (details.getMobile() != null && !details.getMobile().isEmpty()){
                 if (binding.hindi.isChecked()){
                     wishDialog(details.getMobile(), Helper.wishAnniversary("hi", details.getName()));
@@ -410,7 +421,7 @@ public class VoterDetails extends AppCompatActivity {
             }
         });
 
-        binding.wishAnni.setOnClickListener(v->{
+        binding.wishBirthday.setOnClickListener(v->{
             if (details.getMobile() != null && !details.getMobile().isEmpty()){
                 if (binding.hindi.isChecked()){
                     wishDialog(details.getMobile(), Helper.wishBirthday("hi", details.getName()));
@@ -681,7 +692,9 @@ public class VoterDetails extends AppCompatActivity {
                 Helper.WARD,
                 note,
                 details.getPartNo(),
-                Helper.getTextBeforeParenthesis(details.getAddress()),
+                details.getSl_no(),
+                String.valueOf(worksDone),
+                details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()),
                 Helper.UPDATED_DISTANCE
         );
 
@@ -756,6 +769,7 @@ public class VoterDetails extends AppCompatActivity {
                 dialogBinding.textInputL.setError("*");
             }else {
                 note = " _updated phone no by " + Helper.USER_NAME;
+                worksDone++;
                 updateData(details.getConPhoneId(), "new_mobile", text, note);
                 binding.phone.setText("New Mobile No : " + text);
                 dialog.dismiss();
@@ -852,7 +866,7 @@ public class VoterDetails extends AppCompatActivity {
     }
 
 
-    public void shareDialog(String phoneNumber){
+    public void shareDialog(String phoneNumber, String text){
         DialogShareSlipBinding dialogBinding = DialogShareSlipBinding.inflate(getLayoutInflater());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogBinding.getRoot());
@@ -860,7 +874,7 @@ public class VoterDetails extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialogBinding.whatsapp.setOnClickListener(v -> {
-            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(Helper.slipText(details, VoterDetails.this));
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(text);
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse(url));
             try {
@@ -871,7 +885,7 @@ public class VoterDetails extends AppCompatActivity {
             }
         });
         dialogBinding.businessWhatsapp.setOnClickListener(v -> {
-            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(Helper.slipText(details, VoterDetails.this));
+            String url = "https://wa.me/" + Helper.phoneNoWithCountryCode(phoneNumber) + "?text=" + Uri.encode(text);
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse(url));
             try {
@@ -885,7 +899,7 @@ public class VoterDetails extends AppCompatActivity {
         dialogBinding.sms.setOnClickListener(v -> {
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse("sms:" + phoneNumber));
-            sendIntent.putExtra("sms_body", Helper.slipText(details, VoterDetails.this));
+            sendIntent.putExtra("sms_body", text);
             startActivity(sendIntent);
             dialog.dismiss();
         });
@@ -895,7 +909,7 @@ public class VoterDetails extends AppCompatActivity {
             sendIntent.setType("message/rfc822");
             sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
             sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Voter Slip");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, Helper.slipText(details, VoterDetails.this));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, text);
             try {
                 startActivity(Intent.createChooser(sendIntent, "Send mail..."));
                 dialog.dismiss();
@@ -908,7 +922,7 @@ public class VoterDetails extends AppCompatActivity {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.setType("text/plain");
-            sendIntent.putExtra(Intent.EXTRA_TEXT, Helper.slipText(details, VoterDetails.this));
+            sendIntent.putExtra(Intent.EXTRA_TEXT, text);
             startActivity(Intent.createChooser(sendIntent, "Share Voter Slip Via..."));
             dialog.dismiss();
         });
