@@ -29,7 +29,7 @@ public class PartiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPartiesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getSupportActionBar().setTitle("Party Surveys");
+        getSupportActionBar().setTitle(R.string.partySurveys);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -59,10 +59,14 @@ public class PartiesActivity extends AppCompatActivity {
         binding.listItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent ik = new Intent(PartiesActivity.this, SearchActivity.class);
-                ik.putExtra("keyword", arrayList.get(i));
-                ik.putExtra("searchOn", "intereset_party");
-                startActivity(ik);
+//                Intent ik = new Intent(PartiesActivity.this, SearchActivity.class);
+//                ik.putExtra("keyword", arrayList.get(i));
+//                ik.putExtra("searchOn", "intereset_party");
+//                startActivity(ik);
+                Intent lj = new Intent(PartiesActivity.this, PartSectionActivity.class);
+                lj.putExtra("name", "intereset_party");
+                lj.putExtra("lan", arrayList.get(i));
+                startActivity(lj);
             }
         });
 

@@ -21,13 +21,46 @@
         android:textSize="@dimen/_11font_mdp"/>
 
     <LinearLayout
+        android:id="@+id/searchOption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@drawable/bg_white_color_corner8"
+        app:layout_constraintTop_toBottomOf="@id/selectedNo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/_10mdp">
+
+        <EditText
+            android:id="@+id/homeNoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:maxLines="1"
+            android:background="@drawable/bg_dark_gray_corner8"
+            android:hint="Enter house no here..."/>
+        <Button
+            android:id="@+id/goHouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:layout_marginStart="@dimen/_10mdp"
+            android:text="go"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="visible"
         android:background="@drawable/bg_white_color_corner8"
-        app:layout_constraintTop_toBottomOf="@id/selectedNo"
+        app:layout_constraintTop_toBottomOf="@id/searchOption"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/_10mdp">
@@ -127,6 +160,19 @@
         android:background="@drawable/click_effect_red_gray"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <Button
+        android:id="@+id/btnFamily"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_8mdp"
+        android:text="Consider as Family"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/click_effect_back"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/shareSlip"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

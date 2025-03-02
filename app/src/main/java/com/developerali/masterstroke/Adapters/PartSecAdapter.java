@@ -199,6 +199,7 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
 
             }else {
                 holder.itemView.setOnClickListener(v->{
+//                    Toast.makeText(activity, "cli", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
                     i.putExtra("keyword", details.getTxt());
                     i.putExtra("searchOn", type);
@@ -220,13 +221,18 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     holder.itemView.setOnClickListener(v->{
                         Helper.LANGUAGE = "";
                         Intent mn = new Intent(activity.getApplicationContext(), PartSectionActivity.class);
-                        //mn.putExtra("name", "lname");
                         mn.putExtra("name", "language_Part");
-                        mn.putExtra("lan", details.getTxt());
+                        //mn.putExtra("lan", details.getTxt());
+                        mn.putExtra("lan", "");
                         activity.startActivity(mn);
                     });
                 }else {
-                    holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vasi");
+                    if (details.getTxt().equalsIgnoreCase("Hindi") || details.getTxt().equalsIgnoreCase("Bengali")){
+                        holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vashi + Hindu");
+                    }else {
+                        holder.binding.voterName.setText( type.toUpperCase() + " - " + details.getTxt()+"vashi + Muslim");
+                    }
+
                     holder.itemView.setOnClickListener(v->{
                         Intent q = new Intent(activity, PartSectionActivity.class);
                         q.putExtra("name", "language_Part");
@@ -245,6 +251,19 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("keyword", Helper.LANGUAGE);
                     i.putExtra("dualSearch", details.getTxt());
                     i.putExtra("searchOn", "language");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("ageDual")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.MIN_AGE + " AND " + Helper.MAX_AGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "age");
                     activity.startActivity(i);
                 });
             }else if (type.equalsIgnoreCase("religion")){
@@ -266,8 +285,95 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", "religion");
                     activity.startActivity(i);
                 });
-            } else if (type.equalsIgnoreCase("part_no")) {
+            }else if (type.equalsIgnoreCase("family_Part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
                 holder.binding.otherDetails.setText("Total - " + details.getTotal());
+                Helper.LANGUAGE = "F";
+
+
+                holder.itemView.setOnClickListener(v->{
+                    Intent mn = new Intent(activity.getApplicationContext(), PartSectionActivity.class);
+                    mn.putExtra("name", "family_Part_Part");
+                    mn.putExtra("lan", details.getTxt());
+                    activity.startActivity(mn);
+                });
+            }else if (type.equalsIgnoreCase("family_Part_Part")){
+                if (details.getTxt() == null || details.getTxt().isEmpty()){
+                    holder.binding.voterName.setText("UNDEFINED");
+                }else{
+                    holder.binding.voterName.setText(details.getHof_name() + " - " + details.getTxt());
+                }
+                holder.binding.otherDetails.setText("Total - " + details.getTotal());
+
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", details.getTxt());
+                    i.putExtra("searchOn", "family");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("Dead_part") || type.equalsIgnoreCase("Relocated_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "status");
+                    activity.startActivity(i);
+                });
+            } else if (type.equalsIgnoreCase("intereset_party")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "intereset_party");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("hof_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "hof");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("doa_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "doa");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("dob_part")){
+                holder.binding.voterName.setText( "PART_NO - " + details.getTxt());
+                holder.binding.otherDetails.setText("Total - " + details.getTotal()+
+                        (details.getTotal_count() == null ? grossTotal : " / " + details.getTotal_count() + "   | "
+                                + Helper.calculatePercentage(details.getTotal(), details.getTotal_count()) + "%"));
+                holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", Helper.LANGUAGE);
+                    i.putExtra("dualSearch", details.getTxt());
+                    i.putExtra("searchOn", "dob");
+                    activity.startActivity(i);
+                });
+            }else if (type.equalsIgnoreCase("part_no")) {
+                holder.binding.otherDetails.setText("Total - " + details.getTotal());
+                Helper.PART_NO = details.getTxt();
 
                 holder.itemView.setOnClickListener(v->{
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
@@ -275,8 +381,41 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
                     i.putExtra("searchOn", type);
                     activity.startActivity(i);
                 });
-            } else{
+            } else if (type.equalsIgnoreCase("address")) {
+
+                Helper.translateText(activity, holder.binding.voterName.getText().toString(), new Helper.TranslationCallback() {
+                    @Override
+                    public void onTranslationSuccess(String translatedText) {
+                        holder.binding.voterName.setText(translatedText);
+                    }
+
+                    @Override
+                    public void onTranslationFailure(String errorText) {
+
+                    }
+                });
+
+                Helper.translateText(activity, holder.binding.otherDetails.getText().toString(), new Helper.TranslationCallback() {
+                    @Override
+                    public void onTranslationSuccess(String translatedText) {
+                        holder.binding.otherDetails.setText(translatedText);
+                    }
+
+                    @Override
+                    public void onTranslationFailure(String errorText) {
+
+                    }
+                });
+
                 holder.itemView.setOnClickListener(v->{
+                    Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
+                    i.putExtra("keyword", details.getTxt());
+                    i.putExtra("searchOn", type);
+                    activity.startActivity(i);
+                });
+            }else {
+                holder.itemView.setOnClickListener(v->{
+//                    Toast.makeText(activity, "cli2", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(activity.getApplicationContext(), SearchActivity.class);
                     i.putExtra("keyword", details.getTxt());
                     i.putExtra("searchOn", type);
@@ -294,6 +433,8 @@ public class PartSecAdapter  extends RecyclerView.Adapter<PartSecAdapter.ViewHol
 //                removeMatchedList(arrayList, itemsToRemove);
 //            }
 //        }
+
+
 
     }
 

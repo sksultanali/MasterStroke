@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.databinding.ActivityListBinding;
 import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
@@ -35,26 +36,31 @@ public class ListActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.WARD = sharedPreferences.getString("ward_id", "0");
 
-        getSupportActionBar().setTitle("List Page");
+        getSupportActionBar().setTitle(R.string.list_page);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         arrayList.clear();
-        arrayList.add("Complete list"); //0
-        arrayList.add("By Address"); //1
-        arrayList.add("By Booth"); //2
-        arrayList.add("By Name");  //3
-        arrayList.add("By Voter Id No"); //4
+        arrayList.add(getString(R.string.boothName)); //2
+        arrayList.add(getString(R.string.names));  //3
+        arrayList.add(getString(R.string.by_voter_id_no)); //4
+        arrayList.add(getString(R.string.by_house_no)); //4
+        arrayList.add(getString(R.string.by_family)); //4
         if (Helper.ADMIN_APPLICATION){
-            arrayList.add("By Age"); //5
-            arrayList.add("By Language"); //6
-            arrayList.add("By Religion"); //7
-            arrayList.add("By Last Name");  //8
-            arrayList.add("By Sex");  //9
-            arrayList.add("By Section");  //10
-            arrayList.add("By Mobile No List"); //11
-            arrayList.add("Dead");  //12
-            arrayList.add("By Common Name"); //13
+            arrayList.add(getString(R.string.complete_list)); //0
+            arrayList.add(getString(R.string.address)); //1
+            arrayList.add(getString(R.string.by_age)); //5
+            arrayList.add(getString(R.string.by_age_partwise)); //5
+            arrayList.add(getString(R.string.by_language)); //6
+            arrayList.add(getString(R.string.by_religions)); //7
+            arrayList.add(getString(R.string.last_names));  //8
+            arrayList.add(getString(R.string.sexs));  //9
+            //arrayList.add("By Section");  //10
+            arrayList.add(getString(R.string.obile_no_lists)); //11
+            arrayList.add(getString(R.string.merged_last_names)); //11
+        }
+        if (!Helper.WB){
+            arrayList.add(getString(R.string.by_hindu_caste)); //11
         }
 
 
@@ -66,18 +72,11 @@ public class ListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch ((position)){
                     case 0:
-                        startActivity(new Intent(ListActivity.this, SearchActivity.class));
-                        break;
-                    case 1:
-                        Intent l = new Intent(ListActivity.this, PartSectionActivity.class);
-                        l.putExtra("name", "address");
-                        startActivity(l);
-                        break;
-                    case 2:
                         Intent k = new Intent(ListActivity.this, PartSectionActivity.class);
                         k.putExtra("name", "part_no");
                         startActivity(k);
-                    case 3:
+                        break;
+                    case 1:
                         searchDialog("name", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -85,7 +84,7 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 4:
+                    case 2:
                         searchDialog("voter_id", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -93,7 +92,29 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
+                    case 3:
+                        searchDialog("house", keyword->{
+                            Intent i = new Intent(ListActivity.this, SearchActivity.class);
+                            i.putExtra("keyword", keyword);
+                            i.putExtra("searchOn", "house");
+                            startActivity(i);
+                        });
+                        break;
+                    case 4:
+                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+                        mn.putExtra("name", "family_Part");
+                        mn.putExtra("lan", "F");
+                        startActivity(mn);
+                        break;
                     case 5:
+                        startActivity(new Intent(ListActivity.this, SearchActivity.class));
+                        break;
+                    case 6:
+                        Intent l = new Intent(ListActivity.this, PartSectionActivity.class);
+                        l.putExtra("name", "address");
+                        startActivity(l);
+                        break;
+                    case 7:
                         searchDialog("age", keyword->{
                             Intent i = new Intent(ListActivity.this, SearchActivity.class);
                             i.putExtra("keyword", keyword);
@@ -101,52 +122,57 @@ public class ListActivity extends AppCompatActivity {
                             startActivity(i);
                         });
                         break;
-                    case 6:
+                    case 8:
+                        searchDialog("age", keyword->{
+                            Intent i = new Intent(ListActivity.this, PartSectionActivity.class);
+                            i.putExtra("name", "ageDual");
+                            startActivity(i);
+                        });
+                        break;
+                    case 9:
                         //Religion
                         Intent q = new Intent(ListActivity.this, PartSectionActivity.class);
                         q.putExtra("name", "language");
                         Helper.RemoveMarked = true;
                         startActivity(q);
                         break;
-                    case 7:
+                    case 10:
                         Intent m = new Intent(ListActivity.this, PartSectionActivity.class);
                         m.putExtra("name", "religion");
                         startActivity(m);
                         break;
-                    case 8:
-                        Intent mn = new Intent(ListActivity.this, PartSectionActivity.class);
+                    case 11:
+                        Intent mon = new Intent(ListActivity.this, PartSectionActivity.class);
                         Helper.MARKING_ENABLE = true;
                         Helper.RemoveMarked = false;
-                        mn.putExtra("name", "lname");
-                        startActivity(mn);
+                        mon.putExtra("name", "lname");
+                        startActivity(mon);
                         break;
-                    case 9:
+                    case 12:
                         Intent s = new Intent(ListActivity.this, PartSectionActivity.class);
                         s.putExtra("name", "sex");
                         startActivity(s);
                         break;
-                    case 10:
-                        Intent j = new Intent(ListActivity.this, PartSectionActivity.class);
-                        j.putExtra("name", "section");
-                        startActivity(j);
-                        break;
-                    case 11:
+//                    case 12:
+//                        Intent j = new Intent(ListActivity.this, PartSectionActivity.class);
+//                        j.putExtra("name", "section");
+//                        startActivity(j);
+//                        break;
+                    case 13:
                         Intent i = new Intent(ListActivity.this, SearchActivity.class);
                         i.putExtra("keyword", "");
                         i.putExtra("searchOn", "mobile");
                         startActivity(i);
                         break;
-                    case 12:
-                        Intent ik = new Intent(ListActivity.this, SearchActivity.class);
-                        ik.putExtra("keyword", "Dead");
-                        ik.putExtra("searchOn", "status");
-                        startActivity(ik);
+                    case 14:
+                        Intent iolp = new Intent(ListActivity.this, MergeActivity.class);
+                        iolp.putExtra("name", "merged_lname");
+                        startActivity(iolp);
                         break;
-                    case 13:
-                        Intent mno = new Intent(ListActivity.this, PartSectionActivity.class);
-                        mno.putExtra("name", "lname");
-                        mno.putExtra("merge", "cname");
-                        startActivity(mno);
+                    case 15:
+                        Intent ilp = new Intent(ListActivity.this, PartSectionActivity.class);
+                        ilp.putExtra("name", "caste");
+                        startActivity(ilp);
                         break;
                 }
             }
@@ -179,6 +205,8 @@ public class ListActivity extends AppCompatActivity {
                             "Minimum age must be lesser then maximum age. Recheck before search..!");
                 }else {
                     dialog.dismiss();
+                    Helper.MIN_AGE = min;
+                    Helper.MAX_AGE = max;
                     callback.onResult(min + " AND " + max);
                 }
             });

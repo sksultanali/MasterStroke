@@ -47,7 +47,7 @@ public class ChildActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle("Add People");
+        getSupportActionBar().setTitle(R.string.add_people);
 
         SharedPreferences sharedPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.WARD = sharedPreferences.getString("ward_id", "0");

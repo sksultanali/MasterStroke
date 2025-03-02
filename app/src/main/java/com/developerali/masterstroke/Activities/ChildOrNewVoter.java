@@ -61,7 +61,7 @@ public class ChildOrNewVoter extends AppCompatActivity {
         setContentView(binding.getRoot());
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Students");
+        getSupportActionBar().setTitle(R.string.students);
 
         SharedPreferences sharedPreferences = getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.WARD = sharedPreferences.getString("ward_id", "0");

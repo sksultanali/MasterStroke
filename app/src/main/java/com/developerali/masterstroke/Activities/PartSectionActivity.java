@@ -42,6 +42,7 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
     ArrayList<String> sort = new ArrayList<>();
     ProgressDialog progressDialog;
     ArrayList<String> arrayListChoose;
+    ArrayList<String> casteArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +96,49 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + "vasi by L_Name");
                 Helper.MARKING_ENABLE = false;
                 txt = "lname";
+                adType = "lname_language";
             }
         }else if (txt.equalsIgnoreCase("religion_Part")){
             Helper.LANGUAGE = intent.getStringExtra("lan");
             getLanPartData("religion", Helper.LANGUAGE );
             getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("ageDual")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("ageDual", Helper.MIN_AGE );
+            getSupportActionBar().setTitle("Age between " + Helper.MIN_AGE + " & " + Helper.MAX_AGE + " partwise");
+        }else if (txt.equalsIgnoreCase("family_Part")){
+
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("family", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on family");
+
+        } else if (txt.equalsIgnoreCase("family_Part_Part")){
+
+            Helper.LANGUAGE = intent.getStringExtra("lan"); // part_no
+            String F = Helper.LANGUAGE;
+            getRequestedData(txt, "family");
+            getSupportActionBar().setTitle("Search on family in " + Helper.LANGUAGE);
+
+        } else if (txt.equalsIgnoreCase("Dead_Part") || txt.equalsIgnoreCase("Relocated_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("status", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("Doa_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("doa", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("DOA " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("Dob_Part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("dob", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("DOB " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("intereset_party")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("intereset_party", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Search on " + Helper.LANGUAGE + " partwise");
+        }else if (txt.equalsIgnoreCase("hof_part")){
+            Helper.LANGUAGE = intent.getStringExtra("lan");
+            getLanPartData("hof", Helper.LANGUAGE );
+            getSupportActionBar().setTitle("Head of Family Partwise");
         }else {
             getRequestedData(txt, null);
         }
@@ -141,8 +180,8 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
 
         arrayListChoose = new ArrayList<>();
         arrayListChoose.clear();
-        arrayListChoose.add("Bengali");
-        arrayListChoose.add("Hindi");
+        arrayListChoose.add("Bengali/Hindu");
+        arrayListChoose.add("Hindi/Hindu");
         arrayListChoose.add("Urdu/Muslim");
 
         binding.shareSlip.setOnClickListener(v -> {
@@ -153,8 +192,34 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                 if (keyword.equalsIgnoreCase("Urdu/Muslim")){
                     updateItemsSequentially(items, "language", "Urdu", 0);
                     updateItemsSequentially(items, "religion", "Muslim", 0);
+                }else if (keyword.equalsIgnoreCase("Hindi/Hindu")){
+                    updateItemsSequentially(items, "language", "Hindi", 0);
+                    updateItemsSequentially(items, "religion", "Hindu", 0);
                 }else {
-                    updateItemsSequentially(items, "language", keyword, 0);
+                    updateItemsSequentially(items, "language", "Bengali", 0);
+                    updateItemsSequentially(items, "religion", "Hindu", 0);
+                }
+
+            });
+        });
+
+        casteArray = new ArrayList<>();
+        casteArray.clear();
+        casteArray.add("Upper");
+        casteArray.add("OBC");
+        casteArray.add("SC/ST");
+
+        binding.casteUpdate.setOnClickListener(v -> {
+            Helper.searchDialog(PartSectionActivity.this, "Set Caste", casteArray, keyword -> {
+                ArrayList<WardClass.Item> items = adapter.getSelectedRows();
+                progressDialog.show();
+
+                if (keyword.equalsIgnoreCase("Upper")){
+                    updateItemsSequentially(items, "caste", "Upper", 0);
+                }else if (keyword.equalsIgnoreCase("OBC")){
+                    updateItemsSequentially(items, "caste", "OBC", 0);
+                }else {
+                    updateItemsSequentially(items, "caste", "SC/ST", 0);
                 }
 
             });
@@ -177,6 +242,37 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
             Toast.makeText(this, "All updates completed!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void updateItemsSequentiallyLname(ArrayList<WardClass.Item> items, String fieldname, String keyword, int index) {
+        if (index < items.size()) {
+            WardClass.Item currentItem = items.get(index);
+            ArrayList<String> subnames = currentItem.getSubnames();
+
+            // Process each subname sequentially
+            updateSubnamesSequentially2(subnames, fieldname, keyword, 0, () -> {
+                // Once all subnames are processed, proceed to the next main item
+                updateItemsSequentiallyLname(items, fieldname, keyword, index + 1);
+            });
+        } else {
+            // All updates are done
+            progressDialog.dismiss();
+            Toast.makeText(this, "All updates completed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateSubnamesSequentially2(ArrayList<String> subnames, String fieldname, String keyword, int subIndex, Runnable onComplete) {
+        if (subIndex < subnames.size()) {
+            // Update the current subname
+            updateAllData(subnames.get(subIndex), fieldname, keyword, subIndex, success -> {
+                // Proceed to the next subname after the current update is complete
+                updateSubnamesSequentially2(subnames, fieldname, keyword, subIndex + 1, onComplete);
+            });
+        } else {
+            // All subnames are done, call the completion callback
+            onComplete.run();
+        }
+    }
+
 
     interface UpdateCallback {
         void onUpdateComplete(boolean success);
@@ -227,10 +323,18 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
         binding.progressBar.setVisibility(View.VISIBLE);
 
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
-        Call<WardClass> call = apiService.getUniquePartLan(
-                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
-                Integer.parseInt(Helper.WARD), field, values
-        );
+        Call<WardClass> call;
+        if (field.equalsIgnoreCase("ageDual")){
+            call = apiService.getUniquePartAge(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD), Helper.MIN_AGE, Helper.MAX_AGE
+            );
+        }else {
+            call = apiService.getUniquePartLan(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD), field, values
+            );
+        }
 
         call.enqueue(new Callback<WardClass>() {
             @Override
@@ -301,13 +405,21 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
                     Integer.parseInt(Helper.WARD),
                     txt
             );
-        }else {
+        } else if (t.equalsIgnoreCase("family")) {
             call = apiService.getUniqueValuesWithQuery(
                     "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                     Integer.parseInt(Helper.WARD),
-                    txt,
+                    "family",
+                    "part_no",
+                    Helper.LANGUAGE
+            );
+        } else {
+            call = apiService.getUniqueValuesWithQuery(
+                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                    Integer.parseInt(Helper.WARD),
+                    txt, //lname
                     "language",
-                    t
+                    t //''
             );
         }
 
@@ -391,10 +503,12 @@ public class PartSectionActivity extends AppCompatActivity implements SelectionL
     public void onShowAction(Boolean isSelected) {
         if (isSelected){
             binding.shareSlip.setVisibility(View.VISIBLE);
+            binding.casteUpdate.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setText(adapter.getSelectedRows().size() + " voters selected");
         }else {
             binding.shareSlip.setVisibility(View.GONE);
+            binding.casteUpdate.setVisibility(View.GONE);
 //            binding.selectedNo.setVisibility(View.GONE);
         }
     }

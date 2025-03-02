@@ -39,8 +39,14 @@ public class LoginModel {
         private String ward_id;
         @SerializedName("splash_link")
         private String splash_link;
+        @SerializedName("home_link")
+        private String home_link;
+        @SerializedName("party_suggest")
+        private String party_suggest;
         @SerializedName("candidate_name")
         private String candidate_name;
+        @SerializedName("suspend")
+        private String suspend;
 
         public String getUserId() {
             return userId;
@@ -104,6 +110,30 @@ public class LoginModel {
 
         public void setCandidate_name(String candidate_name) {
             this.candidate_name = candidate_name;
+        }
+
+        public String getSuspend() {
+            return suspend;
+        }
+
+        public void setSuspend(String suspend) {
+            this.suspend = suspend;
+        }
+
+        public String getHome_link() {
+            return home_link;
+        }
+
+        public String getParty_suggest() {
+            return party_suggest;
+        }
+
+        public void setParty_suggest(String party_suggest) {
+            this.party_suggest = party_suggest;
+        }
+
+        public void setHome_link(String home_link) {
+            this.home_link = home_link;
         }
     }
 }

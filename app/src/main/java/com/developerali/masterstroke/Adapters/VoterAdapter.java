@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.developerali.masterstroke.Activities.VoterDetails;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
+import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.SelectionListner;
 import com.developerali.masterstroke.databinding.ChildVoterBinding;
@@ -75,6 +76,36 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
             }
         });
 
+        if (Helper.getLanguagePreference(activity).equalsIgnoreCase("null") ||
+            Helper.getLanguagePreference(activity).equalsIgnoreCase("en")){
+
+        }else {
+            Helper.translateText(activity, holder.binding.voterName.getText().toString(), new Helper.TranslationCallback() {
+                @Override
+                public void onTranslationSuccess(String translatedText) {
+                    holder.binding.voterName.setText(translatedText);
+                }
+
+                @Override
+                public void onTranslationFailure(String errorText) {
+
+                }
+            });
+
+            Helper.translateText(activity, holder.binding.otherDetails.getText().toString(), new Helper.TranslationCallback() {
+                @Override
+                public void onTranslationSuccess(String translatedText) {
+                    holder.binding.otherDetails.setText(translatedText);
+                }
+
+                @Override
+                public void onTranslationFailure(String errorText) {
+
+                }
+            });
+        }
+
+
         holder.itemView.setOnClickListener(v->{
             Intent i = new Intent(activity.getApplicationContext(), VoterDetails.class);
             i.putExtra("details", details);
@@ -109,6 +140,11 @@ public class VoterAdapter extends RecyclerView.Adapter<VoterAdapter.ViewHolder>{
                 holder.binding.voterName.setTextColor(activity.getColor(R.color.black));
                 holder.binding.otherDetails.setTextColor(activity.getColor(R.color.icon_color));
             }
+        }
+        if (details.getHof().equalsIgnoreCase("Yes")){
+            holder.binding.backLayout.setBackground(activity.getDrawable(R.drawable.bg_light_orange));
+            //holder.binding.voterName.setTextColor(activity.getColor(R.color.white));
+            holder.binding.otherDetails.setTextColor(activity.getColor(R.color.red));
         }
     }
 

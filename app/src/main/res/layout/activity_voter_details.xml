@@ -31,19 +31,19 @@
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="Survey"
+                android:text="@string/survey"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/slip"
+                android:id="@+id/scrutiny"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5mdp"
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="Slip"
+                android:text="@string/scrutiny"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -56,7 +56,7 @@
                 android:visibility="gone"
                 android:layout_weight="1"
                 android:background="@drawable/bg_green_corner"
-                android:text="Call"
+                android:text="@string/call"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -68,7 +68,7 @@
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="Print"
+                android:text="@string/print"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 
@@ -80,10 +80,22 @@
                 android:layout_marginEnd="@dimen/_5mdp"
                 android:layout_weight="1"
                 android:background="@drawable/click_effect_back"
-                android:text="Other"
+                android:text="@string/other"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/favourText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10mdp"
+            android:enabled="false"
+            android:gravity="center"
+            android:layout_margin="@dimen/_10mdp"
+            android:background="@drawable/bg_dark_gray_corner8"
+            android:textColor="@color/black"
+            android:text="Please vote in favour of "/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,6 +118,15 @@
                 android:textStyle="bold"
                 android:paddingEnd="@dimen/_5mdp"
                 android:background="@drawable/bg_light_orange"
+                android:textSize="@dimen/_13font_mdp" />
+            <TextView
+                android:id="@+id/gname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Name : Person Name"
+                android:paddingStart="@dimen/_5mdp"
+                android:paddingEnd="@dimen/_5mdp"
                 android:textSize="@dimen/_13font_mdp" />
             <TextView
                 android:id="@+id/serialNo"
@@ -266,7 +287,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
-                android:text="Language : "
+                android:text="@string/language"
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
@@ -281,23 +302,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Bengali"/>
+                    android:text="@string/bengali"/>
                 <RadioButton
                     android:id="@+id/hindi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hindi"/>
+                    android:text="@string/hindi"/>
                 <RadioButton
                     android:id="@+id/none"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Urdu"/>
+                    android:text="@string/urdu"/>
             </RadioGroup>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
-                android:text="Residential Status : "
+                android:text="@string/residential_status"
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
@@ -312,23 +333,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Present"/>
+                    android:text="@string/present"/>
                 <RadioButton
                     android:id="@+id/relocated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Relocated"/>
+                    android:text="@string/relocated"/>
                 <RadioButton
                     android:id="@+id/dead"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dead"/>
+                    android:text="@string/dead"/>
             </RadioGroup>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
-                android:text="Head of The Family : "
+                android:text="@string/head_of_the_family"
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
@@ -343,18 +364,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="Yes"/>
+                    android:text="@string/yes"/>
                 <RadioButton
                     android:id="@+id/fNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No"/>
+                    android:text="@string/no"/>
             </RadioGroup>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/_5mdp"
-                android:text="Party Worker? "
+                android:text="@string/party_worker"
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
@@ -368,13 +389,13 @@
                     android:id="@+id/wYes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Yes"/>
+                    android:text="@string/yes"/>
                 <RadioButton
                     android:id="@+id/wNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="No"/>
+                    android:text="@string/no"/>
             </RadioGroup>
         </LinearLayout>
         <Button
@@ -382,7 +403,7 @@
             android:layout_width="match_parent"
             android:layout_margin="@dimen/_8mdp"
             android:layout_height="wrap_content"
-            android:text="Wish Happy Birthday!"
+            android:text="@string/wish_happy_birthday"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:background="@drawable/click_effect_red_gray"
@@ -392,7 +413,7 @@
             android:layout_width="match_parent"
             android:layout_margin="@dimen/_8mdp"
             android:layout_height="wrap_content"
-            android:text="Wish Anniversary!"
+            android:text="@string/wish_anniversary"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:background="@drawable/click_effect_red_gray"

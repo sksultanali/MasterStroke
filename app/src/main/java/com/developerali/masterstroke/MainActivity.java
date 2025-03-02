@@ -1,8 +1,16 @@
 package com.developerali.masterstroke;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,42 +21,72 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
+import com.developerali.masterstroke.Activities.SplashScree;
 import com.developerali.masterstroke.Activities.SurveyActivity;
+import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.Helpers.LocationService;
 import com.developerali.masterstroke.Models.ToolsModel;
 import com.developerali.masterstroke.databinding.ActivityMainBinding;
+import com.developerali.masterstroke.databinding.DialogChooseLanguageBinding;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.mannan.translateapi.Language;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements LocationService.LocationUpdateListener{
 
     ActivityMainBinding binding;
     ArrayList<ToolsModel> arrayList = new ArrayList<>();
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private LocationService locationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //EdgeToEdge.enable(this);
+        //EdgeToEdge.enable(this);`
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        checkLocationAndUpdateTime();
+
+        String currentLanguage = Helper.getLanguagePreference(MainActivity.this);
+        String defaultLanguage = getResources().getConfiguration().locale.getLanguage();
+        if (!currentLanguage.equals(defaultLanguage)) {
+            Helper.updateLocale(MainActivity.this, currentLanguage);
+        }
 
         //make below type false if want worker app
-        Helper.ADMIN_APPLICATION = true;
-
-
-
+        Helper.ADMIN_APPLICATION =  true;
+        Helper.WB =  false;
 
 
         if (Helper.CANDIDATE != null){
@@ -56,18 +94,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         arrayList.clear();
-        arrayList.add(new ToolsModel("Search", getDrawable(R.drawable.search)));
-        arrayList.add(new ToolsModel("List", getDrawable(R.drawable.list)));
+        arrayList.add(new ToolsModel(getString(R.string.search), getDrawable(R.drawable.search)));
+        if (Helper.ADMIN_APPLICATION){
+            arrayList.add(new ToolsModel(getString(R.string.updates), getDrawable(R.drawable.list)));
+        }else {
+            arrayList.add(new ToolsModel(getString(R.string.list), getDrawable(R.drawable.list)));
+        }
+        //arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.google_translate)));
+        arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.lan)));
+        arrayList.add(new ToolsModel(getString(R.string.voter_slip), getDrawable(R.drawable.slip)));
         if (Helper.ADMIN_APPLICATION){
             binding.officerTag.setVisibility(View.GONE);
-            binding.imView.setImageDrawable(getDrawable(R.drawable.pubimg_min));
-            arrayList.add(new ToolsModel("Survey", getDrawable(R.drawable.survey)));
-            arrayList.add(new ToolsModel("Charts", getDrawable(R.drawable.charts)));
-            arrayList.add(new ToolsModel("Others", getDrawable(R.drawable.more)));
+            binding.imView.setImageDrawable(getDrawable(R.drawable.img));
+            arrayList.add(new ToolsModel(getString(R.string.surveyss), getDrawable(R.drawable.survey)));
+            //arrayList.add(new ToolsModel(getString(R.string.chartsmao), getDrawable(R.drawable.charts)));
+            arrayList.add(new ToolsModel(getString(R.string.erssss), getDrawable(R.drawable.more)));
         }else {
             binding.officerTag.setVisibility(View.VISIBLE);
-            binding.imView.setImageDrawable(getDrawable(R.drawable.worker_image));
-            binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
+            if (Helper.HOME_LINK.equalsIgnoreCase("NA")) {
+                binding.imView.setImageDrawable(getDrawable(R.drawable.worker_image));
+            }else {
+                Glide.with(MainActivity.this)
+                        .load(Helper.HOME_LINK)
+                        .placeholder(getDrawable(R.drawable.worker_image))
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .into(binding.imView);
+            }
+            //binding.officerTag.setAnimation(AnimationUtils.loadAnimation(this, R.anim.blink_animation));
         }
 
         myListAdapter adapter = new myListAdapter();
@@ -84,12 +137,19 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, ListActivity.class));
                         break;
                     case 2:
-                        startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+                        showBottomDialog();
                         break;
                     case 3:
-                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
+                        //same
+                        startActivity(new Intent(MainActivity.this, ListActivity.class));
                         break;
                     case 4:
+                        startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+                        break;
+//                    case 5:
+//                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
+//                        break;
+                    case 5:
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                         break;
                 }
@@ -106,8 +166,113 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        //checkLocationAndUpdateTime();
+        if (Helper.getUserLogin(MainActivity.this)){
+            getDetails(Helper.USER_NAME, Helper.PASSWORD);
+        }
 
+    }
 
+    private void getDetails(String userName, String password) {
+
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<LoginModel> call = apiService.getLoginCredentials(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                userName
+        );
+
+        call.enqueue(new Callback<LoginModel>() {
+            @Override
+            public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginModel apiResponse = response.body();
+
+                    if (apiResponse.getItem() != null && !apiResponse.getItem().isEmpty()){
+                        LoginModel.Item userDetails = apiResponse.getItem().get(0);
+                        if (userDetails.getSuspend().equalsIgnoreCase("yes")){
+                            Toast.makeText(MainActivity.this, "Account Suspended..!", Toast.LENGTH_LONG).show();
+                            Helper.clearSharedPreferences(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginModel> call, Throwable t) {
+                //Toast.makeText(MainActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void startLocationSer(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            locationService = new LocationService(MainActivity.this, MainActivity.this);
+            locationService.startLocationUpdates();
+        }
+    }
+
+    private void checkLocationAndUpdateTime() {
+        if (Helper.isLocationEnabled(MainActivity.this)){
+            startLocationSer();
+        }else {
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(5000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest);
+            SettingsClient client = LocationServices.getSettingsClient(this);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+            task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                    checkLocationAndUpdateTime();
+                }
+            });
+
+            task.addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof ResolvableApiException) {
+                        try {
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(MainActivity.this, 100);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                            Toast.makeText(MainActivity.this, "PendingIntent unable to execute request.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Initialize LocationService after permission is granted
+                locationService = new LocationService(this, this);
+            } else {
+                // Handle the case when permission is denied
+                checkLocationAndUpdateTime();
+                Toast.makeText(this, "Location permission is required to use this feature.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationUpdated(Location location) {
+        Helper.UPDATED_LOCATION = location;
+        //Toast.makeText(this, Helper.getCurrentAddress(MainActivity.this, location), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -121,13 +286,66 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.notification) {
-            Toast.makeText(this, "Notification...!", Toast.LENGTH_SHORT).show();
-        } else if (itemId == R.id.logout) {
+//        if (itemId == R.id.translate) {
+//            showBottomDialog();
+//        } else
+
+        if (itemId == R.id.logout) {
+            //Helper.saveLanguagePreference(MainActivity.this, "bn");
             Helper.clearSharedPreferences(MainActivity.this);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showBottomDialog() {
+        DialogChooseLanguageBinding chooseBinding = DialogChooseLanguageBinding.inflate(getLayoutInflater());
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(chooseBinding.getRoot());
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+        if (Helper.getLanguagePreference(MainActivity.this).equalsIgnoreCase("hi")){
+            chooseBinding.hindi.setChecked(true);
+        } else if (Helper.getLanguagePreference(MainActivity.this).equalsIgnoreCase("bn")) {
+            chooseBinding.bengali.setChecked(true);
+        }else if (Helper.getLanguagePreference(MainActivity.this).equalsIgnoreCase("bn")){
+            chooseBinding.english.setChecked(true);
+        }else if (Helper.getLanguagePreference(MainActivity.this).equalsIgnoreCase("ur")){
+            chooseBinding.urdu.setChecked(true);
+        }
+
+        chooseBinding.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.english) {
+                    Helper.saveLanguagePreference(MainActivity.this, "en");
+                    Helper.updateLocale(MainActivity.this, Helper.getLanguagePreference(MainActivity.this));
+                    dialog.dismiss();
+                    recreate();
+                } else if (checkedId == R.id.hindi) {
+                    Helper.saveLanguagePreference(MainActivity.this, "hi");
+                    Helper.updateLocale(MainActivity.this, Helper.getLanguagePreference(MainActivity.this));
+                    dialog.dismiss();
+                    recreate();
+                }else if (checkedId == R.id.urdu) {
+                    Helper.saveLanguagePreference(MainActivity.this, Language.URDU);
+                    Helper.updateLocale(MainActivity.this, Helper.getLanguagePreference(MainActivity.this));
+                    dialog.dismiss();
+                    recreate();
+                }else {
+                    Helper.saveLanguagePreference(MainActivity.this, "bn");
+                    Helper.updateLocale(MainActivity.this, Helper.getLanguagePreference(MainActivity.this));
+                    dialog.dismiss();
+                    recreate();
+                }
+            }
+        });
+
+        dialog.show();
     }
 
     public class myListAdapter extends BaseAdapter {

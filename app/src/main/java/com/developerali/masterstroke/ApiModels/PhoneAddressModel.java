@@ -64,6 +64,8 @@ public class PhoneAddressModel {
         private String section;
         @SerializedName("name")
         private String name;
+        @SerializedName("gname")
+        private String gname;
         @SerializedName("address")
         private String address;
         @SerializedName("religion")
@@ -128,6 +130,14 @@ public class PhoneAddressModel {
 
         public void setConstitutionId(String constitutionId) {
             this.constitutionId = constitutionId;
+        }
+
+        public String getGname() {
+            return gname;
+        }
+
+        public void setGname(String gname) {
+            this.gname = gname;
         }
 
         public String getPartNo() {
@@ -328,6 +338,7 @@ public class PhoneAddressModel {
             partNo = in.readString();
             section = in.readString();
             name = in.readString();
+            gname = in.readString();
             address = in.readString();
             religion = in.readString();
             pollingStation = in.readString();
@@ -376,6 +387,7 @@ public class PhoneAddressModel {
             parcel.writeString(partNo);
             parcel.writeString(section);
             parcel.writeString(name);
+            parcel.writeString(gname);
             parcel.writeString(address);
             parcel.writeString(religion);
             parcel.writeString(pollingStation);

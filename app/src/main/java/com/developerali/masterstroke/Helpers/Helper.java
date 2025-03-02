@@ -8,10 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.pdf.PdfDocument;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -36,6 +43,7 @@ import androidx.annotation.RequiresApi;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
+import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Adapters.myListAdapter;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
@@ -47,6 +55,8 @@ import com.developerali.masterstroke.databinding.DialogListSearchBinding;
 import com.developerali.masterstroke.databinding.DialogTextInputBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mannan.translateapi.Language;
+import com.mannan.translateapi.TranslateAPI;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -78,6 +88,7 @@ import android.content.Context;
 import android.os.CancellationSignal;
 import android.print.PageRange;
 import android.print.PrintDocumentInfo;
+import com.google.android.gms.maps.model.LatLng;
 
 public class Helper {
 
@@ -89,11 +100,68 @@ public class Helper {
     public static String USER_NAME;
     public static String WARD;
     public static String SPLASH_LINK;
+    public static String HOME_LINK;
     public static String CANDIDATE;
     public static String LANGUAGE;
+    public static Location UPDATED_LOCATION;
+    public static String UPDATED_DISTANCE;
+    public static String MIN_AGE;
+    public static String MAX_AGE;
+    public static String PART_NO;
     public static boolean RemoveMarked = false;
     public static boolean MARKING_ENABLE;
-    public static boolean ADMIN_APPLICATION;
+    public static boolean ADMIN_APPLICATION = false;
+    public static boolean WB = true;
+
+    public static boolean isLocationEnabled(Activity activity) {
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return isGpsEnabled || isNetworkEnabled;
+    }
+
+    public static String getCurrentAddress(Activity activity, Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+            String address = addresses.get(0).getAddressLine(0);
+            return address;
+        }catch (Exception e){
+            return "NA";
+        }
+    }
+
+    private double calculateTotalDistance(ArrayList<LatLng> points) {
+        double totalDistance = 0;
+        for (int i = 0; i < points.size() - 1; i++) {
+            totalDistance += haversineDistance(points.get(i), points.get(i + 1));
+        }
+        return totalDistance;
+    }
+
+    public static String formattedHaversineDistance(LatLng start, LatLng end) {
+        double distance = haversineDistance(start, end); // Distance in kilometers
+
+        if (distance < 1) {
+            // Convert to meters if distance is less than 1 kilometer
+            int distanceInMeters = (int) (distance * 1000);
+            return distanceInMeters + "m";
+        } else {
+            // Format to 1 decimal place for kilometers
+            return String.format("%.1fkm", distance);
+        }
+    }
+
+    public static double haversineDistance(LatLng start, LatLng end) {
+        final int EARTH_RADIUS = 6371; // Radius of the earth in kilometers
+        double dLat = Math.toRadians(end.latitude - start.latitude);
+        double dLng = Math.toRadians(end.longitude - start.longitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(start.latitude)) * Math.cos(Math.toRadians(end.latitude))
+                * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
+    }
 
     public static String formatDate (Long date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd LLL yyyy");
@@ -147,6 +215,53 @@ public class Helper {
 
         return formattedDate;
     }
+
+    public interface TranslationCallback {
+        void onTranslationSuccess(String translatedText);
+        void onTranslationFailure(String errorText);
+    }
+
+    public static void translateText(Activity activity, String text, TranslationCallback callback) {
+        TranslateAPI translateAPI = new TranslateAPI(
+                Language.ENGLISH,   // Source Language
+                Helper.getLanguagePreference(activity),       // Target Language
+                text                     // Query Text
+        );
+
+        translateAPI.setTranslateListener(new TranslateAPI.TranslateListener() {
+            @Override
+            public void onSuccess(String translatedText) {
+                callback.onTranslationSuccess(translatedText); // Return the translated text through callback
+            }
+
+            @Override
+            public void onFailure(String errorText) {
+                callback.onTranslationFailure(errorText); // Return the error through callback
+            }
+        });
+    }
+
+    public static String getLanguagePreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("language_code", "null"); // default to "en" if not set
+    }
+
+    public static void saveLanguagePreference(Context context, String languageCode) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("language_code", languageCode);
+        //editor.apply(); // or commit()
+        editor.commit();
+    }
+
+    public static void updateLocale(Context context, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+    }
+
 
     public static void searchDialog(Activity activity, String searchOn,ArrayList<String> arrayListChoose, DialogCallback callback) {
         DialogListSearchBinding dialogBinding = DialogListSearchBinding.inflate(activity.getLayoutInflater());
@@ -206,6 +321,14 @@ public class Helper {
         dialog.show();
     }
 
+    public static String getTextBeforeParenthesis(String address) {
+        int index = address.indexOf('(');
+        if (index != -1) {
+            return address.substring(0, index).trim();
+        }
+        return address;
+    }
+
     public interface DialogCallback {
         void onResult(String keyword);
     }
@@ -225,6 +348,12 @@ public class Helper {
 
     public static String getToday(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
+        String date = simpleDateFormat.format(new Date());
+        return date;
+    }
+
+    public static String getTodayS(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM");
         String date = simpleDateFormat.format(new Date());
         return date;
     }
@@ -285,9 +414,48 @@ public class Helper {
         return tomorrow.format(formatter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getTomorrowDateS() {
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
+        return tomorrow.format(formatter);
+    }
+
     public static String getDateKey(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYYMMdd");
         return simpleDateFormat.format(date);
+    }
+
+    public static String wishToHof(String lan, String name){
+        if (lan.equalsIgnoreCase("hi")){
+            return "नमस्कार, "+ name +"\n" +
+                    "\n" +
+                    "आप और आपका पूरा परिवार वार्ड की बेहतरी के लिए हमारे साथ जुड़ें। मैं आपके सुख-दुख में आपके साथ हूं.\n" +
+                    "\n" +
+                    "वेबसाइट - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "धन्यवाद,\n" +
+                    Helper.CANDIDATE;
+        }else if (lan.equalsIgnoreCase("bn")){
+            return "নমস্কার, " + name +"\n" +
+                    "\n" +
+                    "আপনি এবং আপনার পুরো পরিবার ওয়ার্ডের উন্নতির জন্য আমাদের সঙ্গে যুক্ত হয়েছেন। আপনার সুখ দুঃখে আমি আপনাদের পাশে আছি। \n" +
+                    "\n" +
+                    "website - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "ধন্নবাদন্তে, \n" +
+                    Helper.CANDIDATE;
+        }else {
+            return "Hello, "+ name +"\n" +
+                    "\n" +
+                    "You and your entire family join us for the betterment of the ward. I am with you in your happiness and sadness.\n" +
+                    "\n" +
+                    "website - https://aitcofficial.org/\n" +
+                    "\n" +
+                    "Thank you,\n" +
+                    Helper.CANDIDATE;
+        }
     }
 
     public static String wishBirthday(String lan, String name){
@@ -368,7 +536,8 @@ public class Helper {
 
     public static void accountDetails(String username, String password,
                                  String userId, String name, String phone,
-                                      String ward, String link, String candidate,
+                                      String ward, String link, String homeLink,
+                                      String party_slogan, String candidate,
                                       Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -379,9 +548,19 @@ public class Helper {
         editor.putString("userId", userId);
         editor.putString("ward_id", ward);
         editor.putString("splash_link", link);
+        editor.putString("home_link", homeLink);
+        editor.putString("party_suggest", homeLink);
         editor.putString("candidate_name", candidate);
         editor.apply();
     }
+
+    public static void saveFavourText(String text, Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("favour", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("text", text);
+        editor.apply();
+    }
+
     public static boolean getUserLogin(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE);
         Helper.USER_NAME = sharedPreferences.getString("username", "NA");
@@ -391,6 +570,8 @@ public class Helper {
         Helper.USER_ID = sharedPreferences.getString("userId", "NA");
         Helper.WARD = sharedPreferences.getString("ward_id", "0");
         Helper.SPLASH_LINK = sharedPreferences.getString("splash_link", "NA");
+        Helper.HOME_LINK = sharedPreferences.getString("home_link", "NA");
+        Helper.saveFavourText(sharedPreferences.getString("party_suggest", "Please vote in favour of party."), context);
         Helper.CANDIDATE = sharedPreferences.getString("candidate_name", "NA");
 
         if (Helper.USER_NAME.equalsIgnoreCase("NA")){
@@ -398,6 +579,11 @@ public class Helper {
         }else {
             return true;
         }
+    }
+
+    public static String getFavourText(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("favour", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("text", "Please vote in favour of ");
     }
 
     public static void startCounter(int countTill, TextView textView){
@@ -542,16 +728,34 @@ public class Helper {
         editor.apply();
     }
 
-    public static String slipText(PhoneAddressModel.Item details){
-        String text = "Name : " + details.getName() + "\n" +
-                        "Sl No : " + details.getSl_no() + "\n" +
-                        "Voter Id : " + details.getVoter_id() + "\n" +
-                        "Booth : " + details.getPollingStation() + "\n" +
-                        "Section : " + details.getSection() + "\n" +
-                        "Part : " + details.getPartNo() + " Gender : "+ details.getSex() +" Age : " + details.getAge()+ "\n";
+    public static String slipText(PhoneAddressModel.Item details, Activity context){
+        String text =
+                "*******************************\n\n"+
+                "Name: "+ details.getName() + "\n\n" +
+                        "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
+                        "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
+                        "Voter Id: "+ details.getVoter_id() + "\n\n" +
+                        "Address: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Booth: " + details.getPollingStation() + "\n\n\n" +
+
+                        "*********************\n"+Helper.getFavourText(context)+
+                        "\nGenerated By Master Stroke\n*********************\n\n";
         return text;
     }
 
+    public static String slipTextWithoutLogo(PhoneAddressModel.Item details, Activity context){
+        String text =
+                "*******************************\n\n"+
+                        "Name: "+ details.getName() + "\n\n" +
+                        "Part No: "+ details.getPartNo() + "  |  Sl No: " + details.getSl_no() + "\n\n" +
+                        "Gender: "+ details.getSex() + "  |  Age: " + details.getAge() + "\n\n" +
+                        "Voter Id: "+ details.getVoter_id() + "\n\n" +
+                        "Address: "+ details.getHouse() + ", " +Helper.getTextBeforeParenthesis(details.getAddress()) + "\n\n" +
+                        "Booth: " + details.getPollingStation()+ "\n\n" +
+
+                        "*******************************\n\n";
+        return text;
+    }
 
     public static String phoneNoWithCountryCode(String phone){
         if (phone.length() == 10){
@@ -563,7 +767,21 @@ public class Helper {
         }
     }
 
-    public static void printText(Activity activity, String textToPrint) {
+    public static void printText(Activity activity, String textToPrint, boolean logo){
+        Helper.translateText(activity, textToPrint, new TranslationCallback() {
+            @Override
+            public void onTranslationSuccess(String translatedText) {
+                Helper.executePrint(activity, translatedText, logo);
+            }
+
+            @Override
+            public void onTranslationFailure(String errorText) {
+                Helper.executePrint(activity, textToPrint, logo);
+            }
+        });
+    }
+
+    public static void executePrint(Activity activity, String textToPrint, boolean logo) {
         // Get the PrintManager system service
         PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
 
@@ -587,7 +805,6 @@ public class Helper {
                 }
 
                 // Pass the layout result
-                PrintAttributes.MediaSize pageSize = newAttributes.getMediaSize();
                 callback.onLayoutFinished(
                         new PrintDocumentInfo.Builder(jobName)
                                 .setPageCount(1) // Assuming 1 page
@@ -601,19 +818,33 @@ public class Helper {
                 // Start a page
                 PdfDocument.Page page = pdfDocument.startPage(0);
 
-                // Draw text content on the page
+                // Draw content on the page
                 if (page != null) {
                     Canvas canvas = page.getCanvas();
                     Paint paint = new Paint();
                     paint.setColor(android.graphics.Color.BLACK);
-                    paint.setTextSize(12);
+                    paint.setTextSize(16);
 
-                    // Define the bounds for the text to be drawn
-                    int xPos = 10;
-                    int yPos = 25;
+                    // Step 1: Draw the image first
+                    int xPos = 10;  // Starting x position
+                    int yPos = 25;  // Starting y position for image
 
-                    // Draw the text on the canvas
-                    canvas.drawText(textToPrint, xPos, yPos, paint);
+                    if (logo){
+                        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.slip_logo);
+                        // Resize the bitmap if necessary
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+                        int pageWidth = canvas.getWidth();
+                        int xPos1 = (pageWidth - resizedBitmap.getWidth()) / 2;
+                        canvas.drawBitmap(resizedBitmap, xPos1, yPos, null);
+                        yPos += resizedBitmap.getHeight() + 20;
+                    }
+
+                    // Step 2: Draw the text after the image
+                    String[] lines = textToPrint.split("\n");
+                    for (String line : lines) {
+                        canvas.drawText(line, xPos, yPos, paint);
+                        yPos += paint.descent() - paint.ascent(); // Move the Y position down for the next line
+                    }
 
                     // Finish the page
                     pdfDocument.finishPage(page);
@@ -634,6 +865,8 @@ public class Helper {
         // Start a print job
         printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
     }
+
+
     @SuppressLint("ResourceAsColor")
     public static void showCustomMessage(Activity activity, String title, String message) {
         CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(activity));

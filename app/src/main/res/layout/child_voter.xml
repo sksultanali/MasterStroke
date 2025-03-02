@@ -17,10 +17,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Voter Name"
+        android:gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/_12font_mdp"
+        android:layout_marginStart="@dimen/_20mdp"
+        android:layout_marginEnd="@dimen/_10mdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/slNo"
         app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/slNo"

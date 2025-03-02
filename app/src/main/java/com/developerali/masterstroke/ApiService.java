@@ -2,6 +2,7 @@ package com.developerali.masterstroke;
 
 import com.developerali.masterstroke.ApiModels.BoothReportModel;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
+import com.developerali.masterstroke.ApiModels.FamilyCountResponse;
 import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
@@ -42,6 +43,35 @@ public interface ApiService {
             @Query("searchOn") String searchOn
     );
 
+    @GET("insertWorkRecord")
+    Call<UpdateModel> insertWorkRecord(
+            @Query("token") String token,
+            @Query("username") String username,
+            @Query("location") String location,
+            @Query("date") String date,
+            @Query("ward") String ward,
+            @Query("note") String note,
+            @Query("part_no") String part_no,
+            @Query("sl_no") String sl_no,
+            @Query("works") String works,
+            @Query("actual_address") String actual_address,
+            @Query("distance") String distance
+    );
+
+    @GET("insertWorkRecord")
+    Call<UpdateModel> insertWorkRecord(
+            @Query("token") String token,
+            @Query("username") String username,
+            @Query("location") String location,
+            @Query("date") String date,
+            @Query("ward") String ward,
+            @Query("note") String note,
+            @Query("part_no") String part_no,
+            @Query("sl_no") String sl_no,
+            @Query("actual_address") String actual_address,
+            @Query("distance") String distance
+    );
+
     @GET("phoneAddSearchDual")
     Call<PhoneAddressModel> SearchDualVoters(
             @Query("token") String token,
@@ -64,6 +94,12 @@ public interface ApiService {
             @Query("token") String token
     );
 
+    @GET("familyCount")
+    Call<FamilyCountResponse> getFamilyCount(
+            @Query("token") String token,
+            @Query("consId") int consId
+    );
+
     @GET("consDetails")
     Call<ConstitutionModel> getConstitutionDetails(
             @Query("token") String token,
@@ -79,6 +115,14 @@ public interface ApiService {
 
     );
 
+    @GET("uniqueWardsFF")
+    Call<WardClass> getUniqueWardsFF(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("values") String values
+
+    );
+
     @GET("uniquePartLang1")
     Call<WardClass> getUniquePartLan(
             @Query("token") String token,
@@ -88,7 +132,15 @@ public interface ApiService {
 
     );
 
-    @GET("uniqueWardsWithQuery")
+    @GET("uniquePartByAge")
+    Call<WardClass> getUniquePartAge(
+            @Query("token") String token,
+            @Query("consId") int consId,
+            @Query("minAge") String minAge,
+            @Query("maxAge") String maxAge
+    );
+
+    @GET("uniqueWardsWithQuery2")
     Call<WardClass> getUniqueValuesWithQuery(
             @Query("token") String token,
             @Query("consId") int consId,
@@ -117,7 +169,14 @@ public interface ApiService {
     );
 
     @GET("updateConstitutionName")
-    Call<UpdateModel> UpdateConstitution(
+    Call<UpdateModel> updateConstitution(
+            @Query("token") String token,
+            @Query("conId") int conId,
+            @Query("newValue") String newValue
+    );
+
+    @GET("updateFamilyCount")
+    Call<UpdateModel> updateFamilyCount(
             @Query("token") String token,
             @Query("conId") int conId,
             @Query("newValue") int newValue

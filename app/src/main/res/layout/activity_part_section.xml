@@ -82,6 +82,20 @@
         tools:listitem="@layout/child_voter" />
 
     <Button
+        android:id="@+id/casteUpdate"
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/_8mdp"
+        android:layout_height="wrap_content"
+        android:text="Update Caste"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/click_effect_red_gray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/shareSlip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
         android:id="@+id/shareSlip"
         android:layout_width="0dp"
         android:layout_margin="@dimen/_8mdp"
