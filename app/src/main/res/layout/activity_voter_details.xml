@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:overScrollMode="never"
-    android:padding="5dp"
     tools:context=".Activities.VoterDetails">
 
     <LinearLayout
@@ -322,29 +321,47 @@
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12font_mdp" />
-            <RadioGroup
-                android:id="@+id/radioGroupP"
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/present"
+                android:scrollbars="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/radioGroupP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/present"/>
-                <RadioButton
-                    android:id="@+id/relocated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/relocated"/>
-                <RadioButton
-                    android:id="@+id/dead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dead"/>
-            </RadioGroup>
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/present"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/present"
+                        android:textSize="@dimen/_9font_mdp" />
+
+                    <RadioButton
+                        android:id="@+id/relocated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/relocated"
+                        android:textSize="@dimen/_9font_mdp" />
+
+                    <RadioButton
+                        android:id="@+id/dead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dead"
+                        android:textSize="@dimen/_9font_mdp" />
+
+                    <RadioButton
+                        android:id="@+id/fakeVoter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fake Voter"
+                        android:textSize="@dimen/_9font_mdp" />
+                </RadioGroup>
+            </HorizontalScrollView>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

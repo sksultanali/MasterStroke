@@ -38,6 +38,7 @@ import com.developerali.masterstroke.Activities.LoginActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SplashScree;
+import com.developerali.masterstroke.Activities.StatPageActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
 import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.Helpers.Helper;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         Helper.WB =  false;
 
 
-        if (Helper.CANDIDATE != null){
+        if (Helper.CANDIDATE != null && !Helper.CANDIDATE.isEmpty()){
             getSupportActionBar().setTitle(Helper.CANDIDATE);
         }
 
@@ -286,11 +287,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-//        if (itemId == R.id.translate) {
-//            showBottomDialog();
-//        } else
-
-        if (itemId == R.id.logout) {
+        if (itemId == R.id.stat) {
+            startActivity(new Intent(MainActivity.this, StatPageActivity.class));
+        }else if (itemId == R.id.logout) {
             //Helper.saveLanguagePreference(MainActivity.this, "bn");
             Helper.clearSharedPreferences(MainActivity.this);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

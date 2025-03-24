@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -166,6 +167,8 @@ public class VoterDetails extends AppCompatActivity {
                     binding.relocated.setChecked(true);
                 } else if (details.getStatus().equalsIgnoreCase("Dead")) {
                     binding.dead.setChecked(true);
+                }else if (details.getStatus().equalsIgnoreCase("Fake Voter")) {
+                    binding.fakeVoter.setChecked(true);
                 }else {
                     binding.present.setChecked(true);
                 }
@@ -307,7 +310,10 @@ public class VoterDetails extends AppCompatActivity {
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.relocated) {
                     note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Relocated", note);
-                } else {
+                } else if (radioGroup.getCheckedRadioButtonId() == R.id.fakeVoter) {
+                    note = " _updated relocated no by " + Helper.USER_NAME;
+                    updateData(details.getConPhoneId(), "status", "Fake Voter", note);
+                }else {
                     note = " _updated relocated no by " + Helper.USER_NAME;
                     updateData(details.getConPhoneId(), "status", "Dead", note);
                 }
@@ -762,7 +768,7 @@ public class VoterDetails extends AppCompatActivity {
         // Create and show the dialog
         AlertDialog dialog = builder.create();
 
-        //dialogBinding.textInputL.setInputType(InputType.TYPE_CLASS_PHONE);
+        dialogBinding.textInputL.setInputType(InputType.TYPE_CLASS_PHONE);
         dialogBinding.btn.setOnClickListener(v->{
             String text = dialogBinding.textInputL.getText().toString();
             if (text.isEmpty()){
