@@ -35,6 +35,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.developerali.masterstroke.Activities.ChartsActivity;
 import com.developerali.masterstroke.Activities.ListActivity;
 import com.developerali.masterstroke.Activities.LoginActivity;
+import com.developerali.masterstroke.Activities.NotesActivity;
 import com.developerali.masterstroke.Activities.OtherActivity;
 import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SplashScree;
@@ -287,9 +288,15 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.stat) {
-            startActivity(new Intent(MainActivity.this, StatPageActivity.class));
-        }else if (itemId == R.id.logout) {
+        if (itemId == R.id.notes) {
+            startActivity(new Intent(MainActivity.this, NotesActivity.class));
+        }
+
+//        else if (itemId == R.id.stat) {
+//            startActivity(new Intent(MainActivity.this, StatPageActivity.class));
+//        }
+
+        else if (itemId == R.id.logout) {
             //Helper.saveLanguagePreference(MainActivity.this, "bn");
             Helper.clearSharedPreferences(MainActivity.this);
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

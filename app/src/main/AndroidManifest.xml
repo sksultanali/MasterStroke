@@ -30,6 +30,12 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.AddNotesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.NotesActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.StatPageActivity"
             android:exported="false" />
         <activity

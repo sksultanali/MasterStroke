@@ -3,10 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/stat"
-        android:title="Stat"
+        android:id="@+id/notes"
+        android:title="Notes"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/stats_24"/>
+        android:icon="@drawable/_edit_square_24"/>
+<!--    <item-->
+<!--        android:id="@+id/stat"-->
+<!--        android:title="Stat"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:icon="@drawable/stats_24"/>-->
     <item
         android:id="@+id/logout"
         android:title="LogOut"

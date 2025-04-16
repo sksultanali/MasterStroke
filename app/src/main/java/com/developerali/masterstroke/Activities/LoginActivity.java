@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         if (Helper.getUserLogin(LoginActivity.this)){
-            startActivity(new Intent(LoginActivity.this, SplashScree.class));
+            startActivity(new Intent(LoginActivity.this, StatPageActivity.class));
             finish();
         }
         super.onStart();
