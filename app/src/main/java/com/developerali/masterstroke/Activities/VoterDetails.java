@@ -454,7 +454,11 @@ public class VoterDetails extends AppCompatActivity {
 
 
 
-        getLatLongFromAddress(Helper.getTextBeforeParenthesis(details.getAddress()));
+        try {
+            getLatLongFromAddress(Helper.getTextBeforeParenthesis(details.getAddress()));
+        }catch (Exception e){
+
+        }
 
 
 
