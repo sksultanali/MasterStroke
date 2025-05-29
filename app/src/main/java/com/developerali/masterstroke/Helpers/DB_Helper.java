@@ -20,6 +20,7 @@ public class DB_Helper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_DESCRIPTION = "description";
+    private static final String COLUMN_DATETIME = "date";
     private static final String COLUMN_TIMESTAMP = "timestamp";
 
     public DB_Helper(Context context) {
@@ -32,6 +33,7 @@ public class DB_Helper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_TITLE + " TEXT, " +
                 COLUMN_DESCRIPTION + " TEXT, " +
+                COLUMN_DATETIME + " TEXT, " +
                 COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
                 ")";
         db.execSQL(createTableQuery);
@@ -39,72 +41,82 @@ public class DB_Helper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Handle database upgrades here
+        // Drop and recreate table if upgrading
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES_HISTORY);
+        onCreate(db);
     }
 
+    // Insert if not duplicate
     public void addSearchQuery(NotesModel recentSearchModel) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Check if the search query already exists
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + TABLE_NOTES_HISTORY + " WHERE " + COLUMN_TITLE + " = ?",
                 new String[]{recentSearchModel.getTitle()}
         );
 
         if (cursor.getCount() > 0) {
-            // If the query exists, do not insert it again
             cursor.close();
             db.close();
             return;
         }
-
         cursor.close();
 
-        //If does not exist insert the new search query
         ContentValues values = new ContentValues();
         values.put(COLUMN_TITLE, recentSearchModel.getTitle());
         values.put(COLUMN_DESCRIPTION, recentSearchModel.getDescription());
+        values.put(COLUMN_DATETIME, recentSearchModel.getDate());
+
         db.insert(TABLE_NOTES_HISTORY, null, values);
         db.close();
     }
 
+    // Fetch all notes
     public ArrayList<NotesModel> getAllSearchQueries() {
         ArrayList<NotesModel> searchQueries = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES_HISTORY, null);
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NOTES_HISTORY + " ORDER BY " + COLUMN_TIMESTAMP + " DESC", null);
         if (cursor.moveToFirst()) {
             do {
-
                 NotesModel recentSearchModel = new NotesModel();
-
-                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(COLUMN_TITLE));
-                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION));
-
-                recentSearchModel.setTitle(title);
-                recentSearchModel.setDescription(description);
-
+                recentSearchModel.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)));
+                recentSearchModel.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION)));
+                recentSearchModel.setDate(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATETIME)));
                 searchQueries.add(recentSearchModel);
-
-
             } while (cursor.moveToNext());
         }
+
         cursor.close();
         db.close();
         return searchQueries;
     }
 
+    // Delete by title safely
     public void deleteSearchQuery(String searchQuery) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_NOTES_HISTORY + " WHERE " + COLUMN_TITLE + "='" + searchQuery + "'");
+        db.delete(TABLE_NOTES_HISTORY, COLUMN_TITLE + "=?", new String[]{searchQuery});
         db.close();
     }
 
+    // Reset entire table
     public void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Drop existing tables
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES_HISTORY);
-        // Recreate tables
         onCreate(db);
         db.close();
+    }
+
+    // Optional: Get note count
+    public int getSearchQueryCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NOTES_HISTORY, null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return count;
     }
 }

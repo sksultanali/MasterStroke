@@ -67,4 +67,13 @@
     <string name="relocated">دوبارہ آباد</string>
     <string name="yes">ہاں</string>
     <string name="no">نہیں</string>
+    <string name="by_hindu_caste">ہندو ذات کے مطابق</string>
+    <string name="merged_last_names">مرج شدہ آخری نام</string>
+    <string name="by_age_partwise">عمر کے لحاظ سے (حصہ وار)</string>
+    <string name="track_workings">کام کا ریکارڈ</string>
+    <string name="scrutiny">جانچ پڑتال</string>
+    <string name="voter_slip">ووٹر سلپ</string>
+    <string name="updates">تازہ ترین معلومات</string>
+    <string name="voter_list">ووٹر لسٹ</string>
+
 </resources>

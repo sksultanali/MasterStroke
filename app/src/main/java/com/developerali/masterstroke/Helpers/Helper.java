@@ -131,6 +131,16 @@ public class Helper {
         }
     }
 
+    public static void startCounter(int countTill, TextView textView, String prefix, String suffix){
+        ValueAnimator animator = ValueAnimator.ofInt(0, countTill);
+        animator.setDuration(3000); // Animation duration in milliseconds
+        animator.addUpdateListener(valueAnimator -> {
+            int animatedValue = (int) valueAnimator.getAnimatedValue();
+            textView.setText(prefix + animatedValue + suffix);
+        });
+        animator.start();
+    }
+
     private double calculateTotalDistance(ArrayList<LatLng> points) {
         double totalDistance = 0;
         for (int i = 0; i < points.size() - 1; i++) {
@@ -767,21 +777,21 @@ public class Helper {
         }
     }
 
-    public static void printText(Activity activity, String textToPrint, boolean logo){
+    public static void printText(Activity activity, String textToPrint, boolean logo, boolean tmc){
         Helper.translateText(activity, textToPrint, new TranslationCallback() {
             @Override
             public void onTranslationSuccess(String translatedText) {
-                Helper.executePrint(activity, translatedText, logo);
+                Helper.executePrint(activity, translatedText, logo, tmc);
             }
 
             @Override
             public void onTranslationFailure(String errorText) {
-                Helper.executePrint(activity, textToPrint, logo);
+                Helper.executePrint(activity, textToPrint, logo,tmc);
             }
         });
     }
 
-    public static void executePrint(Activity activity, String textToPrint, boolean logo) {
+    public static void executePrint(Activity activity, String textToPrint, boolean logo, boolean tmc) {
         // Get the PrintManager system service
         PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
 
@@ -830,7 +840,12 @@ public class Helper {
                     int yPos = 25;  // Starting y position for image
 
                     if (logo){
-                        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.slip_logo);
+                        Bitmap bitmap;
+                        if (tmc){
+                            bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.slip_logo);
+                        }else {
+                            bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.bjp_logo);
+                        }
                         // Resize the bitmap if necessary
                         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
                         int pageWidth = canvas.getWidth();

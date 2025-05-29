@@ -425,20 +425,27 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             for (int ij = 0; ij < items.size(); ij++){
                 progressDialog.setMessage("Slip no " + (ij+1) + " is printing in process...");
                 progressDialog.show();
-                if (dialogBinding.logo.isChecked()){
+                if (dialogBinding.logo1.isChecked()){
                     if (ij == 0){
                         stringBuilder.append(Helper.slipText(items.get(ij), this));
                     }else {
                         stringBuilder.append("\n\n").append(Helper.slipText(items.get(ij), this));
                     }
-                    Helper.printText(SearchActivity.this, stringBuilder.toString(), true);
+                    Helper.printText(SearchActivity.this, stringBuilder.toString(), true, false);
+                }if (dialogBinding.logo2.isChecked()){
+                    if (ij == 0){
+                        stringBuilder.append(Helper.slipText(items.get(ij), this));
+                    }else {
+                        stringBuilder.append("\n\n").append(Helper.slipText(items.get(ij), this));
+                    }
+                    Helper.printText(SearchActivity.this, stringBuilder.toString(), true, true);
                 }else {
                     if (ij == 0){
                         stringBuilder.append(Helper.slipTextWithoutLogo(items.get(ij), this));
                     }else {
                         stringBuilder.append("\n\n").append(Helper.slipTextWithoutLogo(items.get(ij), this));
                     }
-                    Helper.printText(SearchActivity.this, stringBuilder.toString(), false);
+                    Helper.printText(SearchActivity.this, stringBuilder.toString(), false, false);
                 }
 
                 progressDialog.dismiss();

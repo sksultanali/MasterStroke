@@ -67,5 +67,14 @@
     <string name="relocated">পুনর্বাসিত</string>
     <string name="yes">হ্যাঁ</string>
     <string name="no">না</string>
+    <string name="by_hindu_caste">হিন্দু জাতি অনুযায়ী</string>
+    <string name="merged_last_names">মিশ্র উপাধি</string>
+    <string name="by_age_partwise">বয়স অনুযায়ী (পর্বভিত্তিক)</string>
+    <string name="track_workings">কাজের ট্র্যাক</string>
+    <string name="scrutiny">পর্যালোচনা</string>
+    <string name="voter_slip">ভোটার স্লিপ</string>
+    <string name="updates">হালনাগাদ</string>
+    <string name="voter_list">ভোটার তালিকা</string>
+
 
 </resources>

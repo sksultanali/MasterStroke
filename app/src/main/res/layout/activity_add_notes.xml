@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:overScrollMode="never"
+    android:background="@color/gray"
     android:fillViewport="true"
     tools:context=".Activities.AddNotesActivity">
     <LinearLayout
@@ -36,24 +37,46 @@
                 android:text="Save"/>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/dateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10mdp"
+            android:background="@drawable/bg_white_color_corner8"
+            android:drawableStart="@drawable/time_24"
+            android:drawablePadding="@dimen/_5mdp"
+            android:elevation="@dimen/_2mdp"
+            android:padding="@dimen/_10mdp"
+            android:text="dd/mm/yyyy hh:mm a"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12font_mdp" />
+
         <EditText
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10mdp"
             android:layout_marginTop="@dimen/_10mdp"
             android:background="@drawable/bg_white_color_corner8"
-            android:hint="Enter Title"/>
+            android:elevation="@dimen/_2mdp"
+            android:hint="Enter Title"
+            android:padding="@dimen/_10mdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12font_mdp" />
+
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10mdp"
-            android:minLines="10"
-            android:gravity="top"
             android:layout_marginTop="@dimen/_10mdp"
             android:background="@drawable/bg_white_color_corner8"
-            android:hint="Enter Title"/>
+            android:elevation="@dimen/_2mdp"
+            android:gravity="top"
+            android:hint="Enter Title"
+            android:minLines="10"
+            android:padding="@dimen/_10mdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12font_mdp" />
 
 
 

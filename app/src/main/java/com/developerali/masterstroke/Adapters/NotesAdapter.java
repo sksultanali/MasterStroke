@@ -43,7 +43,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         NotesModel notesModel = arrayList.get(position);
 
-        holder.binding.voterName.setText(notesModel.getTitle());
+        holder.binding.voterName.setText(notesModel.getTitle()+"\n"+notesModel.getDate());
         if (notesModel.getDescription().length() > 150) {
             holder.binding.otherDetails.setText(notesModel.getDescription().substring(0, 150));
         }else {

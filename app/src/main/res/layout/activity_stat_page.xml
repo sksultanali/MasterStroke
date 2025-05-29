@@ -27,6 +27,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/meetLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5mdp"
@@ -56,12 +57,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10mdp"
                     android:gravity="center"
-                    android:text="Meeting Today"
+                    android:text="Meeting Schedule"
                     android:textSize="@dimen/_12font_mdp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/meetingNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -72,6 +74,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/slipLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5mdp"
@@ -107,6 +110,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/slipNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -122,6 +126,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/editLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5mdp"
@@ -157,6 +162,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/editNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -167,6 +173,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/birthLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5mdp"
@@ -202,6 +209,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/birthNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -217,6 +225,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/phoneLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5mdp"
@@ -246,12 +255,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10mdp"
                     android:gravity="center"
-                    android:text="Phone Updated"
+                    android:text="Phone No Updated"
                     android:textSize="@dimen/_12font_mdp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/phoneNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -315,5 +325,13 @@
         android:layout_marginEnd="@dimen/_5mdp"
         android:layout_gravity="end"
         android:text="Next"/>
+<!--    <Button-->
+<!--        android:id="@+id/btnAuthFail"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="@dimen/_10mdp"-->
+<!--        android:layout_marginEnd="@dimen/_5mdp"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:text="Next"/>-->
 
 </LinearLayout>

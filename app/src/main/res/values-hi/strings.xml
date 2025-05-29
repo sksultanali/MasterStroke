@@ -67,5 +67,14 @@
     <string name="relocated">स्थानांतरित</string>
     <string name="yes">हाँ</string>
     <string name="no">नहीं</string>
+    <string name="by_hindu_caste">हिंदू जाति अनुसार</string>
+    <string name="merged_last_names">संयुक्त उपनाम</string>
+    <string name="by_age_partwise">आयु के अनुसार (भागवार)</string>
+    <string name="track_workings">कार्य ट्रैक करें</string>
+    <string name="scrutiny">जांच</string>
+    <string name="voter_slip">मतदाता पर्ची</string>
+    <string name="updates">अपडेट्स</string>
+    <string name="voter_list">मतदाता सूची</string>
+
 
 </resources>

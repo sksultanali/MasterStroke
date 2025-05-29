@@ -67,7 +67,7 @@
         android:id="@+id/printLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -82,10 +82,15 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RadioButton
-                android:id="@+id/logo"
+                android:id="@+id/logo1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="With logo"/>
+                android:text="Logo1"/>
+            <RadioButton
+                android:id="@+id/logo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logo2"/>
             <RadioButton
                 android:id="@+id/nologo"
                 android:layout_width="wrap_content"

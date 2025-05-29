@@ -96,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         }
 
         arrayList.clear();
-        arrayList.add(new ToolsModel(getString(R.string.search), getDrawable(R.drawable.search)));
+        arrayList.add(new ToolsModel(getString(R.string.voter_list), getDrawable(R.drawable.list)));
         if (Helper.ADMIN_APPLICATION){
-            arrayList.add(new ToolsModel(getString(R.string.updates), getDrawable(R.drawable.list)));
+            arrayList.add(new ToolsModel(getString(R.string.search), getDrawable(R.drawable.search)));
         }else {
             arrayList.add(new ToolsModel(getString(R.string.list), getDrawable(R.drawable.list)));
         }

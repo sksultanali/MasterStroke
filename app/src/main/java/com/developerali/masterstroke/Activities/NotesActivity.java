@@ -3,6 +3,7 @@ package com.developerali.masterstroke.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class NotesActivity extends AppCompatActivity {
             NotesModel recentSearchModel = new NotesModel();
             recentSearchModel.setTitle(searchQuery.getTitle());
             recentSearchModel.setDescription(searchQuery.getDescription());
+            recentSearchModel.setDate(searchQuery.getDate());
 
             recentSearches.add(recentSearchModel);
         }
@@ -64,6 +66,10 @@ public class NotesActivity extends AppCompatActivity {
         if (recentSearches.isEmpty()){
             binding.recView.setVisibility(View.GONE);
             binding.noData.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        }else {
+            binding.recView.setVisibility(View.VISIBLE);
+            binding.noData.setVisibility(View.GONE);
         }
 
         binding.floatingActionButton.setOnClickListener(v->{

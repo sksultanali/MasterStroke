@@ -1,5 +1,6 @@
 package com.developerali.masterstroke;
 
+import com.developerali.masterstroke.ApiModels.ApiResponse;
 import com.developerali.masterstroke.ApiModels.BoothReportModel;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
 import com.developerali.masterstroke.ApiModels.FamilyCountResponse;
@@ -32,6 +33,12 @@ public interface ApiService {
     Call<LoginModel> getLoginCredentials(
             @Query("token") String token,
             @Query("username") String username
+    );
+
+    @GET("getAllCounts")
+    Call<ApiResponse> getAllCounts(
+            @Query("token") String token,
+            @Query("ward") String ward
     );
 
     @GET("phoneAddSearch")

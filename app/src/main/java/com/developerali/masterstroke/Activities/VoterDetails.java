@@ -746,10 +746,12 @@ public class VoterDetails extends AppCompatActivity {
 
 
         dialogBinding.btnPrint.setOnClickListener(v->{
-            if (dialogBinding.logo.isChecked()){
-                Helper.printText(VoterDetails.this, Helper.slipText(details, VoterDetails.this), true);
+            if (dialogBinding.logo1.isChecked()){
+                Helper.printText(VoterDetails.this, Helper.slipText(details, VoterDetails.this), true, false);
+            }else if (dialogBinding.logo2.isChecked()){
+                Helper.printText(VoterDetails.this, Helper.slipText(details, VoterDetails.this), true, true);
             }else {
-                Helper.printText(VoterDetails.this, Helper.slipTextWithoutLogo(details, VoterDetails.this), false);
+                Helper.printText(VoterDetails.this, Helper.slipTextWithoutLogo(details, VoterDetails.this), false, false);
             }
             RecordLocation("printed : " + details.getName());
             dialog.dismiss();
