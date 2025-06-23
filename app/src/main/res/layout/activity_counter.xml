@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple"
+    tools:context=".Activities.CounterActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray">
+        <TextView
+            android:id="@+id/selectedNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="selected people"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="@dimen/_5mdp"
+            android:visibility="gone"
+            android:background="@color/light_orange"
+            android:textColor="@color/orange"
+            android:layout_gravity="center"
+            android:textSize="@dimen/_11font_mdp"/>
+
+        <LinearLayout
+            android:id="@+id/searchOption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/bg_white_color_corner8"
+            app:layout_constraintTop_toBottomOf="@id/selectedNo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="@dimen/_10mdp">
+
+            <EditText
+                android:id="@+id/homeNoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:maxLines="1"
+                android:background="@drawable/bg_dark_gray_corner8"
+                android:hint="Enter house no here..."/>
+            <Button
+                android:id="@+id/goHouse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:textAllCaps="false"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:text="go"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:background="@drawable/bg_white_color_corner8"
+            app:layout_constraintTop_toBottomOf="@id/searchOption"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="@dimen/_10mdp">
+
+            <TextView
+                android:id="@+id/wardName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ward Name"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:textSize="@dimen/_12font_mdp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/totalItems"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:textSize="@dimen/_12font_mdp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_dark_gray_corner8"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textSize="@dimen/_12font_mdp"
+                    android:layout_marginEnd="@dimen/_5mdp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/bg_dark_gray_corner8"
+                    android:text="Page"/>
+                <EditText
+                    android:id="@+id/pageText"
+                    android:layout_width="@dimen/_40mdp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:background="@drawable/bg_dark_gray_corner8"
+                    android:text="1"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/goPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/_10mdp"
+                android:text="go"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/_5mdp"
+            app:layout_constraintTop_toBottomOf="@id/searchLayout"
+            app:layout_constraintBottom_toTopOf="@id/loadMore"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/child_voter" />
+
+        <Button
+            android:id="@+id/loadMore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_8mdp"
+            android:text="Load More ...."
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:background="@drawable/click_effect_back"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/progressBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/shareSlip"
+            android:layout_width="0dp"
+            android:layout_margin="@dimen/_8mdp"
+            android:layout_height="wrap_content"
+            android:text="Share Voter Slip"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:background="@drawable/click_effect_red_gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/progressBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/btnFamily"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_8mdp"
+            android:text="Consider as Family"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:background="@drawable/click_effect_back"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/shareSlip"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

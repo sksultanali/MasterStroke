@@ -9,6 +9,7 @@ import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
+import com.developerali.masterstroke.ApiModels.WorksModel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -27,6 +28,14 @@ public interface ApiService {
             @Query("token") String token,
             @Query("nextToken") int nextToken,
             @Query("consId") int consId
+    );
+
+    @GET("voterPhoneAdd")
+    Call<WorksModel> getWorkDetails(
+            @Query("token") String token,
+            @Query("nextToken") int nextToken,
+            @Query("ward") int ward,
+            @Query("searchFact") String searchFact
     );
 
     @GET("moderators-login")

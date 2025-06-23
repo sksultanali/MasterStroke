@@ -114,10 +114,14 @@ public class StatPageActivity extends AppCompatActivity {
             startActivity(i);
         });
         binding.editLayout.setOnClickListener(v->{
-            startActivity(new Intent(StatPageActivity.this, ListActivity.class));
+            Intent i = new Intent(StatPageActivity.this, CounterActivity.class);
+            i.putExtra("msg", "edited");
+            startActivity(i);
         });
         binding.slipLayout.setOnClickListener(v->{
-            startActivity(new Intent(StatPageActivity.this, ListActivity.class));
+            Intent i = new Intent(StatPageActivity.this, CounterActivity.class);
+            i.putExtra("msg", "printed");
+            startActivity(i);
         });
 
 
