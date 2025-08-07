@@ -99,7 +99,7 @@ public class StatPageActivity extends AppCompatActivity {
         });
 
         binding.phoneLayout.setOnClickListener(v->{
-            Intent i = new Intent(StatPageActivity.this, SearchActivity.class);
+            Intent i = new Intent(StatPageActivity.this, NewMobileActivity.class);
             i.putExtra("keyword", "");
             i.putExtra("searchOn", "mobile");
             startActivity(i);

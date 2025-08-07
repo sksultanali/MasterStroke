@@ -30,6 +30,13 @@ public interface ApiService {
             @Query("consId") int consId
     );
 
+    @GET("getNewPhone")
+    Call<PhoneAddressModel> getNewPhone(
+            @Query("token") String token,
+            @Query("nextToken") int nextToken,
+            @Query("consId") int consId
+    );
+
     @GET("voterPhoneAdd")
     Call<WorksModel> getWorkDetails(
             @Query("token") String token,
