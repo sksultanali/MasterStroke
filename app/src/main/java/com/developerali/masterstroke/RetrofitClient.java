@@ -5,7 +5,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://groundreport.news/simple-api/";
+    //private static final String BASE_URL = "https://groundreport.news/simple-api/";
+    private static final String BASE_URL = "https://groundreport.online/simple-api/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {
