@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/imView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200mdp"
+        android:layout_height="@dimen/_160mdp"
         android:src="@drawable/img"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"

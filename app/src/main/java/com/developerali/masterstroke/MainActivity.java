@@ -41,6 +41,7 @@ import com.developerali.masterstroke.Activities.SearchActivity;
 import com.developerali.masterstroke.Activities.SplashScree;
 import com.developerali.masterstroke.Activities.StatPageActivity;
 import com.developerali.masterstroke.Activities.SurveyActivity;
+import com.developerali.masterstroke.Activities.vote_day;
 import com.developerali.masterstroke.ApiModels.LoginModel;
 import com.developerali.masterstroke.Helpers.Helper;
 import com.developerali.masterstroke.Helpers.LocationService;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
         //arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.google_translate)));
         arrayList.add(new ToolsModel(getString(R.string.languages), getDrawable(R.drawable.lan)));
         arrayList.add(new ToolsModel(getString(R.string.voter_slip), getDrawable(R.drawable.slip)));
+        arrayList.add(new ToolsModel("Vote Day", getDrawable(R.drawable.ballot_box)));
         if (Helper.ADMIN_APPLICATION){
             binding.officerTag.setVisibility(View.GONE);
             binding.imView.setImageDrawable(getDrawable(R.drawable.img));
@@ -146,12 +148,16 @@ public class MainActivity extends AppCompatActivity implements LocationService.L
                         startActivity(new Intent(MainActivity.this, ListActivity.class));
                         break;
                     case 4:
+                        //Vote Day
+                        startActivity(new Intent(MainActivity.this, vote_day.class));
+                        break;
+                    case 5:
                         startActivity(new Intent(MainActivity.this, SurveyActivity.class));
                         break;
 //                    case 5:
 //                        startActivity(new Intent(MainActivity.this, ChartsActivity.class));
 //                        break;
-                    case 5:
+                    case 6:
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                         break;
                 }

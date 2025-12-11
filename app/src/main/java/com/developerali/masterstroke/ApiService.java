@@ -1,5 +1,7 @@
 package com.developerali.masterstroke;
 
+import androidx.annotation.Nullable;
+
 import com.developerali.masterstroke.ApiModels.ApiResponse;
 import com.developerali.masterstroke.ApiModels.BoothReportModel;
 import com.developerali.masterstroke.ApiModels.ConstitutionModel;
@@ -10,6 +12,8 @@ import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
 import com.developerali.masterstroke.ApiModels.WorksModel;
+import com.developerali.masterstroke.Models.PartResponse;
+import com.developerali.masterstroke.Models.VotingStatsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -189,6 +193,29 @@ public interface ApiService {
             @Query("fieldName") String fieldName,
             @Query("newValue") String newValue,
             @Query("note") String note
+    );
+
+    @GET("updateVoteDone")
+    Call<UpdateModel> updateVoteDone(
+            @Query("token") String token,
+            @Query("con_phone_id") String sl_no,
+            @Query("part_no") String part_no,
+            @Query("fieldName") String fieldName,
+            @Query("newValue") String newValue,
+            @Query("note") String note
+    );
+
+    @GET("part-no-report")
+    Call<PartResponse> getPartNo(
+            @Query("token") String token,
+            @Query("consId") String sl_no
+    );
+
+    @GET("voter-stats")
+    Call<VotingStatsResponse> getVoterStatus(
+            @Query("token") String token,
+            @Query("consId") String sl_no,
+            @Query("partNo")@Nullable String partNo
     );
 
     @GET("updateConstitutionName")

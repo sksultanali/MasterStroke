@@ -34,6 +34,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.vote_day"
+            android:exported="false" />
+        <activity
             android:name=".Activities.NewMobileActivity"
             android:exported="false" />
         <activity
@@ -102,6 +105,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
         <receiver
             android:name=".Helpers.AlarmReceiver"
             android:exported="false" />
