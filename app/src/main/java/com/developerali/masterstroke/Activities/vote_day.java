@@ -1,6 +1,7 @@
 package com.developerali.masterstroke.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -97,7 +98,7 @@ public class vote_day extends AppCompatActivity {
         binding.spinner.setAdapter(adapter);
 
         // Load data from API
-        loadVoterStats();
+        //loadVoterStats();
         loadPartNos();
 
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -114,6 +115,24 @@ public class vote_day extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+
+        binding.oPLay.setOnClickListener(view -> {
+            Intent i = new Intent(vote_day.this, SearchActivity.class);
+            i.putExtra("party_interest", "Our Party");
+            startActivity(i);
+        });
+
+        binding.oPPLay.setOnClickListener(view -> {
+            Intent i = new Intent(vote_day.this, SearchActivity.class);
+            i.putExtra("party_interest", "Opposition Party");
+            startActivity(i);
+        });
+
+        binding.dLay.setOnClickListener(view -> {
+            Intent i = new Intent(vote_day.this, SearchActivity.class);
+            i.putExtra("party_interest", "Doubtful");
+            startActivity(i);
+        });
 
 
 

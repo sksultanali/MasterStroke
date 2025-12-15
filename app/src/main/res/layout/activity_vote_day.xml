@@ -392,6 +392,7 @@
         android:layout_marginEnd="@dimen/_10mdp"
         android:orientation="horizontal">
         <LinearLayout
+            android:id="@+id/oPLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -416,6 +417,7 @@
                 android:textStyle="bold"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/oPPLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -441,6 +443,7 @@
                 android:textStyle="bold"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/dLay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

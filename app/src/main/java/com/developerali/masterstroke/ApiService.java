@@ -13,6 +13,7 @@ import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiModels.WardStudentVoterModel;
 import com.developerali.masterstroke.ApiModels.WorksModel;
 import com.developerali.masterstroke.Models.PartResponse;
+import com.developerali.masterstroke.Models.VoterListResponse;
 import com.developerali.masterstroke.Models.VotingStatsResponse;
 
 import retrofit2.Call;
@@ -31,6 +32,14 @@ public interface ApiService {
     Call<PhoneAddressModel> getVoters(
             @Query("token") String token,
             @Query("nextToken") int nextToken,
+            @Query("consId") int consId
+    );
+
+    @GET("voter-list-pending")
+    Call<VoterListResponse> getPendingVoters(
+            @Query("token") String token,
+            @Query("intereset_party") @Nullable String intereset_party,
+            @Query("offset") int nextToken,
             @Query("consId") int consId
     );
 

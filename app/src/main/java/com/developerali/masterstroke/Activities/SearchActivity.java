@@ -32,6 +32,7 @@ import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiService;
 import com.developerali.masterstroke.Helpers.Helper;
+import com.developerali.masterstroke.Models.VoterListResponse;
 import com.developerali.masterstroke.R;
 import com.developerali.masterstroke.RetrofitClient;
 import com.developerali.masterstroke.SelectionListner;
@@ -53,8 +54,8 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
     ArrayList<String> searchParameters = new ArrayList<>();
     VoterAdapter adapter;
     int nextPageToken, currentPage = 0;
-    String searchOn, searchKeyword, dualSearchPart;
-    boolean normalNextPage, counted;
+    String searchOn, searchKeyword, dualSearchPart, party_interest;
+    boolean normalNextPage, counted, ulala;
     private boolean isLoading = false;
     private boolean noMoreLoad = false;
     private boolean dualSearch = false;
@@ -137,7 +138,11 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             }
             getSearchVoters(nextPageToken, searchKeyword, searchOn);
 
-        }else {
+        } else if (i.hasExtra("party_interest")) {
+            party_interest = i.getStringExtra("party_interest");
+            normalNextPage = true; ulala = true;
+            getPendingDetails(nextPageToken);
+        } else {
             normalNextPage = true;
             getDetails(nextPageToken);
         }
@@ -567,8 +572,13 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 adapter.removeItems();
                 getSearchVoters((nextPageToken-50), searchKeyword, searchOn);
             }else {
-                adapter.removeItems();
-                getDetails((nextPageToken-50));
+                if (ulala){
+                    adapter.removeItems();
+                    getPendingDetails((nextPageToken-50));
+                }else {
+                    adapter.removeItems();
+                    getDetails((nextPageToken-50));
+                }
             }
         }
         return super.onOptionsItemSelected(item);
@@ -611,7 +621,11 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                         if (!normalNextPage) {
                             getSearchVoters(nextPageToken, searchKeyword, searchOn);
                         } else {
-                            getDetails(nextPageToken);
+                            if (ulala){
+                                getPendingDetails(nextPageToken);
+                            }else {
+                                getDetails(nextPageToken);
+                            }
                         }
                     }
                 }
@@ -711,22 +725,6 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
         ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
         Call<PhoneAddressModel> call;
-//        if (dualSearch){
-//            call = apiService.SearchDualVoters(
-//                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
-//                    nextToken,
-//                    Integer.parseInt(Helper.WARD),
-//                    keyword,
-//                    field,
-//                    Integer.parseInt(dualSearchPart)
-//            );
-//        }else {
-//            call = apiService.getVoters(
-//                    "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
-//                    nextToken,
-//                    Integer.parseInt(Helper.WARD)
-//            );
-//        }
         call = apiService.getVoters(
                 "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                 nextToken,
@@ -776,6 +774,70 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
             @Override
             public void onFailure(Call<PhoneAddressModel> call, Throwable t) {
+                Toast.makeText(SearchActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchActivity.this, call.request().url().toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    void getPendingDetails(int nextToken) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.loadMore.setVisibility(View.GONE);
+        normalNextPage = true;
+
+        ApiService apiService = RetrofitClient.getRetrofitInstance().create(ApiService.class);
+        Call<VoterListResponse> call;
+        call = apiService.getPendingVoters(
+                "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
+                party_interest,
+                nextToken,
+                Integer.parseInt(Helper.WARD)
+        );
+
+
+        call.enqueue(new Callback<VoterListResponse>() {
+            @Override
+            public void onResponse(Call<VoterListResponse> call, Response<VoterListResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    VoterListResponse apiResponse = response.body();
+
+                    if (apiResponse.getData() == null){
+                        Toast.makeText(SearchActivity.this, "not found", Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (adapter == null) {
+                            adapter = new VoterAdapter(SearchActivity.this, apiResponse.getData(), SearchActivity.this);
+                            binding.recView.setAdapter(adapter);
+                        } else {
+                            adapter.addItems(apiResponse.getData()); // Modify your adapter to support adding new items
+                        }
+                        nextPageToken = apiResponse.getNextToken();
+                        currentPage = (nextPageToken/50);
+                        binding.pageText.setText(String.valueOf((currentPage+1)));
+                        getSupportActionBar().setSubtitle("Ward no - "+apiResponse.getData().get(0).getWard());
+
+                        if (apiResponse.getTotal() != null && !counted){
+                            total = Integer.parseInt(apiResponse.getTotal());
+                            Helper.startCounter(total, binding.totalItems);
+                            counted = true;
+                        }
+
+                        if (apiResponse.getData().size() < 50){
+                            noMoreLoad = true;
+                        }
+
+                        isLoading = false;
+                    }
+                    binding.progressBar.setVisibility(View.GONE);
+                } else {
+                    Toast.makeText(SearchActivity.this, "Failed...!", Toast.LENGTH_SHORT).show();
+                }
+
+                Log.d("SearchActivity.this", "URL: " + call.request().url());
+            }
+
+            @Override
+            public void onFailure(Call<VoterListResponse> call, Throwable t) {
                 Toast.makeText(SearchActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
                 Toast.makeText(SearchActivity.this, call.request().url().toString(), Toast.LENGTH_LONG).show();
             }
