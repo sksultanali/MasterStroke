@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.developerali.masterstroke.Adapters.MergeAdapter;
 import com.developerali.masterstroke.Adapters.PartSecAdapter;
+import com.developerali.masterstroke.ApiModels.PhoneAddressModel;
 import com.developerali.masterstroke.ApiModels.UpdateModel;
 import com.developerali.masterstroke.ApiModels.WardClass;
 import com.developerali.masterstroke.ApiService;
@@ -141,6 +142,25 @@ public class MergeActivity extends AppCompatActivity implements SelectionListner
                 }
 
             });
+        });
+
+        binding.surveyOurParty.setOnClickListener(v->{
+            progressDialog.show();
+            ArrayList<WardClass.Item> items = adapter.getSelectedRows();
+            progressDialog.show();
+            updateItemsSequentiallyLname(items, "intereset_party", "Our Party", 0);
+        });
+        binding.oppositionParty.setOnClickListener(v->{
+            progressDialog.show();
+            ArrayList<WardClass.Item> items = adapter.getSelectedRows();
+            progressDialog.show();
+            updateItemsSequentiallyLname(items, "intereset_party", "Opposition Party", 0);
+        });
+        binding.doubtfulParty.setOnClickListener(v->{
+            progressDialog.show();
+            ArrayList<WardClass.Item> items = adapter.getSelectedRows();
+            progressDialog.show();
+            updateItemsSequentiallyLname(items, "intereset_party", "Doubtful", 0);
         });
 
         casteArray = new ArrayList<>();
@@ -280,7 +300,7 @@ public class MergeActivity extends AppCompatActivity implements SelectionListner
                             Collections.sort(apiResponse.getItem(), new Comparator<WardClass.Item>() {
                                 @Override
                                 public int compare(WardClass.Item item1, WardClass.Item item2) {
-                                    // Assuming `item.getName()` returns the string field to be sorted alphabetically
+                                    // Assuming item.getName() returns the string field to be sorted alphabetically
                                     return item1.getTxt().compareToIgnoreCase(item2.getTotal());
                                 }
                             });
@@ -374,7 +394,7 @@ public class MergeActivity extends AppCompatActivity implements SelectionListner
                             Collections.sort(apiResponse.getItem(), new Comparator<WardClass.Item>() {
                                 @Override
                                 public int compare(WardClass.Item item1, WardClass.Item item2) {
-                                    // Assuming `item.getName()` returns the string field to be sorted alphabetically
+                                    // Assuming item.getName() returns the string field to be sorted alphabetically
                                     return item1.getTxt().compareToIgnoreCase(item2.getTotal());
                                 }
                             });
@@ -425,10 +445,12 @@ public class MergeActivity extends AppCompatActivity implements SelectionListner
     public void onShowAction(Boolean isSelected) {
         if (isSelected){
             binding.shareSlip.setVisibility(View.VISIBLE);
+            binding.surveyLayout.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setVisibility(View.VISIBLE);
 //            binding.selectedNo.setText(adapter.getSelectedRows().size() + " voters selected");
         }else {
             binding.shareSlip.setVisibility(View.GONE);
+            binding.surveyLayout.setVisibility(View.GONE);
 //            binding.selectedNo.setVisibility(View.GONE);
         }
     }

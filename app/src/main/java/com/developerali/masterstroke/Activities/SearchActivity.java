@@ -53,7 +53,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> searchParameters = new ArrayList<>();
     VoterAdapter adapter;
-    int nextPageToken, currentPage = 0;
+    int nextPageToken, currentPage = 0, partNo;
     String searchOn, searchKeyword, dualSearchPart, party_interest;
     boolean normalNextPage, counted, ulala;
     private boolean isLoading = false;
@@ -140,8 +140,9 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
         } else if (i.hasExtra("party_interest")) {
             party_interest = i.getStringExtra("party_interest");
+            partNo = Integer.parseInt(i.getStringExtra("partNo"));
             normalNextPage = true; ulala = true;
-            getPendingDetails(nextPageToken);
+            getPendingDetails(nextPageToken, partNo);
         } else {
             normalNextPage = true;
             getDetails(nextPageToken);
@@ -574,7 +575,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             }else {
                 if (ulala){
                     adapter.removeItems();
-                    getPendingDetails((nextPageToken-50));
+                    getPendingDetails((nextPageToken-50), partNo);
                 }else {
                     adapter.removeItems();
                     getDetails((nextPageToken-50));
@@ -622,7 +623,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                             getSearchVoters(nextPageToken, searchKeyword, searchOn);
                         } else {
                             if (ulala){
-                                getPendingDetails(nextPageToken);
+                                getPendingDetails(nextPageToken, partNo);
                             }else {
                                 getDetails(nextPageToken);
                             }
@@ -712,6 +713,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             @Override
             public void onFailure(Call<PhoneAddressModel> call, Throwable t) {
                 Toast.makeText(SearchActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
+                Log.d("SearchActivity.this", "URL: " + call.request().url());
                 Toast.makeText(SearchActivity.this, call.request().url().toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -781,7 +783,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
 
     }
 
-    void getPendingDetails(int nextToken) {
+    void getPendingDetails(int nextToken, int partNo) {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.loadMore.setVisibility(View.GONE);
         normalNextPage = true;
@@ -792,6 +794,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
                 "fa3b2c9c-a96d-48a8-82ad-0cb775dd3e5d",
                 party_interest,
                 nextToken,
+                partNo,
                 Integer.parseInt(Helper.WARD)
         );
 
@@ -839,6 +842,7 @@ public class SearchActivity extends AppCompatActivity implements SelectionListne
             @Override
             public void onFailure(Call<VoterListResponse> call, Throwable t) {
                 Toast.makeText(SearchActivity.this, "Error 404...!", Toast.LENGTH_SHORT).show();
+                Log.d("SearchActivity.this", "URL: " + call.request().url());
                 Toast.makeText(SearchActivity.this, call.request().url().toString(), Toast.LENGTH_LONG).show();
             }
         });

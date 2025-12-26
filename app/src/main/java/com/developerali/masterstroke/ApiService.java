@@ -40,6 +40,7 @@ public interface ApiService {
             @Query("token") String token,
             @Query("intereset_party") @Nullable String intereset_party,
             @Query("offset") int nextToken,
+            @Query("partNo") int partNo,
             @Query("consId") int consId
     );
 

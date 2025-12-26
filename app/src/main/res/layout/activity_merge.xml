@@ -103,9 +103,67 @@
         android:textColor="@color/white"
         android:background="@drawable/click_effect_red_gray"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintBottom_toTopOf="@id/surveyLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/surveyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10mdp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:padding="@dimen/_5mdp"
+        android:background="@drawable/bg_white_color_corner8"
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/_12font_mdp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="Party Survey"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5mdp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/surveyOurParty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Our Party"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:layout_marginEnd="@dimen/_5mdp"
+                android:background="@drawable/bg_dark_gray_corner8"/>
+            <Button
+                android:id="@+id/oppositionParty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Opposition"
+                android:textAllCaps="false"
+                android:textColor="@color/red"
+                android:background="@drawable/bg_red_red"/>
+            <Button
+                android:id="@+id/doubtfulParty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Doubtful"
+                android:layout_marginStart="@dimen/_5mdp"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:background="@drawable/bg_dark_gray_corner8"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

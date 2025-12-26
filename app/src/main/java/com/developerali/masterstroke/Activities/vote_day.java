@@ -119,18 +119,21 @@ public class vote_day extends AppCompatActivity {
         binding.oPLay.setOnClickListener(view -> {
             Intent i = new Intent(vote_day.this, SearchActivity.class);
             i.putExtra("party_interest", "Our Party");
+            i.putExtra("partNo", selectedPart);
             startActivity(i);
         });
 
         binding.oPPLay.setOnClickListener(view -> {
             Intent i = new Intent(vote_day.this, SearchActivity.class);
             i.putExtra("party_interest", "Opposition Party");
+            i.putExtra("partNo", selectedPart);
             startActivity(i);
         });
 
         binding.dLay.setOnClickListener(view -> {
             Intent i = new Intent(vote_day.this, SearchActivity.class);
             i.putExtra("party_interest", "Doubtful");
+            i.putExtra("partNo", selectedPart);
             startActivity(i);
         });
 
@@ -156,26 +159,77 @@ public class vote_day extends AppCompatActivity {
                     // Update UI
                     binding.totalVoter.setText(stats.getTotal_voters());
 
-                    String doneCount = stats.getVote_done().getCount();
+                    String doneCount = stats.getVote_done().getTotal();
                     double donePerc = stats.getVote_done().getPercentage();
                     binding.pendingPoll.setText(doneCount);
                     binding.pendingPoll.setText(doneCount+"");
                     binding.percentage.setText("(" + donePerc + "%)");
 
-                    // Our Party
+                    // ---------- OUR PARTY ----------
+                    int ourTotal = Integer.parseInt(stats.getOur_party().getTotal());
+                    int ourPending = Integer.parseInt(stats.getOur_party().getPending());
+
+                    double ourPendingPer = stats.getOur_party().getPercentage();
+
+                    int ourPolled = ourTotal - ourPending;
+                    double ourPolledPer = ourTotal > 0
+                            ? (ourPolled * 100.0) / ourTotal
+                            : 0;
+
                     binding.ourParty.setText(
-                            stats.getOur_party().getCount() + " (" + String.format("%.1f", stats.getOur_party().getPercentage()) + "%)"
+                            ourPending + "\n\n" + String.format("%.1f", (100 - ourPolledPer)) + "%"
                     );
 
-                    // Opposition
+
+
+                    binding.ourParty1.setText(
+                            ourPolled + "\n\n" + String.format("%.1f", ourPolledPer) + "%"
+                    );
+
+
+                    // ---------- OPPOSITION PARTY ----------
+                    int opoTotal = Integer.parseInt(stats.getOpposition_party().getTotal());
+                    int opoPending = Integer.parseInt(stats.getOpposition_party().getPending());
+
+                    double opoPendingPer = stats.getOpposition_party().getPercentage();
+
+                    int opoPolled = opoTotal - opoPending;
+                    double opoPolledPer = opoTotal > 0
+                            ? (opoPolled * 100.0) / opoTotal
+                            : 0;
+
                     binding.oppositionParty.setText(
-                            stats.getOpposition_party().getCount() + " (" + String.format("%.1f", stats.getOpposition_party().getPercentage()) + "%)"
+                            opoPending + "\n\n" + String.format("%.1f", (100 - opoPolledPer)) + "%"
                     );
 
-                    // Doubtful
-                    binding.doubtfulParty.setText(
-                            stats.getDoubtful().getCount() + " (" + String.format("%.1f", stats.getDoubtful().getPercentage()) + "%)"
+
+
+                    binding.oppositionParty1.setText(
+                            opoPolled + "\n\n" + String.format("%.1f", opoPolledPer) + "%"
                     );
+
+
+                    // ---------- DOUBTFUL ----------
+                    int douTotal = Integer.parseInt(stats.getDoubtful().getTotal());
+                    int douPending = Integer.parseInt(stats.getDoubtful().getPending());
+
+                    double douPendingPer = stats.getDoubtful().getPercentage();
+
+
+
+                    int douPolled = douTotal - douPending;
+                    double douPolledPer = douTotal > 0
+                            ? (douPolled * 100.0) / douTotal
+                            : 0;
+
+                    binding.doubtfulParty.setText(
+                            douPending + "\n\n" + String.format("%.1f", (100 - douPolledPer)) + "%"
+                    );
+
+                    binding.doubtfulParty1.setText(
+                            douPolled + "\n\n" + String.format("%.1f", douPolledPer) + "%"
+                    );
+
 
                     progressDialog.dismiss();
                 }

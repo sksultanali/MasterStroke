@@ -109,24 +109,26 @@ public class VotingStatsResponse {
 
     // Inner class for count + percentage objects
     public static class VoteCount {
-        private String count;
+        private String total;
+        private String pending;
         private double percentage;  // or int if percentage is always whole number
 
         // Default constructor
         public VoteCount() {
         }
 
-        public VoteCount(String count, double percentage) {
-            this.count = count;
+        public VoteCount(String total, String pending, double percentage) {
+            this.total = total;
+            this.pending = pending;
             this.percentage = percentage;
         }
 
-        public String getCount() {
-            return count;
+        public String getTotal() {
+            return total;
         }
 
-        public void setCount(String count) {
-            this.count = count;
+        public String getPending() {
+            return pending;
         }
 
         public double getPercentage() {
@@ -140,7 +142,7 @@ public class VotingStatsResponse {
         @Override
         public String toString() {
             return "VoteCount{" +
-                    "count='" + count + '\'' +
+                    "count='" + total + '\'' +
                     ", percentage=" + percentage +
                     '}';
         }
